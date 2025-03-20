@@ -1,0 +1,21 @@
+.shimmer {
+    --baseColor: rgb(17, 17, 23);  
+    --shimmerDark: rgb(30, 30, 40); 
+    --shimmerLight: rgb(35, 35, 40);
+
+    background: linear-gradient(90deg, 
+                var(--baseColor) 0%, 
+                var(--shimmerDark) 40%, 
+                var(--shimmerLight) 50%, 
+                var(--shimmerDark) 60%, 
+                var(--baseColor) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite linear;
+    border-radius: 8px;
+  }
+  
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }

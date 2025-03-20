@@ -1,0 +1,1 @@
+export type TabType = "explore" | "more" | "test" | "login" | "signup" | "profile";

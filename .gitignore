@@ -18,7 +18,7 @@ dist-ssr
 # cloud
 firebase.json
 .firebaserc
-/src/firebase.config.js
+/src/firebase.config.tsx
 .firebase
 
 
