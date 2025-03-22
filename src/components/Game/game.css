@@ -1,0 +1,33 @@
+.game-wrapper {
+    height: auto;
+    max-width: 100vh;
+    width: 100vh;
+    min-width: 440px;
+    padding: 40px;
+    flex: 1 1 0;
+
+}
+
+.gamegui-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    max-width: 100%;
+    box-shadow: var(--defaultShadow);
+}
+
+#BasicBoard {
+    height: auto;
+    width: auto;
+    border-radius: 6px;
+}
+
+.flash-green > * {
+    outline: 5px solid var(--lightGreen);
+}
+
+.flash-red > * {
+    outline: 5px solid var(--red);
+}
+

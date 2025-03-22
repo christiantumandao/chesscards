@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './App.css'
 
 // type imports
@@ -15,10 +15,11 @@ import MainBody from './components/Main/MainBody';
 import About from "./components/About/About";
 import LogIn from './components/LogIn/LogIn';
 import Profile from './components/Profile/Profile';
-import { AppContext, TabContext, UserContext } from './contexts';
-import { onAuthStateChanged, User, UserCredential } from 'firebase/auth';
+import { CardsContext, TabContext, UserContext } from './contexts';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { getUserData, getUserFlashcards, getUserFolders } from './services/userGetters';
+import { getDefaultCards, getDefaultFolders } from './services/getDefaultCards';
 
 function App() {
 
@@ -30,8 +31,10 @@ function App() {
   const [folders, setFolders] = useState<Folder[]>([]);
 
 
+  // CONTEXT PROVIDER VALUES ====================================================
+
   // prevent updates for every rerender 
-  const appContextProviderValue = useMemo(()=> ({
+  const cardsContextProviderValue = useMemo(()=> ({
     flashcards: flashcards, 
     setFlashcards: setFlashcards,
     folders: folders,
@@ -50,6 +53,10 @@ function App() {
     setUserData
   }), [user, userData]);
 
+  // ==========================================================================
+
+
+  // Loading in user data in event of log in/out
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
@@ -66,6 +73,13 @@ function App() {
 
         setUser(null);
         setUserData(null);
+
+        // TO DO: load in default cards
+        const defaultCards = getDefaultCards();
+        const defaultFolders = getDefaultFolders();
+        setFlashcards(defaultCards);
+        setFolders(defaultFolders);
+
       }
 
     });
@@ -78,7 +92,7 @@ function App() {
     <div className="App">
 
       <UserContext.Provider value = { userContextProviderValue }>
-          <AppContext.Provider value = { appContextProviderValue }>
+          <CardsContext.Provider value = { cardsContextProviderValue }>
             <TabContext.Provider value = { tabContextProviderValue }>
               
               <NavBar />
@@ -93,7 +107,7 @@ function App() {
               </Routes>
 
             </TabContext.Provider>
-          </AppContext.Provider>
+          </CardsContext.Provider>
         </UserContext.Provider>
 
     </div>

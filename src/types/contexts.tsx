@@ -1,11 +1,15 @@
 import { User } from "firebase/auth"
 import { TabType } from "../components/NavBar/types"
 import { Flashcard, Folder, UserData } from "./db"
+import { Chess } from "chess.js"
+import { Trie } from "../util/Trie"
+import { Color } from "./states"
+import { ToolbarTab } from "../components/Toolbar/types"
 
-export interface AppContextType {
-    flashcards: Flashcard[] | null,
+export interface CardsContextType {
+    flashcards: Flashcard[],
     setFlashcards: (newFlashcards: Flashcard[]) => void,
-    folders: Folder[] | null,
+    folders: Folder[],
     setFolders: (newFolders: Folder[]) => void
   }
 export interface TabContextType {
@@ -18,4 +22,72 @@ export interface UserContextType {
     user: User | null,
     setUserData: (newUserData: UserData | null) => void,
     setUser: (newUser: User | null) => void 
+}
+
+export interface BoardStateContextType {
+    game: Chess,
+    currOpening: Flashcard | null,
+    history: string[],
+    moveHistory: string[],
+    currMove: number,
+    color: Color,
+
+    setGame: (newGame: Chess) => void,
+    setCurrOpening: (newCurrOpening: Flashcard | null) => void,
+    setHistory: (newHistory: string[]) => void,
+    setMoveHistory: (newMoveHistory: string[]) => void,
+    setCurrMove: (newCurrMove: number) => void
+    setColor: (newColor: Color) => void
+}
+
+export interface PlayContextType {
+    testMode: boolean,
+    testingFlashcards: Flashcard[],
+    flashcardIdx: number,
+    flashcardMoves: string[],
+    playerMoveIdx: number,
+    flashGreen: boolean,
+    flashRed: boolean,
+
+    freestyle: boolean,
+    trieHead: Trie,
+    currTrie: Trie,
+
+
+    setTestMode: (newVal: boolean) => void,
+    setTestingFlashcards: (newVal: Flashcard[]) => void,
+    setFlashcardIdx: (newVal: number) => void,
+    setFlashcardMoves: (newVal: string[]) => void,
+    setPlayerMoveIdx: (newVal: number) => void,
+    setFlashGreen: (newVal: boolean) => void,
+    setFlashRed: (newVal: boolean) => void,
+
+    setFreestyle: (newVal: boolean) => void,
+    setTrieHead: (newVal: Trie) => void,
+    setCurrTrie: (newVal: Trie) => void
+}
+
+export interface AutoPlayContextType {
+    autoPlay: boolean,
+    autoPlayIdx: number,
+    autoPlayMoves: string[],
+
+    autoPlayOpening: (flashcard: Flashcard) => void,
+    setAutoPlay: (newVal: boolean) => void,
+    setAutoPlayIdx: (newVal: number) => void,
+    setAutoPlayMoves: (newVal: string[]) => void
+}
+
+export interface ToolbarContextType {
+    toolbarTab: ToolbarTab,
+    setToolbarTab: (newVal: ToolbarTab) => void,
+    currentFolder: Folder | null,
+    setCurrentFolder: (newVal: Folder | null) => void,
+
+    editFolderMode: boolean
+    setEditFolderMode: (newVal: boolean) => void,
+    editFlashcardsMode: boolean,
+    setEditFlashcardsMode: (newVal: boolean) => void,
+    addOpeningsToFolder: boolean
+    setAddOpeningsToFolder: (newVal: boolean) => void,
 }

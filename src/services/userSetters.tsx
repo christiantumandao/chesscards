@@ -1,7 +1,6 @@
 import { doc, getDoc, updateDoc } from "@firebase/firestore"
 import { db } from "../firebase.config"
 import { auth } from "../firebase.config";
-import { UserData } from "../types/db";
 
 const updateFirstName = async (firstName: string, uid: string) => {
     try {
@@ -70,5 +69,7 @@ const incrementIncorrects = async () => {
         console.error("Error finding user while attempting to update");
     }
 }
+
+
 
 export { updateFirstName, updateLastName, incrementCorrects, incrementIncorrects };

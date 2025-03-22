@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 import { db } from "../firebase.config";
-import { User } from "firebase/auth";
+
 import { Flashcard, Folder, UserData } from "../types/db";
 
 export const getUserData = async (uid: string): Promise<UserData | null> => {

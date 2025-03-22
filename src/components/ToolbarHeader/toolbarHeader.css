@@ -1,0 +1,270 @@
+/* main toolbar styles */
+
+.toolbar-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar-title {
+    border-bottom: var(--border);
+    padding-left: 0;
+    padding: 10px 5px 5px 10px;
+    font-size: 1.5rem;
+    background-color: var(--darkGrey);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.toolbar-description {
+    height: var(--toolbarTitleHeight);
+    width: 100%;
+    font-size: 14px;
+    font-weight: bolder;
+
+    padding: 10px;
+
+    border-top:  var(--border);
+    border-bottom: var(--border);
+    
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    position: relative;
+}
+
+.toolbar-description > button {
+    padding: .5rem;
+    width: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    color: var(--green);
+    background-color: transparent;
+    border: none;
+    transition: 1 all ease-in-out;
+}
+
+.toolbar-description > .add-opening-btn:hover {
+    transform: scale(1.1);
+    color: var(--lightGreen);
+}
+
+.is-added-btn {
+    position: relative;
+}
+
+
+/* testing styles*/
+
+.selectcolor-container {
+    width: 100%;
+    height: var(--toolbarTopHeaderHeight);
+    min-height: var(--toolbarTopHeaderHeight);
+    padding: 10px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.selectcolor-container > select,
+.selectcolor-container > button,
+.freestyle-container  > button {
+    border: var(--border);
+    background-color: var(--darkGrey);
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    font-weight: bolder;
+    padding: 6px;
+    height: 100%;
+}
+
+.freestyle-container {
+    height: 100%;
+    margin-right: 8px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+}
+.freestyle-container > button {
+    margin-left: 4px;
+}
+.freestyle-container > svg {
+    align-self: center;
+}
+
+.tooltip a {
+    color: white;
+}
+.tooltip a:hover {
+    color: gray;
+}
+
+.select-element {
+    margin-right: 8px;
+    height: 100%;
+    width: auto;
+
+    border: var(--border);
+    border-radius: 5px;
+    background-color: var(--darkGrey);
+    color: white;
+
+    border-radius: 5px;
+    position: relative;
+}
+
+.select-element > select {
+    height: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: transparent;
+    color: white;
+    padding: 6px;
+    padding-right: 28px;
+    font-size: 14px;
+    font-weight: bolder;
+}
+
+.select-element > select:focus {
+    outline: none;
+}
+
+.select-element > svg {
+    font-size: 12px;
+    position: absolute;
+    right: 6px;
+    top: 50%;
+
+    transform: translateY(-50%);
+    
+}
+
+.selectcolor-container > select:focus {
+    outline: none;
+}
+.selectcolor-container > button:hover,
+.select-element > select:hover,
+.freestyle-container  > button:hover {
+    background-color: var(--hoverHighlightDarkGrey);
+}
+
+.selectcolor-container > button.begin-test:hover {
+    color: white;
+    border: 1px solid var(--green);
+    background-color: var(--hoverHighlightGreen);
+    
+}
+
+button.exit-test {
+    margin-left: 10x;
+    background-color: var(--red);
+    border: 1px solid var(--lightRed);
+}
+  
+button.exit-test.red-btn:hover {
+background-color: rgba(255,0,0,.3);
+border: 1px solid var(--red);
+}
+
+button.begin-test {
+    background-color: var(--green);
+    margin: 0;
+    margin-right: auto;
+
+}
+
+.playing-as {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: auto;
+    font-size: 16px;
+    margin-right: auto;
+
+}
+
+.selectcolor-container span {
+    font-weight: bolder;
+    margin-left: .5ch;
+    font-size: 16px;
+}
+.selectcolor-container span.black {
+    color: rgb(100,100,100);
+}
+
+
+
+/* sign in message styles */
+.small-modal-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 150;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .small-modal-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0 10px;
+  
+    width: 100%;
+    height: 100%;
+    background-color: black;
+  
+    flex-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .small-modal-message {
+    font-size: 14px;
+    flex-grow: 1;
+  }
+  
+  .small-modal-buttons {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+  
+  .small-modal-buttons > button {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 3px;
+    width: auto;
+    
+    display: flex;
+    flex-direction: center;
+    align-items: center;
+    color: white;
+  }
+  .small-modal-sign-in {
+    margin-right: 6px;
+  }
+  .small-modal-buttons > .small-modal-cancel {
+    border: var(--border);
+    background-color: var(--eigen);
+  }
+  
+  .small-modal-buttons > button:hover {
+    opacity: .8;;
+  }
+

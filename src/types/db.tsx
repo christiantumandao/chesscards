@@ -8,7 +8,7 @@ export interface Flashcard {
 
 export interface Folder {
     name: string,
-    flashcards: Flashcard[]
+    openings: Flashcard[]
 }
 
 export interface UserData {

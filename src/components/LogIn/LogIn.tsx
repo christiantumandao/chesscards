@@ -51,7 +51,9 @@ const LogIn = (props: LoginProps) => {
         else return;
 
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password)
+            // user will be updated at hook in App.tsx
+
+            await signInWithEmailAndPassword(auth, email, password)
             //const user = userCredential.user;
             resetFields();
             nav("/flashcards");
@@ -114,7 +116,8 @@ const LogIn = (props: LoginProps) => {
         return true;
     }
 
-
+    if (user) return null
+    else 
     return (
         <div className="login-wrapper page">
             <div className="login-container">

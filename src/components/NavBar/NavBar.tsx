@@ -3,7 +3,7 @@ import "./navBar.css";
 
 import { FaSearch } from "react-icons/fa";
 import { PiCardsLight } from "react-icons/pi";
-import { AppContext, TabContext, UserContext } from "../../contexts";
+import { TabContext, UserContext } from "../../contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { BsThreeDots } from "react-icons/bs";
@@ -52,6 +52,7 @@ const NavBar = () => {
             else if (path === "log-in") relPath = "login"
             else if (path === "flashcards") relPath = "test"
             else if (path === "about") relPath = "more"
+            else if (path === "profile") relPath = "profile"
             else relPath = "explore";
 
             setTab(relPath);
