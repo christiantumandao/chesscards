@@ -1,0 +1,1 @@
+export type ToolbarTab = "Flashcards" | "Folders" | "FolderFocus";
