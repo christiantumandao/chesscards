@@ -5,7 +5,7 @@ import { BoardStateContext, CardsContext, PlayContext, ToolbarContext } from "..
 import { BsCaretDown } from "react-icons/bs";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { shuffleCards } from "../../util/formatting";
+import shuffleCards from "../../util/shuffleCards";
 import { Color } from "../../types/states";
 
 interface TopHeaderPlayProps {

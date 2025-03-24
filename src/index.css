@@ -1,12 +1,4 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,4 +10,35 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html {
+  /*background-color: #2b3b31;
+  overscroll-behavior: auto;
+  background-color: var(--darkGreen);
+  background-image: radial-gradient(circle at -70% -12%, #00000031 46%, transparent 46.05%),radial-gradient(circle at 88% 78%, #0000002f 59%, transparent 59.05%),radial-gradient(circle at 87% 0%, #00000022 49%, transparent 49.05%),linear-gradient(13deg, #0000002e 58%, transparent 58.05%);
+*/
+
+background-color: #2b3b31;
+background-image: linear-gradient(139deg, #00000029 57%, transparent 57.05%),linear-gradient(-47deg, #0000001e 70%, transparent 70.05%),linear-gradient(-60deg, #0000001e 23%, transparent 23.05%),linear-gradient(-48deg, #0000001e 88%, transparent 88.05%),linear-gradient(25deg, #0000001e 50%, transparent 50.05%),linear-gradient(-161deg, #0000001e 76%, transparent 76.05%),linear-gradient(-345deg, #0000001e 71%, transparent 71.05%);
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 

@@ -20,7 +20,7 @@
 }
 
 .login-container {
-    width: clamp(360px, 30%, 1080px);
+    width: clamp(400px, 30%, 1080px);
     height: auto;
     padding: 25px;
     background-color: var(--eigen);

@@ -1,0 +1,142 @@
+.add-openings-modal-container {
+    width: 100%;
+    border-radius: 5px;
+    margin: 15px 0;
+    padding: 10px;
+    padding-bottom: 10px;
+    background-color: var(--eigen);
+}
+
+.flashcard-to-add-container input[type="checkbox"]:disabled {
+    background-color: green;
+}
+
+.close-add-openings-modal-btn {
+    border: none;
+    background-color: transparent;
+    position: sticky;
+    top: 0;
+}
+
+.add-openings-modal-body {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+button.close-add-openings-modal-btn svg:hover {
+    color: rgba(255,0,0,.3);
+}
+
+.close-add-openings-modal-btn svg {
+    color: var(--red);
+    font-size: 16px;
+}
+
+.add-openings-modal-header h4 {
+    text-align: center;
+    width: 100%;
+}
+
+.flashcard-to-add-container {
+    height: auto;
+    width: 100%;
+    padding: 10px;
+    padding-left: 0;
+    margin: 10px 0;
+
+    border-bottom: var(--border);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.flashcard-to-add-left {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.fta-title {
+    font-size: 14px;
+    font-weight: bolder;
+}
+
+.flashcard-to-add-left div.fta-title-selected.fta-title {
+    color: var(--green);
+}
+
+.fta-moves {
+    font-size: 12px;
+    color: gray;
+}
+
+
+.flashcard-to-add-right {
+    width: auto;
+    height: 100%;
+}
+
+.play-btn {
+    padding: .2rem;
+    background-color: var(--darkGray);
+    color: white;
+    border: var(--border);
+
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bolder;
+    padding: .5rem;
+}
+
+.play-btn:hover {
+    background-color: var(--hoverHighlightLight);
+}
+
+.add-openings-btn {
+    width: 100%;
+    background-color: var(--green);
+    padding: 10px;
+    font-weight: bolder;
+    font-size: 14px;
+    border: 1px solid var(--lightGreen);
+    border-radius: 5px;
+    color: white;
+
+    position: sticky;
+    bottom: 0;
+    left: 0;
+}
+
+.add-openings-btn:hover {
+    background-color: rgba(81, 112, 88,.5);
+    color: white;
+    border: 1px solid var(--green);
+}
+
+.delete-openings-btn {
+    width: 100%;
+
+    padding: 10px;
+    font-weight: bolder;
+    font-size: 14px;
+
+    border-radius: 5px;
+    color: white;
+
+    position: sticky;
+    bottom: 0;
+    left: 0;
+}
+
+
+.no-openings-to-add {
+    width: 75%;
+    text-align: center;
+    margin: 50px 0;
+    color: gray;
+    
+}

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import "./profile.css";
 import "../../styles/loading.css";
 import { auth, db } from "../../firebase.config";
@@ -11,7 +11,7 @@ import { FirebaseError } from "firebase/app";
 import { UserData } from "../../types/db";
 const Profile = () => {
 
-    const { user, userData, setUser, setUserData } = useContext(UserContext);
+    const { user, userData, setUserData } = useContext(UserContext);
 
     const nav = useNavigate();
 
@@ -82,16 +82,18 @@ const Profile = () => {
         }
         try {
             setIsLoadingFirstName(true);
-            const newUserData = await updateFirstName(firstName, user.uid);
-        
-            const newData = { ...userData, firstName: firstName } as UserData;
-            setUserData(newData);
-            setFirstName("");
+            const success = await updateFirstName(firstName, user.uid);
+            if (success) {
+                const newData = { ...userData, firstName: firstName } as UserData;
+                setUserData(newData);
+            }
+
             
         } catch (e) {
             console.error(e);
         } finally {
             setIsLoadingFirstName(false);
+            setFirstName("");
         }
         
     }

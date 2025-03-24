@@ -2,28 +2,31 @@ import { doc, getDoc, updateDoc } from "@firebase/firestore"
 import { db } from "../firebase.config"
 import { auth } from "../firebase.config";
 
-const updateFirstName = async (firstName: string, uid: string) => {
+const updateFirstName = async (firstName: string, uid: string): Promise<boolean> => {
     try {
         const ref = doc(db, "userData", uid);
         await updateDoc(ref, {
             firstName: firstName
         })
+        return true;
     } catch (e) {
         console.error("Something went wrong. Try again later");
         console.error(e);
-
+        return false;
     }
 }
 
-const updateLastName = async (lastName: string, uid: string) => {
+const updateLastName = async (lastName: string, uid: string): Promise<boolean>  => {
     try {
         const ref = doc(db, "userData", uid);
         await updateDoc(ref, {
             lastName: lastName
         })
+        return true;
     } catch (e) {
         console.error("Something went wrong. Try again later");
         console.error(e);
+        return false;
     }
 }
 
