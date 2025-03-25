@@ -29,8 +29,10 @@
 
   --darkGrey: rgb(17, 17, 23);
   --eigen: #16161d;
+  --mediumGrey: rgb(42,42,47);
   --lightGrey: rgb(115,115,119);
 
+  --black: rgb(12,18,12,.8);
   --darkGreen: #2b3b31;
   --green: #517058;
   --lightGreen: #799981;
@@ -189,6 +191,11 @@ input:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: .2s;
+}
+
+.tooltip-container:hover {
+    color: grey;
 }
 
 .tooltip-container:hover .tooltip {

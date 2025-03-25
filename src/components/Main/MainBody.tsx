@@ -73,28 +73,6 @@ const MainBody = () => {
     },[currMove, game, history, moveHistory])
 
 
-
-    // event listener for seeing player history with arrows
-    useEffect(() => {
-        const handleKeyPress = (event: KeyboardEvent) => {
-            if (event.key === 'ArrowLeft' && !testMode) {
-                undo();
-            } else if (event.key === 'ArrowRight' && !testMode) {
-                redo();
-              }
-
-        };
-    
-        // Attach the event listener when the component mounts
-        window.addEventListener('keydown', handleKeyPress);
-    
-        // Remove the event listener when the component unmounts
-        return () => {
-          window.removeEventListener('keydown', handleKeyPress);
-        };
-    },[testMode]);
-
-
     // useEffect for autoplaying an opening
     useEffect(()=> {
 
@@ -257,10 +235,31 @@ const MainBody = () => {
         }
         else {
             setCurrMove(currMove -1);
+
             const prevMove = history[currMove - 1];
             setGame(new Chess(prevMove));
         }
     }
+
+    // event listener for seeing player history with arrows
+    useEffect(() => {
+
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowLeft' && !testMode && !freestyle) {
+                undo();
+            } else if (event.key === 'ArrowRight' && !testMode && !freestyle) {
+                redo();
+                }
+    
+        }
+    
+        window.addEventListener('keydown', handleKeyPress);
+    
+        // Remove the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+            };
+    },[testMode, freestyle, currMove]);
 
     const boardContextProviderValue = useMemo(()=> ({
         game: game,

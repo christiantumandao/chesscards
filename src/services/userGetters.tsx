@@ -10,7 +10,6 @@ export const getUserData = async (uid: string): Promise<UserData | null> => {
 
         const docSnap = await getDoc(ref);
         if (docSnap.exists()) {
-            console.log(docSnap.data())
             const userData = {
                 ...docSnap.data(),
                 id: uid
@@ -39,7 +38,6 @@ export const getUserFlashcards = async (uid: string): Promise<Flashcard[] | []> 
         return userCards;
     } catch (e) {
         console.error(e);
-        console.log(",,,")
         return [];
     }  
 }

@@ -19,3 +19,28 @@
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
   }
+
+
+  .loader-animation-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    top: 50px;
+    left: 0;
+  }
+  .loader-animation-container > svg {
+    animation: loader 1s infinite linear;
+    font-size: 64px;
+  }
+
+  @keyframes loader {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+  }

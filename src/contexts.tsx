@@ -65,7 +65,7 @@ export const PlayContext = createContext<PlayContextType>({
     setCurrTrie: () => {}
 })
 
-export const startingFen: string = "nbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+export const startingFen: string = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 export const AutoPlayContext = createContext<AutoPlayContextType>({
     autoPlay: false,

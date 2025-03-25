@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import MovePair from "./MovePair";
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import { db } from "../../../firebase.config";
@@ -8,19 +8,25 @@ import Folders from "./Folders/Folders";
 import { useLocation } from "react-router-dom";
 import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarContext, UserContext } from "../../../contexts";
 import { Flashcard as FlashcardType, Folder } from "../../../types/db";
+import { BiLoaderAlt } from "react-icons/bi";
+import { FaArrowLeft } from "react-icons/fa";
+import { Chess } from "chess.js";
 
 interface ToolbarContentProps { 
-    searchResults: FlashcardType[]
+    searchResults: FlashcardType[],
+    setSearchResults: (val: FlashcardType[]) => void
+    isSearchLoading: boolean,
 }
 
-const ToolbarContent = ({ searchResults }: ToolbarContentProps) => {
+const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: ToolbarContentProps) => {
 
     const { flashcards, setFlashcards, folders, setFolders } = useContext(CardsContext);
     const { currentFolder, setCurrentFolder, 
             toolbarTab, editFlashcardsMode } = useContext(ToolbarContext);
     const { user } = useContext(UserContext);
     const { freestyle } = useContext(PlayContext);
-    const { game, moveHistory } = useContext(BoardStateContext);
+    const { game, setGame, moveHistory, setMoveHistory, setHistory, setCurrMove } = useContext(BoardStateContext);
+
 
     const currPath = useLocation();
 
@@ -77,7 +83,7 @@ const ToolbarContent = ({ searchResults }: ToolbarContentProps) => {
             const newFlashcards = flashcards.filter((f)=>f.id !== fc.id);
             setFlashcards(newFlashcards);
 
-
+            
         } catch (e) {
             console.error(e);
         }
@@ -101,6 +107,14 @@ const ToolbarContent = ({ searchResults }: ToolbarContentProps) => {
         )
     }
 
+    const getExploreBody = () => {
+        return (
+            <>
+                { showMoveHistory() } 
+            </>
+        )
+    }
+ 
     const getFolderContents = () => {
         return (
             <FolderFocus 
@@ -111,24 +125,63 @@ const ToolbarContent = ({ searchResults }: ToolbarContentProps) => {
     }
 
     const getExploreInit = () => {
+        return (      
+            <>
+                <h1 className="empty-query-message">
+                    Play a move or search for an opening above to get started.
+                </h1>
+            </>
+        );
+    }
+
+    const getSearchLoading = () => {
         return (
-            <h1 className="empty-query-message">
-                Play a move or search for an opening above to get started.
-            </h1>
-        )
+            <div className="loader-animation-container">
+                <BiLoaderAlt />
+            </div>  
+        );
     }
 
     const getSearchResults = () => {
         return (
-            searchResults.map((flashcard, idx)=>(
-                <Flashcard
-                    key = { flashcard.moves }
-                    idx = { idx }
-                    editFlashcard = { false }
-                    flashcard = { flashcard }
-                    deleteFlashcard={ ()=>{} }
-                />
-            ))
+            <>
+                <button 
+                onClick = { ()=> setSearchResults([]) }
+                className="back-to-view-moves">
+                    <FaArrowLeft />
+                </button>
+                {
+                    searchResults.map((flashcard, idx)=>(
+                        <Flashcard
+                            key = { flashcard.moves }
+                            idx = { idx }
+                            editFlashcard = { false }
+                            flashcard = { flashcard }
+                            deleteFlashcard={ ()=>{} }
+                        />
+                    ))
+                }
+            </>
+        );
+    }
+
+    const getFlashcards = () => {
+        return (
+            <div className="flashcards-container">
+            {
+                // if in flashcard mode
+                flashcards.map((flashcard, idx)=>(
+                    <Flashcard 
+                        key = { flashcard.moves + idx }
+                        idx = { idx }
+                        flashcard = { flashcard }
+                        deleteFlashcard = { deleteFlashcardFromMain }
+                        editFlashcard = { editFlashcardsMode }
+
+                    />
+                ))          
+            }
+            </div>
         )
     }
 
@@ -143,38 +196,25 @@ const ToolbarContent = ({ searchResults }: ToolbarContentProps) => {
             (freestyle) ? 
                 showMoveHistory() 
             :
-            <div className="flashcards-container">
-            {
-                // if in flashcard mode
-                (flashcards && currPath.pathname === "/flashcards") ?
-                    flashcards.map((flashcard, idx)=>(
-                        <Flashcard 
-                            key = { flashcard.moves + idx }
-                            idx = { idx }
-                            flashcard = { flashcard }
-                            deleteFlashcard = { deleteFlashcardFromMain }
-                            editFlashcard = { editFlashcardsMode }
-
-                        />
-                    )) 
-                // if searched, none found
-                /*: (searchResults && searchResults.length === 1 && currPath.pathname === "/" && searchResults[0] === "empty" && !currOpening) ?
-                    <h1 className="empty-query-message">
-                        No openings found. Try a different query or play a move to get started.
-                    </h1>*/
-                // if nothing done so far
-
-                : (searchResults.length === 0 && currPath.pathname === "/" && game.fen() === startingFen) ?
-                    getExploreInit()
-                // if searched and has results
-                : (searchResults && searchResults.length > 0 && currPath.pathname === "/") ?
-                    getSearchResults()
-                : (currPath.pathname === "/") ? 
-                    showMoveHistory()
-                : null
-                
-            }
-            </div>
+            (flashcards && currPath.pathname === "/flashcards") ?
+                getFlashcards()
+        
+            // if searched, none found
+            /*: (searchResults && searchResults.length === 1 && currPath.pathname === "/" && searchResults[0] === "empty" && !currOpening) ?
+                <h1 className="empty-query-message">
+                    No openings found. Try a different query or play a move to get started.
+                </h1>*/
+            // if nothing done so far
+            : ( isSearchLoading) ?
+                getSearchLoading()
+            : (searchResults.length === 0 && currPath.pathname === "/" && game.fen() === startingFen) ?
+                getExploreInit()
+            // if searched and has results
+            : (searchResults && searchResults.length > 0 && currPath.pathname === "/") ?
+                getSearchResults()
+            : (currPath.pathname === "/") ? 
+                getExploreBody()
+            : null
     )
 }
 

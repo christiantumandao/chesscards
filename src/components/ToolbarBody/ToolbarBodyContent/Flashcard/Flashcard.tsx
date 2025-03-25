@@ -39,12 +39,12 @@ const Flashcard = (props: FlashcardProps) => {
         e.stopPropagation();
 
         try {
+            setIsLoading(true);
             if (toolbarTab === "Flashcards") await deleteFlashcard(flashcard);
             else if (toolbarTab === "FolderFocus" && currentFolder) await deleteFlashcard(flashcard);
             else {
                 console.error("Error resolving flashcard/folder for deletion");
             }
-            setIsLoading(true);
 
         } catch (e) {
             console.error(e);

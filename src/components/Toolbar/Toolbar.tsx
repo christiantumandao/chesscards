@@ -7,6 +7,7 @@ import { Flashcard, Folder } from "../../types/db";
 import { BoardStateContext, CardsContext, PlayContext, TabContext, ToolbarContext } from "../../contexts";
 import { Color } from "../../types/states";
 import { ToolbarTab } from "./types";
+
 import ToolbarFooter from "../ToolbarFooter/ToolbarFooter";
 import ToolbarBody from "../ToolbarBody/ToolbarBody";
 import ToolbarHeader from "../ToolbarHeader/ToolbarHeader";
@@ -44,6 +45,8 @@ const Toolbar = (props: ToolbarProps) => {
     const [editFlashcardsMode, setEditFlashcardsMode] = useState<boolean>(false);
     const [addOpeningsToFolder, setAddOpeningsToFolder] = useState<boolean>(false);
 
+    const [isSearchLoading, setIsSearchLoading] = useState<boolean>(false);
+
     const toolbarContextProviderValue = useMemo(()=> ({
         toolbarTab,
         setToolbarTab,
@@ -55,7 +58,7 @@ const Toolbar = (props: ToolbarProps) => {
         editFlashcardsMode,
         setEditFlashcardsMode,
         addOpeningsToFolder,
-        setAddOpeningsToFolder
+        setAddOpeningsToFolder,
     }),[toolbarTab, currentFolder, editFolderMode, editFlashcardsMode, addOpeningsToFolder]);
 
     // whenever the component is mounted or login changes, we get the user's cards
@@ -69,7 +72,8 @@ const Toolbar = (props: ToolbarProps) => {
 
     useEffect(()=>{
         setToolbarTab("Flashcards");
-    },[tab, setToolbarTab]);
+    },[tab]);
+
 
     const handleFreestyle = () => {
         let head = new Trie();
@@ -104,11 +108,14 @@ const Toolbar = (props: ToolbarProps) => {
                     onFinishFlashcards = { onFinishFlashcards }
                     handleFreestyle = { handleFreestyle }
                     handleSkip = { handleSkip }
+                    setIsSearchLoading = { setIsSearchLoading }
                 />
 
                 {/** Toolbar Body */}
                 <ToolbarBody
                     searchResults = { searchResults }
+                    setSearchResults = { setSearchResults }
+                    isSearchLoading = { isSearchLoading }
                 />
                 
 

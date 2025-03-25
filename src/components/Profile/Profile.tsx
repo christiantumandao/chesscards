@@ -87,8 +87,7 @@ const Profile = () => {
                 const newData = { ...userData, firstName: firstName } as UserData;
                 setUserData(newData);
             }
-
-            
+   
         } catch (e) {
             console.error(e);
         } finally {
@@ -104,14 +103,17 @@ const Profile = () => {
         }
         try {
             setIsLoadingLastName(true);
-            await updateLastName(lastName, user.uid);
-            const newData = { ...userData, lastName: lastName } as UserData;
-            setUserData(newData);
-            setLastName("");
+            const success = await updateLastName(lastName, user.uid);
+            if (success) {
+                const newData = { ...userData, lastName: lastName } as UserData;
+                setUserData(newData);
+            }
+
         } catch (e) {
             console.error(e);
         } finally {
             setIsLoadingLastName(false);
+            setLastName("");
         }
 
     }

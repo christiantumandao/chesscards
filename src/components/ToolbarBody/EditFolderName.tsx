@@ -1,7 +1,7 @@
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import React, { useContext, useState } from "react";
 import { db } from "../../firebase.config";
-import { validateFolderName } from "../../services/validate";
+import { validateFolderName } from "../../util/validate";
 import { CardsContext, ToolbarContext, UserContext } from "../../contexts";
 
 const EditFolderName = () => {
@@ -27,7 +27,7 @@ const EditFolderName = () => {
 
         const validName = validateFolderName(newFolderName, setErrorMessage, folders);
         if (!validName) {
-            console.log("Error validating name");
+            console.error("Error validating name");
             return;
         }
         try {

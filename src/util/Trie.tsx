@@ -39,7 +39,7 @@ export default function buildTrie(flashcards: Flashcard[]): Trie {
 
             // parsing moves into array and removing numbered elements
             const arr = flashcards.moves.split(" ");
-            const parsedMoves =  arr.filter((move, idx) => idx % 3 !== 0);
+            const parsedMoves =  arr.filter((_, idx) => idx % 3 !== 0);
 
             // adding the sequence of mvoes in flashcard to trie from head
             addFlashcardMoves(parsedMoves, head);

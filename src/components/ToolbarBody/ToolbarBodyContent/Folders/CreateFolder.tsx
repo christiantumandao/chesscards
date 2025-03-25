@@ -2,7 +2,7 @@ import { FormEvent, useContext, useState } from "react";
 
 import { db } from "../../../../firebase.config";
 import { doc, setDoc } from "@firebase/firestore";
-import { validateFolderName } from "../../../../services/validate";
+import { validateFolderName } from "../../../../util/validate";
 import { CardsContext, UserContext } from "../../../../contexts";
 
 interface CreateFolderProps {

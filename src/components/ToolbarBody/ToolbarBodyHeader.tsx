@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import EditFolderName from "./EditFolderName";
 import { deleteDoc, doc } from "@firebase/firestore";
 import { db } from "../../firebase.config";
@@ -51,7 +51,7 @@ const ToolbarBodyHeader = () => {
 
     const getEditFlashcardsTopHeaderComponent = () => {
         return (
-            <button onClick = { () => setEditFlashcardsMode(false) }className="cancel-edit-flashcards-btn">
+            <button onClick = { () => setEditFlashcardsMode(false) } className="cancel-edit-flashcards-btn">
                 Exit
             </button>
         )

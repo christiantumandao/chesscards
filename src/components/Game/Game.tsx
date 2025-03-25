@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 
 import "./game.css";
 
 import 'firebase/firestore';
-import { db, auth } from "../../firebase.config";
-import { collection, query, where, getDocs } from "@firebase/firestore";
 
 import { Chessboard } from "react-chessboard";
-import { Chess, Piece, Square } from "chess.js";
+import { Chess, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
 import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../contexts";
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
-import { Flashcard } from "../../types/db";
 import { findOpening } from "../../services/dbGetters";
 
 const animationSpeed = 100;
@@ -297,7 +294,19 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                     onPieceDrop = { onDrop }
                     
 
-                    animationDuration={(autoPlay) ? animationSpeed : 0}
+                    // this is to prevent animation when player makes the move
+                    animationDuration={ (autoPlay) ? animationSpeed : 
+                        (
+                            (autoPlay) || (
+                                (testMode || freestyle) && (
+                                    (playerMoveIdx % 2 === 0 && color === "black") || 
+                                    (playerMoveIdx % 2 !== 0 && color === "white")
+                                )
+                            )
+                        ) ? animationSpeed :
+                         0 
+                    }
+                    
                     boardOrientation={(color==='both') ? 'white' : color}
                     customBoardStyle = { (window.innerWidth > 425) ?                  
                         { borderRadius: '5px' } : {} }

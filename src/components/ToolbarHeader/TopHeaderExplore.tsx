@@ -8,9 +8,10 @@ import { Flashcard } from "../../types/db";
 
 interface TopHeaderExploreProps {
     setSearchResults: (newVal: Flashcard[]) => void
+    setIsSearchLoading: (val: boolean) => void
 }
 
-const TopHeaderExplore = ({ setSearchResults }: TopHeaderExploreProps) => {
+const TopHeaderExplore = ({ setSearchResults, setIsSearchLoading }: TopHeaderExploreProps) => {
 
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [resultLimit, setResultLimit] = useState<number>(20);
@@ -24,7 +25,11 @@ const TopHeaderExplore = ({ setSearchResults }: TopHeaderExploreProps) => {
 
     const handleSubmitSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        search(searchQuery, setSearchResults, resultLimit)
+        setIsSearchLoading(true);
+        search(searchQuery, setSearchResults, resultLimit);
+        setTimeout(() => {
+            setIsSearchLoading(false);
+        }, 500);
     }
  
     return (

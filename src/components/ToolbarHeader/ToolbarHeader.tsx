@@ -20,13 +20,14 @@ interface ToolbarHeaderProps {
     handleBegin: () => void,
     onFinishFlashcards: () => void,
     handleFreestyle: () => void,
-    handleSkip: () => void
+    handleSkip: () => void,
+    setIsSearchLoading: (val: boolean) => void
 }
 
 const ToolbarHeader = (props: ToolbarHeaderProps) => {
 
     const { setSearchResults, handleBegin, onFinishFlashcards, 
-            handleFreestyle, handleSkip
+            handleFreestyle, handleSkip, setIsSearchLoading
     } = props;
 
     const currPath = useLocation();
@@ -52,7 +53,7 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
             setShowAddButton(true);
         }
 
-    },[currOpening, flashcards, game, startingFen, testMode, freestyle])
+    },[currOpening, flashcards, game, testMode, freestyle])
 
     const addOpening = async () => {
         if (!user) {
@@ -104,6 +105,7 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
                     (currPath.pathname === "/") ? 
                         <TopHeaderExplore 
                             setSearchResults = { setSearchResults }
+                            setIsSearchLoading = { setIsSearchLoading }
                         /> 
                     : 
                     (!addOpeningsToFolder && (toolbarTab === "Flashcards" || toolbarTab === "FolderFocus")) ?

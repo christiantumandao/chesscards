@@ -166,7 +166,7 @@
 }
 
 button.exit-test {
-    margin-left: 10x;
+    margin-left: 10px;
     background-color: var(--red);
     border: 1px solid var(--lightRed);
 }
