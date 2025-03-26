@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import MovePair from "./MovePair";
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import { db } from "../../../firebase.config";
@@ -10,7 +10,6 @@ import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarConte
 import { Flashcard as FlashcardType, Folder } from "../../../types/db";
 import { BiLoaderAlt } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
-import { Chess } from "chess.js";
 
 interface ToolbarContentProps { 
     searchResults: FlashcardType[],
@@ -25,7 +24,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
             toolbarTab, editFlashcardsMode } = useContext(ToolbarContext);
     const { user } = useContext(UserContext);
     const { freestyle } = useContext(PlayContext);
-    const { game, setGame, moveHistory, setMoveHistory, setHistory, setCurrMove } = useContext(BoardStateContext);
+    const { game, moveHistory } = useContext(BoardStateContext);
 
 
     const currPath = useLocation();
@@ -97,7 +96,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
                     moveHistory.map((move, idx)=> (
                        (idx % 2 === 0) ? 
                             <MovePair
-                                key = { move } 
+                                key = { move + idx } 
                                 idx = { idx } 
                             /> 
                         : null
@@ -153,7 +152,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
                 {
                     searchResults.map((flashcard, idx)=>(
                         <Flashcard
-                            key = { flashcard.moves }
+                            key = { flashcard.moves + idx }
                             idx = { idx }
                             editFlashcard = { false }
                             flashcard = { flashcard }
