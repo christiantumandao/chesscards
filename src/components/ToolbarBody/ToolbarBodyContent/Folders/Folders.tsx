@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import CreateFolder from "./CreateFolder";
 import FolderWrapper from "./FolderWrapper";
 
-import { CardsContext, ToolbarContext, UserContext } from "../../../../contexts";
+import { CardsContext, ToolbarContext, UserContext } from "../../../../util/contexts";
 
 // component outputs either the folders user has OR the openings of a selected folder
 const Folders = () => {

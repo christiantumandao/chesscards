@@ -9,7 +9,7 @@ import { CgAddR, CgCheckR } from "react-icons/cg";
 import { useLocation } from "react-router-dom";
 
 import { Flashcard } from "../../types/db"
-import { BoardStateContext, CardsContext, PlayContext, startingFen, TabContext, ToolbarContext, UserContext } from "../../contexts";
+import { BoardStateContext, CardsContext, PlayContext, startingFen, TabContext, ToolbarContext, UserContext } from "../../util/contexts";
 
 import GetSignInMessageToolbar from "./GetSignInMessage";
 import TopHeaderPlay from "./TopHeaderPlay";

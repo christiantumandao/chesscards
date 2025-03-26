@@ -4,7 +4,7 @@ import "./toolbar.css";
 
 import buildTrie, { Trie } from "../../util/Trie";
 import { Flashcard, Folder } from "../../types/db";
-import { BoardStateContext, CardsContext, PlayContext, TabContext, ToolbarContext } from "../../contexts";
+import { BoardStateContext, CardsContext, PlayContext, TabContext, ToolbarContext } from "../../util/contexts";
 import { Color } from "../../types/states";
 import { ToolbarTab } from "./types";
 

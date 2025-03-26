@@ -6,7 +6,7 @@ import Flashcard from "./Flashcard/Flashcard";
 import FolderFocus from "./Folders/FolderFocus";
 import Folders from "./Folders/Folders";
 import { useLocation } from "react-router-dom";
-import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarContext, UserContext } from "../../../contexts";
+import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarContext, UserContext } from "../../../util/contexts";
 import { Flashcard as FlashcardType, Folder } from "../../../types/db";
 import { BiLoaderAlt } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";

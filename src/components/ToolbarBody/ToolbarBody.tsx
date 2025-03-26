@@ -2,7 +2,7 @@ import { Flashcard } from "../../types/db";
 import { useLocation } from "react-router-dom";
 
 import { useContext } from "react";
-import { CardsContext, ToolbarContext } from "../../contexts";
+import { CardsContext, ToolbarContext } from "../../util/contexts";
 
 import ToolbarBodyHeader from "./ToolbarBodyHeader";
 import ToolbarContent from "./ToolbarBodyContent/ToolbarBodyContent";

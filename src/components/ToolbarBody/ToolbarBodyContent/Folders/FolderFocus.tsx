@@ -3,7 +3,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import Flashcard  from "../Flashcard/Flashcard";
 import SelectOpeningsInFolder from "./SelectOpenings/SelectOpeningsInFolder";
 import { useNavigate } from "react-router-dom";
-import { PlayContext, ToolbarContext, UserContext } from "../../../../contexts";
+import { PlayContext, ToolbarContext, UserContext } from "../../../../util/contexts";
 import { Flashcard as FlashcardType } from "../../../../types/db";
 
 interface FolderFocusProps {

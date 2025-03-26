@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { BoardStateContext } from "../../../../contexts";
+import { BoardStateContext } from "../../../../util/contexts";
 import "./movePair.css"
 import { Chess } from "chess.js";
 

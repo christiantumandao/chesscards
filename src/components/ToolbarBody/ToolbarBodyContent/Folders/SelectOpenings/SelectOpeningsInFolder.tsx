@@ -6,7 +6,7 @@ import { doc, getDoc, setDoc } from "@firebase/firestore";
 import { db } from "../../../../../firebase.config";
 import { useNavigate } from "react-router-dom";
 import FlashcardToSelect from "./FlashcardToSelect";
-import { CardsContext, ToolbarContext, UserContext } from "../../../../../contexts";
+import { CardsContext, ToolbarContext, UserContext } from "../../../../../util/contexts";
 import { Flashcard, Folder } from "../../../../../types/db";
 
 

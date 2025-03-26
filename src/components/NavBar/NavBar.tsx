@@ -3,7 +3,7 @@ import "./navBar.css";
 
 import { FaSearch } from "react-icons/fa";
 import { PiCardsLight } from "react-icons/pi";
-import { TabContext, UserContext } from "../../contexts";
+import { TabContext, UserContext } from "../../util/contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { BsThreeDots } from "react-icons/bs";

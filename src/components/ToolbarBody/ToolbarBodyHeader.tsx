@@ -3,7 +3,7 @@ import EditFolderName from "./EditFolderName";
 import { deleteDoc, doc } from "@firebase/firestore";
 import { db } from "../../firebase.config";
 import { FaRegEdit } from "react-icons/fa";
-import { CardsContext, PlayContext, ToolbarContext, UserContext } from "../../contexts";
+import { CardsContext, PlayContext, ToolbarContext, UserContext } from "../../util/contexts";
 
 const ToolbarBodyHeader = () => {
 

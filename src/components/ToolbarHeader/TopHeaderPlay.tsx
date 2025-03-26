@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import "./toolbarHeader.css";
 
-import { BoardStateContext, CardsContext, PlayContext, ToolbarContext } from "../../contexts";
+import { BoardStateContext, CardsContext, PlayContext, ToolbarContext } from "../../util/contexts";
 import { BsCaretDown } from "react-icons/bs";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";

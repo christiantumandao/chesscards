@@ -5,7 +5,7 @@ import "./../../../../styles/loading.css";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { db } from "../../../../firebase.config";
 import { doc, setDoc } from "@firebase/firestore";
-import { AutoPlayContext, CardsContext, PlayContext, ToolbarContext, UserContext } from "../../../../contexts";
+import { AutoPlayContext, CardsContext, PlayContext, ToolbarContext, UserContext } from "../../../../util/contexts";
 import { Flashcard as FlashcardType } from "../../../../types/db";
 
 interface FlashcardProps {

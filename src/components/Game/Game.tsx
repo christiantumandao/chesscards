@@ -8,7 +8,7 @@ import { Chessboard } from "react-chessboard";
 import { Chess, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
-import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../contexts";
+import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
@@ -306,7 +306,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                         ) ? animationSpeed :
                          0 
                     }
-                    
+
                     boardOrientation={(color==='both') ? 'white' : color}
                     customBoardStyle = { (window.innerWidth > 425) ?                  
                         { borderRadius: '5px' } : {} }

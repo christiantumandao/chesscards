@@ -3,7 +3,7 @@ import { Flashcard } from "../../types/db";
 import { Chess } from "chess.js";
 import { Trie } from "../../util/Trie";
 import { Color, MoveVerbose } from "../../types/states"; 
-import { AutoPlayContext, BoardStateContext, CardsContext, PlayContext, startingFen, TabContext } from "../../contexts";
+import { AutoPlayContext, BoardStateContext, CardsContext, PlayContext, startingFen, TabContext } from "../../util/contexts";
 import { incrementIncorrects } from "../../services/userSetters";
 import Game from "../Game/Game";
 import Toolbar from "../Toolbar/Toolbar";
@@ -273,8 +273,9 @@ const MainBody = () => {
         setHistory: setHistory,
         setMoveHistory: setMoveHistory,
         setCurrMove: setCurrMove,
-        setCurrOpening
-      } as BoardStateContextType),[game, history, moveHistory, currMove, currOpening]);
+        setCurrOpening,
+        setColor: setColor
+      } as BoardStateContextType),[game, history, moveHistory, currMove, currOpening, color]);
 
       const autoPlayContextProviderValue = useMemo(()=>({
         autoPlay,
@@ -284,6 +285,7 @@ const MainBody = () => {
         setAutoPlay,
         setAutoPlayIdx,
         setAutoPlayMoves,
+
         autoPlayOpening
       } as AutoPlayContextType),[autoPlay, autoPlayIdx, autoPlayMoves]);
 
@@ -293,6 +295,7 @@ const MainBody = () => {
         flashcardIdx: flashcardIdx,
         flashcardMoves: flashcardMoves,
         playerMoveIdx: playerMoveIdx,
+        
         flashGreen: flashGreen,
         flashRed: flashRed,
 
@@ -312,7 +315,7 @@ const MainBody = () => {
         setFreestyle: setFreestyle,
         setTrieHead: setTrieHead,
         setCurrTrie: setCurrTrie
-    } as PlayContextType),[testMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx, flashGreen, flashRed,
+    } as PlayContextType),[testMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx,
         freestyle, trieHead, currTrie
     ]);
 

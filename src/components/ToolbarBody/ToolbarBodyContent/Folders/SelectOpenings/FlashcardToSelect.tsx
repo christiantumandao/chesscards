@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Flashcard } from "../../../../../types/db";
-import { AutoPlayContext } from "../../../../../contexts";
+import { AutoPlayContext } from "../../../../../util/contexts";
 
 interface FlashcardToSelectProps {
     selected: boolean,

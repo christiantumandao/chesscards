@@ -7,7 +7,7 @@ import { LoginProps } from "./types";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase.config";
 import { doc, setDoc } from "@firebase/firestore";
-import { UserContext } from "../../contexts";
+import { UserContext } from "../../util/contexts";
 
 
 const LogIn = (props: LoginProps) => {

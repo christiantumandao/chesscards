@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { AutoPlayContextType, BoardStateContextType, CardsContextType, PlayContextType, TabContextType, ToolbarContextType, UserContextType } from "./types/contexts";
+import { AutoPlayContextType, BoardStateContextType, CardsContextType, PlayContextType, TabContextType, ToolbarContextType, UserContextType } from "../types/contexts";
 import { Chess } from "chess.js";
-import { Trie } from "./util/Trie";
+import { Trie } from "./Trie";
 
 export const TabContext = createContext<TabContextType>({
     tab: "explore",

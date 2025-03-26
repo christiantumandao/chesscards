@@ -2,7 +2,7 @@ import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import React, { useContext, useState } from "react";
 import { db } from "../../firebase.config";
 import { validateFolderName } from "../../util/validate";
-import { CardsContext, ToolbarContext, UserContext } from "../../contexts";
+import { CardsContext, ToolbarContext, UserContext } from "../../util/contexts";
 
 const EditFolderName = () => {
 

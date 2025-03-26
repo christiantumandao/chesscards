@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { EmailAuthProvider, deleteUser, reauthenticateWithCredential } from "@firebase/auth";
 import { deleteDoc, doc } from "@firebase/firestore";
 import { updateFirstName, updateLastName } from "../../services/userSetters";
-import { UserContext } from "../../contexts";
+import { UserContext } from "../../util/contexts";
 import { FirebaseError } from "firebase/app";
 import { UserData } from "../../types/db";
 const Profile = () => {

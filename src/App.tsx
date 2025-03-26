@@ -15,7 +15,7 @@ import MainBody from './components/Main/MainBody';
 import About from "./components/About/About";
 import LogIn from './components/LogIn/LogIn';
 import Profile from './components/Profile/Profile';
-import { CardsContext, TabContext, UserContext } from './contexts';
+import { CardsContext, TabContext, UserContext } from './util/contexts';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { getUserData, getUserFlashcards, getUserFolders } from './services/userGetters';

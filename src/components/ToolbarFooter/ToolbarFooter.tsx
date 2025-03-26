@@ -2,7 +2,7 @@ import "./toolbarFooter.css";
 
 import { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaArrowsAltV, FaRedo } from "react-icons/fa";
-import { BoardStateContext, PlayContext, startingFen } from "../../contexts";
+import { BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
 import { Chess, validateFen } from "chess.js";
 import { useLocation } from "react-router-dom";
 

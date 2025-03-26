@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import "../Flashcard/flashcard.css";
-import { ToolbarContext } from "../../../../contexts";
+import { ToolbarContext } from "../../../../util/contexts";
 import { Folder } from "../../../../types/db";
 
 interface FolderWrapperProps {
