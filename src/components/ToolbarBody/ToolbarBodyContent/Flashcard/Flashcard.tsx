@@ -24,7 +24,7 @@ const Flashcard = (props: FlashcardProps) => {
     const { flashcards, setFlashcards, folders, setFolders } = useContext(CardsContext);
     const { freestyle, testMode, flashcardIdx } = useContext(PlayContext);
     const { autoPlayOpening } = useContext(AutoPlayContext);
-    const { currentFolder, setCurrentFolder, toolbarTab } = useContext(ToolbarContext);
+    const { currentFolder, setCurrentFolder, toolbarTab, editFlashcardsMode } = useContext(ToolbarContext);
     const { user } = useContext(UserContext);
 
     const [editName, setEditName] = useState(false);
@@ -33,7 +33,11 @@ const Flashcard = (props: FlashcardProps) => {
 
     useEffect(()=>{
         setNewName("");
-    },[editName])
+    },[editName]);
+
+    useEffect(() => {
+        setEditName(false);
+    },[editFlashcardsMode])
 
     const handleDeleteFlashcard = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
@@ -71,17 +75,21 @@ const Flashcard = (props: FlashcardProps) => {
             <form 
                 className="edit-flashcard-name-form"
                 onSubmit = { handleEditFlashcardName }>
-                    
+                <label>
+                    Change name
                 <input 
-                    placeholder={(flashcard) ? parseName() : undefined }
+                    placeholder={(flashcard) ? flashcard.name: undefined }
                     value = { newName }
                     onChange = { (e) => setNewName(e.target.value)}
                     onClick = { (e) => e.stopPropagation()}
                     required
                 />
+                </label>
+
                 <button 
                     onClick = { (e) => e.stopPropagation()}
-                    className= "edit-flashcard-btn green-btn" type="submit">
+                    className= {(newName.length === 0) ? "display-none" : "edit-flashcard-btn green-btn" }
+                    type="submit">
                     Change
                 </button>
 
@@ -211,7 +219,7 @@ const Flashcard = (props: FlashcardProps) => {
             </div>
 
             {
-                (editName) ?
+                (editName && editFlashcardsMode) ?
                     getEditFlashcardButton() :
                     getFlashcardButtons()
             }

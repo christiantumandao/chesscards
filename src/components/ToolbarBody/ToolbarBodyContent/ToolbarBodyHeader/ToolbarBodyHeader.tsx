@@ -1,10 +1,10 @@
 import { useContext, useEffect } from "react";
-import EditFolderName from "./EditFolderName";
+import EditFolderName from "../Folders/EditFolderName/EditFolderName";
 import { deleteDoc, doc } from "@firebase/firestore";
-import { db } from "../../firebase.config";
+import { db } from "../../../../firebase.config";
 import { FaRegEdit } from "react-icons/fa";
-import { CardsContext, PlayContext, ToolbarContext, UserContext } from "../../util/contexts";
-
+import { CardsContext, PlayContext, ToolbarContext, UserContext } from "../../../../util/contexts";
+import "./toolbarBodyHeader.css";
 const ToolbarBodyHeader = () => {
 
     const { toolbarTab, setToolbarTab, 

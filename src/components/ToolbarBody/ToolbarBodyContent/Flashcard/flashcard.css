@@ -55,12 +55,6 @@
 
 }
 
-
-
-.flashcard-wrapper > * {
-    margin: 2px 0;
-}
-
 .flashcard-title {
     color: white;
     font-size: 12px;
@@ -134,28 +128,38 @@ div.flashcard-highlight {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: 100%;
+    height: auto;
+    width: 60%;
+
+    position: relative;
+}
+
+form.edit-flashcard-name-form input {
+    font-size: 12px;
+    width: 100%;
+    height: 32px;
+    margin: 0;
+}
+
+form.edit-flashcard-name-form > label {
+    font-size: 14px;
+    font-weight: bolder;
     width: 100%;
 }
 
-.edit-flashcard-name-form > * {
-    height: 50%;
-}
-
-form.edit-flashcard-name-form > input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    font-size: 12px;
-    width: 50%;
-}
-
 .edit-flashcard-name-form > button {
+    height: 32px;
+    width: auto;
     background-color: var(--eigen);
     border: var(--border);
     color: white;
     padding: 5px;
     border-top-left-radius: 0;
     border-left: none;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 button.edit-flashcard-btn {

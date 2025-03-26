@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { CardsContext, ToolbarContext } from "../../util/contexts";
 
-import ToolbarBodyHeader from "./ToolbarBodyHeader";
+import ToolbarBodyHeader from "./ToolbarBodyContent/ToolbarBodyHeader/ToolbarBodyHeader";
 import ToolbarContent from "./ToolbarBodyContent/ToolbarBodyContent";
 
 interface ToolbarBodyProps {

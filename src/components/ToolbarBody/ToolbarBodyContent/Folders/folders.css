@@ -1,0 +1,31 @@
+.add-folder-wrapper {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    padding: 15px;
+    margin: 15px 0;
+
+    background-color: var(--darkGrey);
+    border-radius: 5px;
+    color: white;
+
+    overflow: hidden;
+    border:none;
+    border-bottom: 1px solid black;
+    box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+}
+
+.add-folder-wrapper:hover {
+    background-color: var(--hoverHighlightDarkGrey);
+    transform: scale(1.02);
+}
+
+.add-folder-wrapper > h4 {
+    width: auto;
+    margin-left: 5px;
+    font-size: 14px;
+}

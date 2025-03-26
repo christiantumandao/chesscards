@@ -1,0 +1,61 @@
+.edit-name-container {
+    width: 100%;
+}
+
+.edit-name-field-set {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70%;
+
+    position: relative;
+
+}
+
+.edit-name-field-set input {
+    font-size: 16px;
+    height: 40px;
+    width: 100%;
+    min-width: 200px;
+    border-radius: 5px;
+}
+.edit-name-field-set button.display-none {
+    display: none;
+}
+.edit-name-field-set .edit-folder-name-btn {
+    font-size: 14px;
+    height: 40px;
+    background-color: var(--green);
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    font-size: 14px;
+    letter-spacing: .2ch;
+
+    position: absolute;
+    right: 0;
+}
+
+.edit-name-field-set .edit-folder-name-btn:hover {
+    background-color: var(--darkGreen);
+    border: 1px solid var(--lightGreen);
+}
+
+.edit-name-field-set .edit-folder-name-btn:disabled {
+    border: var(--border);
+    color: var(--lightGrey);
+    background-color: var(--darkGrey);
+}
+
+.edit-name-container .align-left.error-message {
+    font-size: 14px;
+}
+
+.flashcards-container {
+    width: 100%;
+}

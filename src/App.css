@@ -131,6 +131,15 @@ button:focus {
   visibility: hidden;
 }
 
+.margin-left-auto {
+    margin-left: auto;
+}
+  
+.align-left {
+    text-align: left;
+}
+
+
 .red-btn {
   background-color: var(--red);
   border: 1px solid var(--lightRed);
@@ -154,10 +163,9 @@ input::placeholder {
   color: rgb(69,69,74);
 }
 
-input:focus {
+input:focus, textarea:focus {
   border: 1px solid var(--lightGrey);
   outline: none;
-
 }
 
 .tooltip {

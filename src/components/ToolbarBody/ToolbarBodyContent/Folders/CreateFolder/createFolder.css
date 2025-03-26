@@ -1,0 +1,109 @@
+.add-folder-input-wrapper {
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 15px;
+    margin: 15px 0;
+
+    background-color: var(--darkGrey);
+    border-radius: 5px;
+    color: white;
+
+    overflow: hidden;
+    border:none;
+    border-bottom: 1px solid black;
+    box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+}
+
+.add-folder-input-container {
+    width: 60%;
+}
+
+.add-folder-input-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 5px;
+}
+.add-folder-input-field input {
+    height: 30px;
+    width: 100%;
+
+    color: var(--lightGrey);
+    margin-top: 5px;
+
+
+    padding: .2rem .5rem;
+    font-size: .9rem;
+    letter-spacing: .2ch;
+    border: var(--border);
+    border-radius: 5px;
+    background-color: var(--darkGrey);
+    color: var(--lightGrey);
+    box-shadow: var(--defaultShadow);
+}
+
+.add-folder-input-field input:focus {
+    border: 1px solid var(--lightGrey);
+}
+
+.add-folder-buttons {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-folder-buttons button {
+    flex: 1;
+    border: var(--border);
+    background-color: var(--eigen);
+    border-radius: 5px;
+    color: white;
+    font-size: 12x;
+    font-weight: bolder;
+    padding: 5px;
+    height: 32px;
+}
+
+button.cancel-create-folder {
+    background-color: var(--eigen);
+}
+
+.add-folder-buttons button:hover {
+    background-color: var(--hoverHighlightEigen);
+    border: 1px solid var(--eigen);
+}
+.add-folder-input-wrapper > div {
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+.add-folder-buttons button.create-folder:hover {
+    background-color: var(--hoverHighlightGreen);
+    border: 1px solid var(--green);
+    
+}
+
+.add-folder-buttons button.create-folder {
+    background-color: var(--green);
+    margin: 0;
+}
+
+
+
+.add-folder-input-field label {
+    font-family: inherit;
+    font-weight: bolder;
+
+}

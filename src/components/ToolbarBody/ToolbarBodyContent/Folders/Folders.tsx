@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import "../../../../styles/loading.css"
+import "../../../../styles/loading.css";
+import "./folders.css";
 
 import { FaPlusCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import CreateFolder from "./CreateFolder";
+import CreateFolder from "./CreateFolder/CreateFolder";
 import FolderWrapper from "./FolderWrapper";
 
 import { CardsContext, ToolbarContext, UserContext } from "../../../../util/contexts";

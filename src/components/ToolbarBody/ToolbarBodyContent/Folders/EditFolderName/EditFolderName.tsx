@@ -1,8 +1,9 @@
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import React, { useContext, useState } from "react";
-import { db } from "../../firebase.config";
-import { validateFolderName } from "../../util/validate";
-import { CardsContext, ToolbarContext, UserContext } from "../../util/contexts";
+import { db } from "../../../../../firebase.config";
+import { validateFolderName } from "../../../../../util/validate";
+import { CardsContext, ToolbarContext, UserContext } from "../../../../../util/contexts";
+import "./editFolderName.css"
 
 const EditFolderName = () => {
 
@@ -87,6 +88,7 @@ const EditFolderName = () => {
                 />
 
                 <button 
+                    className={ newFolderName.length === 0 ? "display-none" : "edit-folder-name-btn" }
                     disabled = { newFolderName.length === 0 }
                     type="submit">
                     Edit
