@@ -19,7 +19,7 @@ import { CardsContext, TabContext, UserContext } from './contexts';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { getUserData, getUserFlashcards, getUserFolders } from './services/userGetters';
-import { getDefaultCards, getDefaultFolders } from './services/getDefaultCards';
+import { getDefaultCards, getDefaultFolders } from './util/getDefaultCards';
 
 function App() {
 

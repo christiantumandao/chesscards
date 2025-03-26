@@ -569,35 +569,7 @@ div > button.border-right {
     margin: auto;
 }
 
-.movepair-container {
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px;
-}
-.movepair-container.movepair-shadow {
-    background-color: rgba(32,32,39,.5);
-    border-radius: 5px;
-}
 
-.move-number {
-    font-size: .9rem;
-    font-weight: bolder;
-    margin-right: 20px;
-    min-width: 15px;
-}
-
-.white-move, .black-move {
-    font-weight: bolder;
-    font-size: .8rem;
-    min-width: 30px;
-    margin-right: 30px;
-}
-.move-highlight {
-    color: var(--lightGreen);
-}
 
 .explore-buttons-container {
     width: 100%;

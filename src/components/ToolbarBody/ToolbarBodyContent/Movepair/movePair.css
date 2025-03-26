@@ -1,0 +1,41 @@
+.movepair-container {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 7px 10px;
+    margin: 0 -15px;
+}
+.movepair-container.movepair-shadow {
+    background-color: rgba(32,32,39,.5);
+}
+
+.move-number {
+    font-size: .9rem;
+    font-weight: bolder;
+    margin-right: 20px;
+    min-width: 15px;
+}
+
+.move-btn {
+    font-weight: bolder;
+    font-size: .9rem;
+    min-width: 30px;
+    margin-right: 30px;
+
+    border: none;
+    background-color: transparent;
+    color: white;
+}
+.move-btn:focus {
+    outline: none;
+}
+.move-btn:hover {
+    color: var(--lightGreen);
+}
+.move-highlight {
+    color: var(--green);
+    font-size: .9rem;
+}
+

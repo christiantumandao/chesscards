@@ -1,5 +1,6 @@
 import { Flashcard, Folder } from "../types/db";
 
+
 export const getDefaultCards = (): Flashcard[] => {
 
         return ([

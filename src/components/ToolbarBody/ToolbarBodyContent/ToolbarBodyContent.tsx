@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import MovePair from "./MovePair";
+import MovePair from "./Movepair/MovePair";
 import { deleteDoc, doc, setDoc } from "@firebase/firestore";
 import { db } from "../../../firebase.config";
 import Flashcard from "./Flashcard/Flashcard";
