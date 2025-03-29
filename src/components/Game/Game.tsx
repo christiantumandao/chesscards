@@ -3,6 +3,8 @@ import { useEffect, useContext } from "react";
 import "./game.css";
 
 import 'firebase/firestore';
+import checkmarkIcon from "../../assets/checkmark.svg" ;
+import xIcon from "../../assets/xMark.svg" ;
 
 import { Chessboard } from "react-chessboard";
 import { Chess, Square } from "chess.js";
@@ -14,13 +16,16 @@ import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 
 const animationSpeed = 100;
+const transitionSpeed = 750;
 
 interface GameProps {
     makeAMove: (newMove: MoveVerbose | string) => void
     onFinishFlashcards: () => void
+    lastSquare: string | null
+    setLastSquare: (newVal: string | null) => void
 }
 
-const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
+const Game = ({ makeAMove, onFinishFlashcards, lastSquare, setLastSquare }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame
@@ -60,7 +65,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                 const randomIdx = Math.floor(Math.random() * childrenArr.length);
                 makeAMove(childrenArr[randomIdx]);
             }
-        }, 1000);
+        }, animationSpeed);
     },[playMode, playerMoveIdx,
         flashcardMoves, color])
 
@@ -73,11 +78,9 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
         } else if (currPath.pathname === "/flashcards") {
             const moveHistory = game.history();
             const move = moveHistory[moveHistory.length - 1];
-            setTimeout(()=>{
-                if (game.fen() === startingFen) return;
-                else if (playMode === "flashcards") validateMove_flashcards(move);
-                else if (playMode === "freestyle") validateMove_freestyle(move);
-            }, animationSpeed)
+            if (game.fen() === startingFen) return;
+            else if (playMode === "flashcards") validateMove_flashcards(move);
+            else if (playMode === "freestyle") validateMove_freestyle(move);
         } 
     },[game, currPath, playMode]);
 
@@ -96,14 +99,17 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
 
         } else {
             setFlash("red");
-            incrementIncorrects();
-            setPlayerMoveIdx(0);
-            setGame(new Chess());
-            setCurrTrie(trieHead);
-
-            setHistory([startingFen]);
-            setMoveHistory([]);
-            setCurrMove(0);
+            triggerIncorrectAnimation();
+            setTimeout(()=>{
+                incrementIncorrects();
+                setPlayerMoveIdx(0);
+                setGame(new Chess());
+                setCurrTrie(trieHead);
+    
+                setHistory([startingFen]);
+                setMoveHistory([]);
+                setCurrMove(0);
+            },transitionSpeed)
 
             
         }
@@ -120,17 +126,24 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                 onNextFlashcard();
             // next move in flashcard
             } else {
-                checkBot_flashcards();
+                setTimeout(()=>{
+                    checkBot_flashcards();
+                },animationSpeed)
             }
+
         } else {
             setFlash("red");
             incrementIncorrects();
-            setPlayerMoveIdx(0);
+            triggerIncorrectAnimation();
+            
+            setTimeout(()=>{
+                setPlayerMoveIdx(0);
 
-            setGame(new Chess());
-            setHistory([startingFen]);
-            setMoveHistory([]);
-            setCurrMove(0);
+                setGame(new Chess());
+                setHistory([startingFen]);
+                setMoveHistory([]);
+                setCurrMove(0);
+            },transitionSpeed)
             
         }
         
@@ -170,43 +183,44 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
     const checkBot_flashcards = () => {
         // checking if move prompts bot
         if ((color === 'black' && playerMoveIdx % 2 === 1) || (color === 'white' && playerMoveIdx % 2 === 0)) {
-            
+            if ((playerMoveIdx + 1) >= flashcardMoves.length) {
+                makeAMove(flashcardMoves[playerMoveIdx+1]);
+                 
+                onNextFlashcard();
+                return;
+            }
             setTimeout(()=>{
                 makeAMove(flashcardMoves[playerMoveIdx+1]);
-                if ((playerMoveIdx + 1) >= flashcardMoves.length) {
-                    onNextFlashcard();
-                // next move in flashcard
-                } else {
-                    setPlayerMoveIdx(playerMoveIdx+1);
-                }
+                setPlayerMoveIdx(playerMoveIdx+1);
             }, animationSpeed);
 
         // if not a bot play (or bot has played)
         } else {
             setPlayerMoveIdx(playerMoveIdx+1);
         }
-        // checking player move
     }
 
     const onNextFreestyle = () => {
-        setTimeout(()=>{
-            setFlash("green");
-            incrementCorrects();
+        setFlash("green");
+        triggerCorrectAnimation();
+        incrementCorrects();
     
+        setTimeout(()=>{
             setGame(new Chess());
             setCurrTrie(trieHead);
             setMoveHistory([]);
             setHistory([startingFen]);
             setPlayerMoveIdx(0);
-        },500);   
+        }, transitionSpeed);   
     }
 
 
     const onNextFlashcard = () => {
-        setTimeout(()=>{
-            setFlash("green");
-            incrementCorrects();
+        setFlash("green");
+        triggerCorrectAnimation();
+        incrementCorrects();
 
+        setTimeout(()=>{
             if ((flashcardIdx + 1) >= testingFlashcards.length) {
                 onFinishFlashcards();
                 return;
@@ -223,7 +237,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
             setMoveHistory([]);
     
             setPlayerMoveIdx(0);
-        },500);
+        },transitionSpeed);
     }
     
   
@@ -274,17 +288,61 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
         return true;
     } 
 
-    useEffect(()=>{
-        if (flash !== "") {
-            setTimeout(()=> {
-                setFlash("");
-            },1000)
-        }
-    },[flash, setFlash])
-    console.log(flash);
+    const triggerCorrectAnimation = () => {
+
+        const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
+        const imgElement = document.createElement("img");
+        imgElement.src = checkmarkIcon;  // Replace with your image URL
+        target?.appendChild(imgElement);
+
+        if (target == null) return;
+
+        target.style.position = "relative";
+        imgElement.style.position = "absolute";
+        imgElement.style.top = "-10px";
+        imgElement.style.right = "-10px";
+        imgElement.style.height = "2rem";
+        imgElement.style.width = "2rem";
+        imgElement.style.zIndex = "100";
+
+        setTimeout(()=> {
+            imgElement.remove();
+            setLastSquare(null);
+        },transitionSpeed);
+        
+    }
+
+    const triggerIncorrectAnimation = () => {
+
+        const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
+        const imgElement = document.createElement("img");
+        imgElement.src = xIcon;  // Replace with your image URL
+        target?.appendChild(imgElement);
+
+        if (target == null) {
+            return;
+        };
+
+        target.style.position = "relative";
+        imgElement.style.position = "absolute";
+        imgElement.style.top = "-10px";
+        imgElement.style.right = "-10px";
+        imgElement.style.height = "2rem";
+        imgElement.style.width = "2rem";
+        imgElement.style.zIndex = "100";
+
+        setTimeout(()=> {
+            imgElement.remove();
+            setLastSquare(null);
+        },transitionSpeed);
+        
+    }
+
+
+
     return (
         <div className="game-wrapper">
-            <div className={(flash === "green") ? "gamegui-container flash-green" : (flash==="red") ? "gamegui-container flash-red" : (flash === "") ? "gamegui-container" : "gamegui-container"}>
+            <div className={"gamegui-container"}>
 
                 <Chessboard 
                     position = { game.fen() }
@@ -292,27 +350,17 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                     
 
                     // this is to prevent animation when player makes the move
-                    animationDuration={ (autoPlay) ? animationSpeed : 
-                        (
-                            (autoPlay) || (
-                                (playMode !== "") && (
-                                    (playerMoveIdx % 2 === 0 && color === "black") || 
-                                    (playerMoveIdx % 2 !== 0 && color === "white")
-                                )
-                            )
-                        ) ? animationSpeed :
-                         0 
-                    }
+                    animationDuration = { (autoPlay || playMode !== "") ? animationSpeed : 0 }
 
-                    boardOrientation={(color==='both') ? 'white' : color}
+                    boardOrientation = { (color==='both') ? 'white' : color }
                     customBoardStyle = { (window.innerWidth > 425) ?                  
                         { borderRadius: '5px' } : {} }
-                    arePremovesAllowed ={ true }
                     customDropSquareStyle = {{ boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' }}
                     arePiecesDraggable = { true }
+
+
                 />
             </div>
-
         </div>
     );
 }

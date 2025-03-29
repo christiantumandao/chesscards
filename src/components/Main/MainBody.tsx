@@ -23,6 +23,8 @@ const MainBody = () => {
     const [currOpening, setCurrOpening]= useState<Flashcard | null>(null); // contains opening name of whatever is on board
     const [color, setColor] = useState<Color>("white"); 
 
+    const [lastSquare, setLastSquare] = useState<string | null>(null);
+
     // auto playing openings
     const [autoPlay, setAutoPlay] = useState<boolean>(false);
     const [autoPlayIdx, setAutoPlayIdx] = useState<number>(0);
@@ -55,6 +57,12 @@ const MainBody = () => {
             newHistory.push(gameCopy.fen());
             setHistory(newHistory);
             setCurrMove(currMove + 1);
+            
+            if (typeof move === "string") {
+                setLastSquare(move);
+            } else {
+                setLastSquare(move.to);
+            }
 
             if (isFirstMove) {
                 setMoveHistory([gameCopy.history()[0]]);
@@ -327,6 +335,8 @@ const MainBody = () => {
                             <Game 
                                 makeAMove = { makeAMove }
                                 onFinishFlashcards = { onFinishFlashcards }
+                                lastSquare = { lastSquare }
+                                setLastSquare={ setLastSquare }
                             />
                             <Toolbar 
                                 undo = { undo } 
