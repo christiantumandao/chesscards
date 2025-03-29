@@ -39,28 +39,24 @@ export const BoardStateContext = createContext<BoardStateContextType>({
 })
 
 export const PlayContext = createContext<PlayContextType>({
-    testMode: false,
+    playMode: "",
     testingFlashcards: [],
     flashcardIdx: 0,
     flashcardMoves: [],
     playerMoveIdx: 0,
-    flashGreen: false,
-    flashRed: false,
+    flash: "",
 
-    freestyle: false,
+
     trieHead: new Trie(),
     currTrie: new Trie(),
 
-
-    setTestMode: () => {},
+    setPlayMode: () => {},
     setTestingFlashcards: () => {},
     setFlashcardIdx: () => {},
     setFlashcardMoves: () => {},
     setPlayerMoveIdx: () => {},
-    setFlashGreen: () => {},
-    setFlashRed: () => {},
+    setFlash: () => {},
 
-    setFreestyle: () => {},
     setTrieHead: () => {},
     setCurrTrie: () => {}
 })

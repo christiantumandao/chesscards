@@ -20,7 +20,7 @@ const ToolbarFooter = ({restart, undo, redo }: ToolbarFooterProps) => {
     const [loadInErrorMessage, setLoadInErrorMessage] = useState<string>("");
     const [option, setOption] = useState<"pgn" | "fen" | "">("");
 
-    const { testMode, freestyle } = useContext(PlayContext);
+    const { playMode } = useContext(PlayContext);
     const { color, setColor, setGame, setMoveHistory, setHistory, setCurrMove } = useContext(BoardStateContext); 
     
     const currPath = useLocation();
@@ -155,7 +155,7 @@ const ToolbarFooter = ({restart, undo, redo }: ToolbarFooterProps) => {
             <div className="toolbar-footer">
                 <div className="buttons-container">
                     {
-                    (!testMode && !freestyle) ? 
+                    (playMode === "") ? 
                     <>
                         <button onClick = { restart }>
                             <FaRedo />

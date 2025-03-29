@@ -26,8 +26,8 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame
      } = useContext(BoardStateContext);
 
-    const { testMode, flashcardIdx, setFlashcardIdx, flashcardMoves, setFlashcardMoves, playerMoveIdx, setPlayerMoveIdx, testingFlashcards, flashGreen, flashRed, setFlashGreen, setFlashRed,
-            freestyle, currTrie, trieHead, setCurrTrie,
+    const { playMode, flashcardIdx, setFlashcardIdx, flashcardMoves, setFlashcardMoves, playerMoveIdx, setPlayerMoveIdx, testingFlashcards, flash, setFlash,
+            currTrie, trieHead, setCurrTrie,
      } = useContext(PlayContext);
 
      const { autoPlay } = useContext(AutoPlayContext);
@@ -51,35 +51,35 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
     // when using a flashcard, the bot must play first:
     useEffect(()=>{
         setTimeout(()=>{
-            if (testMode && color==='black' && playerMoveIdx===0 && flashcardMoves) {
+            if (playMode === "flashcards" && color==='black' && playerMoveIdx===0 && flashcardMoves) {
                 makeAMove(flashcardMoves[0]);
 
-            } else if (freestyle && color === 'black' && playerMoveIdx === 0 && currTrie) {
+            } else if (playMode === "freestyle" && color === 'black' && playerMoveIdx === 0 && currTrie) {
                 // making random move among children in currTrie node
                 const childrenArr = Object.keys(currTrie.children);
                 const randomIdx = Math.floor(Math.random() * childrenArr.length);
                 makeAMove(childrenArr[randomIdx]);
             }
         }, 1000);
-    },[testMode, freestyle, playerMoveIdx,
+    },[playMode, playerMoveIdx,
         flashcardMoves, color])
 
     // useEffect 2
     // for updating the title of opening is being played in toolbar
     // for checking and proceding in flashcard testing
     useEffect(()=> {
-        if (!testMode && !freestyle) {
+        if (playMode === "") {
             handleFindOpening(); 
-        } else if ((testMode || freestyle) && currPath.pathname === "/flashcards") {
+        } else if (currPath.pathname === "/flashcards") {
             const moveHistory = game.history();
             const move = moveHistory[moveHistory.length - 1];
             setTimeout(()=>{
                 if (game.fen() === startingFen) return;
-                else if (testMode) validateMove_flashcards(move);
-                else if (freestyle) validateMove_freestyle(move);
+                else if (playMode === "flashcards") validateMove_flashcards(move);
+                else if (playMode === "freestyle") validateMove_freestyle(move);
             }, animationSpeed)
         } 
-    },[game, currPath, testMode, freestyle]);
+    },[game, currPath, playMode]);
 
     const validateMove_freestyle = (move: string) => {
         if (!move) return;
@@ -95,7 +95,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
             }
 
         } else {
-            setFlashRed(true);
+            setFlash("red");
             incrementIncorrects();
             setPlayerMoveIdx(0);
             setGame(new Chess());
@@ -123,7 +123,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                 checkBot_flashcards();
             }
         } else {
-            setFlashRed(true);
+            setFlash("red");
             incrementIncorrects();
             setPlayerMoveIdx(0);
 
@@ -190,7 +190,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
 
     const onNextFreestyle = () => {
         setTimeout(()=>{
-            setFlashGreen(true);
+            setFlash("green");
             incrementCorrects();
     
             setGame(new Chess());
@@ -204,7 +204,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
 
     const onNextFlashcard = () => {
         setTimeout(()=>{
-            setFlashGreen(true);
+            setFlash("green");
             incrementCorrects();
 
             if ((flashcardIdx + 1) >= testingFlashcards.length) {
@@ -225,18 +225,6 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
             setPlayerMoveIdx(0);
         },500);
     }
-
-    useEffect(()=>{
-        setTimeout(()=>{
-            setFlashGreen(false);
-        },1000);
-    },[flashGreen]);
-
-    useEffect(()=>{
-        setTimeout(()=>{
-            setFlashRed(false);
-        },1000)
-    },[flashRed]);
     
   
    /* const findOpening = async () => {
@@ -285,10 +273,19 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
         if (move === null) return false;
         return true;
     } 
-    
+
+    useEffect(()=>{
+        if (flash !== "") {
+            setTimeout(()=> {
+                setFlash("");
+            },1000)
+        }
+    },[flash, setFlash])
+    console.log(flash);
     return (
         <div className="game-wrapper">
-            <div className={(flashGreen) ? "gamegui-container flash-green" : (flashRed) ? "gamegui-container flash-red" : "gamegui-container"}>
+            <div className={(flash === "green") ? "gamegui-container flash-green" : (flash==="red") ? "gamegui-container flash-red" : (flash === "") ? "gamegui-container" : "gamegui-container"}>
+
                 <Chessboard 
                     position = { game.fen() }
                     onPieceDrop = { onDrop }
@@ -298,7 +295,7 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                     animationDuration={ (autoPlay) ? animationSpeed : 
                         (
                             (autoPlay) || (
-                                (testMode || freestyle) && (
+                                (playMode !== "") && (
                                     (playerMoveIdx % 2 === 0 && color === "black") || 
                                     (playerMoveIdx % 2 !== 0 && color === "white")
                                 )
@@ -310,6 +307,9 @@ const Game = ({ makeAMove, onFinishFlashcards }: GameProps) => {
                     boardOrientation={(color==='both') ? 'white' : color}
                     customBoardStyle = { (window.innerWidth > 425) ?                  
                         { borderRadius: '5px' } : {} }
+                    arePremovesAllowed ={ true }
+                    customDropSquareStyle = {{ boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' }}
+                    arePiecesDraggable = { true }
                 />
             </div>
 

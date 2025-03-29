@@ -15,7 +15,7 @@ const ToolbarBodyHeader = () => {
     } = useContext(ToolbarContext);
 
     const { user } = useContext(UserContext);
-    const { testMode, freestyle } = useContext(PlayContext);
+    const { playMode } = useContext(PlayContext);
     const { folders, setFolders } = useContext(CardsContext);
 
 
@@ -78,7 +78,7 @@ const ToolbarBodyHeader = () => {
             <div className="folders-flashcards-button-container">
                 <button
                     className={(toolbarTab === "Flashcards") ? "flashcards-folders-btn-selected border-right" :"flashcards-folders-btn border-right"}
-                    disabled = { (toolbarTab === "Flashcards" || testMode || freestyle) }
+                    disabled = { (toolbarTab === "Flashcards" || playMode !== "") }
                     onClick = { () => {
                         setToolbarTab("Flashcards");
                         setCurrentFolder(null);
@@ -89,7 +89,7 @@ const ToolbarBodyHeader = () => {
                 </button>
                 <button
                     className={(toolbarTab === "Folders") ? "flashcards-folders-btn-selected" :"flashcards-folders-btn"}
-                    disabled = { (toolbarTab === "Folders" || testMode || freestyle) }
+                    disabled = { (toolbarTab === "Folders" || playMode !== "") }
                     onClick = { () => {
                         setToolbarTab("Folders");
                         setCurrentFolder(null);
@@ -122,12 +122,12 @@ const ToolbarBodyHeader = () => {
             }
 
             {
-                (toolbarTab === "FolderFocus" && !editFolderMode && user && !testMode && !freestyle) ?
+                (toolbarTab === "FolderFocus" && !editFolderMode && user && playMode === "") ?
                     <button onClick = { () => setEditFolderMode(true) }className="edit-folder-btn">
                         <FaRegEdit />
                     </button>
                 :  
-                (toolbarTab === "Flashcards" && !editFlashcardsMode && user && !testMode && !freestyle) ? 
+                (toolbarTab === "Flashcards" && !editFlashcardsMode && user && playMode === "") ? 
                     <button onClick = { () => setEditFlashcardsMode(true) }className="edit-folder-btn">
                         <FaRegEdit />
                     </button> 

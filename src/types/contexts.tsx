@@ -3,7 +3,7 @@ import { TabType } from "../components/NavBar/types"
 import { Flashcard, Folder, UserData } from "./db"
 import { Chess } from "chess.js"
 import { Trie } from "../util/Trie"
-import { Color } from "./states"
+import { Color, PlayModeType } from "./states"
 import { ToolbarTab } from "../components/Toolbar/types"
 
 export interface CardsContextType {
@@ -41,28 +41,23 @@ export interface BoardStateContextType {
 }
 
 export interface PlayContextType {
-    testMode: boolean,
+    playMode: PlayModeType,
     testingFlashcards: Flashcard[],
     flashcardIdx: number,
     flashcardMoves: string[],
     playerMoveIdx: number,
-    flashGreen: boolean,
-    flashRed: boolean,
+    flash: "red" | "green" | "",
 
-    freestyle: boolean,
     trieHead: Trie,
     currTrie: Trie,
 
-
-    setTestMode: (newVal: boolean) => void,
+    setPlayMode: (newVal: PlayModeType) => void,
     setTestingFlashcards: (newVal: Flashcard[]) => void,
     setFlashcardIdx: (newVal: number) => void,
     setFlashcardMoves: (newVal: string[]) => void,
     setPlayerMoveIdx: (newVal: number) => void,
-    setFlashGreen: (newVal: boolean) => void,
-    setFlashRed: (newVal: boolean) => void,
+    setFlash: (newVal: "red" | "green" | "") => void,
 
-    setFreestyle: (newVal: boolean) => void,
     setTrieHead: (newVal: Trie) => void,
     setCurrTrie: (newVal: Trie) => void
 }

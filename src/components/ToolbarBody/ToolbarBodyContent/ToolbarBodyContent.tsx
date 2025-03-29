@@ -23,7 +23,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
     const { currentFolder, setCurrentFolder, 
             toolbarTab, editFlashcardsMode } = useContext(ToolbarContext);
     const { user } = useContext(UserContext);
-    const { freestyle } = useContext(PlayContext);
+    const { playMode } = useContext(PlayContext);
     const { game, moveHistory } = useContext(BoardStateContext);
 
 
@@ -189,10 +189,10 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
             (toolbarTab === "Folders" && currPath.pathname === "/flashcards") ?             
                 <Folders />          
             :
-            (toolbarTab === "FolderFocus" && currentFolder && currPath.pathname === "/flashcards" && !freestyle) ?
+            (toolbarTab === "FolderFocus" && currentFolder && currPath.pathname === "/flashcards" && playMode !== "freestyle") ?
                 getFolderContents()
             :
-            (freestyle) ? 
+            (playMode === "freestyle") ? 
                 showMoveHistory() 
             :
             (flashcards && currPath.pathname === "/flashcards") ?

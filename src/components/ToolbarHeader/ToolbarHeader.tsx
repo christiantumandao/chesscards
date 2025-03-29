@@ -38,7 +38,7 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
 
     const { game, currOpening, moveHistory, currMove } = useContext(BoardStateContext);
     const { addOpeningsToFolder, toolbarTab } = useContext(ToolbarContext);
-    const { testMode, freestyle }= useContext(PlayContext);
+    const { playMode }= useContext(PlayContext);
     const { flashcards, setFlashcards }= useContext(CardsContext);
     const { user }= useContext(UserContext);
     const { tab }= useContext(TabContext);
@@ -46,14 +46,14 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
 
     // if the current position changes, then currOpening will change, and so add showAddButton
     useEffect(()=> {
-        if (game.fen() === startingFen || testMode || freestyle) setShowAddButton(false);
+        if (game.fen() === startingFen || playMode !== "") setShowAddButton(false);
         else if (flashcards.some((flashcard) => flashcard.fen === game.fen())) {
             setShowAddButton(false);
         } else {
             setShowAddButton(true);
         }
 
-    },[currOpening, flashcards, game, testMode, freestyle])
+    },[currOpening, flashcards, game, playMode])
 
     const addOpening = async () => {
         if (!user) {
@@ -120,10 +120,10 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
                 }
 
             <div className="toolbar-description">
-                { (freestyle) ? "Freestyle Aracde" : (currOpening) ? formatName(currOpening) : (game.fen() !== startingFen) ? formatCustomMoveHistory(moveHistory, currMove) : null }
+                { (playMode === "freestyle") ? "Freestyle Aracde" : (currOpening) ? formatName(currOpening) : (game.fen() !== startingFen) ? formatCustomMoveHistory(moveHistory, currMove) : null }
 
                 {
-                    (freestyle) ? null :
+                    (playMode === "freestyle") ? null :
                     (showAddButton) ?           
                         <button 
                         className={(isAddLoading) ? "hidden" : "add-opening-btn"}

@@ -13,7 +13,7 @@ interface FolderFocusProps {
 const FolderFocus = ({deleteFlashcard}: FolderFocusProps) => {
 
     const { currentFolder, addOpeningsToFolder, setAddOpeningsToFolder, toolbarTab, editFolderMode } = useContext(ToolbarContext); 
-    const { testMode, freestyle } = useContext(PlayContext);
+    const { playMode } = useContext(PlayContext);
     const { user } = useContext(UserContext);
 
     const [showSignInMsg, setShowSignInMsg] = useState(false);
@@ -29,7 +29,7 @@ const FolderFocus = ({deleteFlashcard}: FolderFocusProps) => {
 
     const getAddToFolderElement = () => {
         return (
-            (addOpeningsToFolder || editFolderMode || testMode || freestyle) ? null :
+            (addOpeningsToFolder || editFolderMode || playMode !== "") ? null :
             <button 
                 onClick = { ()=> (user) ? setAddOpeningsToFolder(true) : setShowSignInMsg(true) }
                 className="add-folder-wrapper">

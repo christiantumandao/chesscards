@@ -17,7 +17,7 @@ interface TopHeaderPlayProps {
 
 const TopHeaderPlay = ({ handleBegin, handleSkip, handleFreestyle, onFinishFlashcards }: TopHeaderPlayProps) => {
 
-    const { testMode, freestyle } = useContext(PlayContext);
+    const { playMode } = useContext(PlayContext);
     const { color, setColor } = useContext(BoardStateContext);
     const { flashcards, setFlashcards } = useContext(CardsContext);
     const { editFlashcardsMode, editFolderMode } = useContext(ToolbarContext);
@@ -26,7 +26,7 @@ const TopHeaderPlay = ({ handleBegin, handleSkip, handleFreestyle, onFinishFlash
         <div className="selectcolor-container">
                     
             {
-                (testMode || freestyle) ? 
+                (playMode !== "") ? 
                     <>
                         <div className="playing-as">
                             <p>Playing as:</p>
@@ -43,7 +43,7 @@ const TopHeaderPlay = ({ handleBegin, handleSkip, handleFreestyle, onFinishFlash
                         </div>
 
                         {
-                            (!freestyle) ? 
+                            (playMode !== "freestyle") ? 
                                 <button
                                     className="skip-btn"
                                     onClick = { handleSkip }

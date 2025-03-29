@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useContext, useMemo } from "react";
 import { Flashcard } from "../../types/db";
 import { Chess } from "chess.js";
 import { Trie } from "../../util/Trie";
-import { Color, MoveVerbose } from "../../types/states"; 
+import { Color, MoveVerbose, PlayModeType } from "../../types/states"; 
 import { AutoPlayContext, BoardStateContext, CardsContext, PlayContext, startingFen, TabContext } from "../../util/contexts";
 import { incrementIncorrects } from "../../services/userSetters";
 import Game from "../Game/Game";
@@ -29,17 +29,17 @@ const MainBody = () => {
     const [autoPlayMoves, setAutoPlayMoves] = useState<string[]>([]);
 
     // for playing flashcards
+    const [playMode, setPlayMode] = useState<PlayModeType>("");
+
     const [testingFlashcards, setTestingFlashcards] = useState<Flashcard[]>([]); 
     const [flashcardIdx, setFlashcardIdx] = useState<number>(0);            // idx for testingFlashcards
     const [flashcardMoves, setFlashcardMoves] = useState<string[]>([]);
     const [playerMoveIdx, setPlayerMoveIdx] = useState<number>(0);          // the move idx in testing a flashcard
-    const [testMode, setTestMode] = useState<boolean>(false);
-    const [flashGreen, setFlashGreen] = useState<boolean>(false);
-    const [flashRed, setFlashRed] = useState<boolean>(false);
+    const [flash, setFlash] = useState<"green" | "red" | "">("");
 
-    const [freestyle, setFreestyle] = useState<boolean>(false);
     const [trieHead, setTrieHead] = useState<Trie>(new Trie());
     const [currTrie, setCurrTrie] = useState<Trie>(new Trie());
+
 
     const { flashcards } = useContext(CardsContext);
 
@@ -91,11 +91,11 @@ const MainBody = () => {
             }
         }
 
-        if (!testMode && autoPlay && autoPlayIdx <= autoPlayMoves.length) {
+        if (playMode === "" && autoPlay && autoPlayIdx <= autoPlayMoves.length) {
             autoPlayMove();
         }
 
-    },[game, testMode, autoPlay, autoPlayIdx, autoPlayMoves, makeAMove])
+    },[game, playMode, autoPlay, autoPlayIdx, autoPlayMoves, makeAMove])
 
     // incase user changes tab in middle of autoplaying an opening or playing flashcards
     useEffect(()=>{
@@ -112,13 +112,12 @@ const MainBody = () => {
         setMoveHistory([]);
         setCurrMove(0);
 
-        setTestMode(false);
+        setPlayMode("");
         setTestingFlashcards([]);
         setFlashcardIdx(0);
         setFlashcardMoves([]);
         setPlayerMoveIdx(0);
 
-        setFreestyle(false);
         setCurrTrie(new Trie());
         setTrieHead(new Trie());
 
@@ -135,10 +134,9 @@ const MainBody = () => {
         }
         
         setColor(color);
-        setFreestyle(true);
         setTrieHead(head);
         setCurrTrie(head);
-        setTestMode(false); //double check
+        setPlayMode("freestyle"); //double check
         setPlayerMoveIdx(0);
         setGame(new Chess());
         setMoveHistory([]);
@@ -155,7 +153,7 @@ const MainBody = () => {
         }
         const firstMoveSet = parseMovesIntoArray(flashcardsToTest[0].moves);
         setTestingFlashcards(flashcardsToTest);
-        setTestMode(true);
+        setPlayMode("flashcards");
         setFlashcardIdx(0);
         setFlashcardMoves(firstMoveSet);
         setPlayerMoveIdx(0);
@@ -170,7 +168,7 @@ const MainBody = () => {
 
     const handleSkip = () => {
 
-        setFlashRed(true);
+        setFlash("red");
         incrementIncorrects();
 
         if ((flashcardIdx + 1) >= testingFlashcards.length) {
@@ -245,9 +243,9 @@ const MainBody = () => {
     useEffect(() => {
 
         const handleKeyPress = (event: KeyboardEvent) => {
-            if (event.key === 'ArrowLeft' && !testMode && !freestyle) {
+            if (event.key === 'ArrowLeft' && playMode === "") {
                 undo();
-            } else if (event.key === 'ArrowRight' && !testMode && !freestyle) {
+            } else if (event.key === 'ArrowRight' && playMode === "") {
                 redo();
                 }
     
@@ -259,7 +257,8 @@ const MainBody = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
             };
-    },[testMode, freestyle, currMove]);
+    },[playMode, currMove]);
+    
 
     const boardContextProviderValue = useMemo(()=> ({
         game: game,
@@ -290,33 +289,30 @@ const MainBody = () => {
       } as AutoPlayContextType),[autoPlay, autoPlayIdx, autoPlayMoves]);
 
     const playContextProviderValue = useMemo(()=> ({
-        testMode: testMode,
         testingFlashcards: testingFlashcards,
         flashcardIdx: flashcardIdx,
         flashcardMoves: flashcardMoves,
         playerMoveIdx: playerMoveIdx,
-        
-        flashGreen: flashGreen,
-        flashRed: flashRed,
 
-        freestyle: freestyle,
+        flash: flash,
+
         trieHead: trieHead,
         currTrie: currTrie,
 
+        playMode: playMode,
+        
 
-        setTestMode: setTestMode,
+        setFlash: setFlash,
         setTestingFlashcards: setTestingFlashcards,
         setFlashcardIdx: setFlashcardIdx,
         setFlashcardMoves: setFlashcardMoves,
         setPlayerMoveIdx: setPlayerMoveIdx,
-        setFlashGreen: setFlashGreen,
-        setFlashRed: setFlashRed,
 
-        setFreestyle: setFreestyle,
         setTrieHead: setTrieHead,
-        setCurrTrie: setCurrTrie
-    } as PlayContextType),[testMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx,
-        freestyle, trieHead, currTrie
+        setCurrTrie: setCurrTrie,
+        setPlayMode: setPlayMode
+    } as PlayContextType),[playMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx,
+        trieHead, currTrie, flash
     ]);
 
 

@@ -22,7 +22,7 @@ const Flashcard = (props: FlashcardProps) => {
             editFlashcard } = props;
 
     const { flashcards, setFlashcards, folders, setFolders } = useContext(CardsContext);
-    const { freestyle, testMode, flashcardIdx } = useContext(PlayContext);
+    const { playMode, flashcardIdx } = useContext(PlayContext);
     const { autoPlayOpening } = useContext(AutoPlayContext);
     const { currentFolder, setCurrentFolder, toolbarTab, editFlashcardsMode } = useContext(ToolbarContext);
     const { user } = useContext(UserContext);
@@ -64,7 +64,7 @@ const Flashcard = (props: FlashcardProps) => {
                     { (flashcard) ? parseName() : null}
                 </h4>
                 <p>
-                    {(testMode || freestyle) ? null : flashcard.moves }
+                    {(playMode !== "") ? null : flashcard.moves }
                 </p>
             </>
         )
@@ -203,9 +203,9 @@ const Flashcard = (props: FlashcardProps) => {
 
     return (
         <div 
-            className={(isLoading) ? "shimmer flashcard-wrapper" : (testMode && idx === flashcardIdx) ? "flashcard-wrapper flashcard-highlight" : "flashcard-wrapper"} 
+            className={(isLoading) ? "shimmer flashcard-wrapper" : (playMode === "flashcards" && idx === flashcardIdx) ? "flashcard-wrapper flashcard-highlight" : "flashcard-wrapper"} 
             onClick ={ () => {
-                if (!testMode && !freestyle) autoPlayOpening(flashcard)
+                if (playMode === "") autoPlayOpening(flashcard)
             }}>
           
             
