@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useContext, useMemo } from "react";
 import { Flashcard } from "../../types/db";
-import { Chess } from "chess.js";
+import { Chess, Move } from "chess.js";
 import { Trie } from "../../util/Trie";
 import { Color, MoveVerbose, PlayModeType } from "../../types/states"; 
 import { AutoPlayContext, BoardStateContext, CardsContext, PlayContext, startingFen, TabContext } from "../../util/contexts";
@@ -9,7 +9,6 @@ import Game from "../Game/Game";
 import Toolbar from "../Toolbar/Toolbar";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { AutoPlayContextType, BoardStateContextType, PlayContextType } from "../../types/contexts";
-
 
 const MainBody = () => {
 
@@ -22,6 +21,7 @@ const MainBody = () => {
     const [currMove, setCurrMove] = useState<number>(0);                      // used for tracking player history
     const [currOpening, setCurrOpening]= useState<Flashcard | null>(null); // contains opening name of whatever is on board
     const [color, setColor] = useState<Color>("white"); 
+    const [lastMove, setLastMove] = useState<Move | undefined>(undefined); // this is for sound effects
 
     const [lastSquare, setLastSquare] = useState<string | null>(null);
 
@@ -42,15 +42,47 @@ const MainBody = () => {
     const [trieHead, setTrieHead] = useState<Trie>(new Trie());
     const [currTrie, setCurrTrie] = useState<Trie>(new Trie());
 
+    const moveAudio = useMemo( () => (
+        new Audio("/src/assets/sounds/move-self.mp3")
+    ),[]);
+    const checkAudio = useMemo( () => (
+        new Audio("/src/assets/sounds/check.mp3")
+    ),[]);
+    const castleAudio = useMemo( () => (
+        new Audio("/src/assets/sounds/castle.mp3")
+    ),[]);
+    const captureAudio = useMemo( () => (
+        new Audio("/src/assets/sounds/capture.mp3")
+    ),[]);
+
 
     const { flashcards } = useContext(CardsContext);
+
+    useEffect(()=> {
+        if (game.fen() === startingFen) {
+            
+        }
+        else if (game.isCheck() || game.isCheckmate()) {
+            checkAudio.play();
+        }
+        else if (lastMove?.isCapture()) {
+            captureAudio.play();
+        } else if (moveHistory && currMove >= 0 && currMove < moveHistory.length && moveHistory[currMove].includes("x") ||
+            (lastMove?.isKingsideCastle() || lastMove?.isQueensideCastle())) {
+            moveAudio.play();
+        } else {
+            moveAudio.play();
+        }
+
+    },[game, lastMove, currMove]);
 
 
     const  makeAMove = useCallback( (move: MoveVerbose | string) => {
         try {
             const isFirstMove = (game.fen() === startingFen);
             const gameCopy = new Chess(game.fen());
-            gameCopy.move(move);
+            const moveObject = gameCopy.move(move);
+            setLastMove(moveObject);
             setGame(gameCopy);
 
             const newHistory = history.slice(0, currMove + 1);
@@ -228,8 +260,14 @@ const MainBody = () => {
     const redo = () => {
         if (currMove === history.length - 1) return;
         else {
-            setCurrMove(currMove + 1);
-            setGame(new Chess(history[currMove + 1]));
+
+            const newCurrMove = currMove + 1;
+            const newGame = new Chess(game.fen());
+            const newLastMove = newGame.move(moveHistory[currMove]);
+
+            setCurrMove(newCurrMove);
+            setGame(newGame);
+            setLastMove(newLastMove);
         }
     }
 
@@ -237,13 +275,16 @@ const MainBody = () => {
         if (currMove === 0) return;
         else if (currMove === 1) {
             setCurrMove(0);
-            setGame(new Chess());
+            setGame(new Chess());  
+            setLastMove(undefined);
         }
         else {
             setCurrMove(currMove -1);
 
             const prevMove = history[currMove - 1];
-            setGame(new Chess(prevMove));
+            const newGame = new Chess(prevMove);
+            setGame(newGame);
+            setLastMove(undefined);
         }
     }
 
