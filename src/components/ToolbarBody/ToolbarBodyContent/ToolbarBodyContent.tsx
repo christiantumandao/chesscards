@@ -197,7 +197,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
             :
             (flashcards && currPath.pathname === "/flashcards") ?
                 getFlashcards()
-        
+            
             // if searched, none found
             /*: (searchResults && searchResults.length === 1 && currPath.pathname === "/" && searchResults[0] === "empty" && !currOpening) ?
                 <h1 className="empty-query-message">

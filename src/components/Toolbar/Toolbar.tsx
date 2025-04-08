@@ -17,9 +17,8 @@ interface ToolbarProps {
     redo: () => void,
     restart: () => void, 
     handleSkip: () => void,
-    beginFreestyle: (color: Color, head: Trie) => void,
-    testFlashcards: (color: Color, flashcardsToTest: Flashcard[]) => void,
-    onFinishFlashcards: () => void
+    beginFreestyle: (color: Color, head: Trie, folderName: 0 | string) => void,
+    testFlashcards: (color: Color, flashcardsToTest: Flashcard[], setName: string | 0) => void,
 }
 
 const Toolbar = (props: ToolbarProps) => {
@@ -27,7 +26,7 @@ const Toolbar = (props: ToolbarProps) => {
     const { undo, redo, restart,
             handleSkip,
 
-            beginFreestyle, testFlashcards, onFinishFlashcards,
+            beginFreestyle, testFlashcards,
     } = props;
 
     const { color } = useContext(BoardStateContext);
@@ -35,9 +34,8 @@ const Toolbar = (props: ToolbarProps) => {
     const { flashcards } = useContext(CardsContext);
     const { setTrieHead } = useContext(PlayContext)
 
-    const [searchResults, setSearchResults] = useState<Flashcard[]>([]);
-
     const [toolbarTab, setToolbarTab] = useState<ToolbarTab>("Flashcards");
+    const [searchResults, setSearchResults] = useState<Flashcard[]>([]);
 
     const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
 
@@ -82,7 +80,9 @@ const Toolbar = (props: ToolbarProps) => {
         if (toolbarTab === "FolderFocus" && currentFolder && currentFolder.openings.length > 0) head = buildTrie(currentFolder?.openings);
         else head = buildTrie(flashcards);  
         setTrieHead(head);
-        beginFreestyle(color, head);
+
+        const folderName = (currentFolder) ? currentFolder.name:0;
+        beginFreestyle(color, head,folderName);
 
     }
 
@@ -90,8 +90,8 @@ const Toolbar = (props: ToolbarProps) => {
 
     const handleBegin = () => {
         if (toolbarTab === "FolderFocus" && (!currentFolder || currentFolder.openings.length === 0)) return;
-        if (toolbarTab === "FolderFocus" && currentFolder && currentFolder.openings.length > 0) testFlashcards(color, currentFolder.openings);
-        else testFlashcards(color, flashcards);
+        if (toolbarTab === "FolderFocus" && currentFolder && currentFolder.openings.length > 0) testFlashcards(color, currentFolder.openings, currentFolder.name);
+        else testFlashcards(color, flashcards, 0);
     }
 
 
@@ -105,7 +105,6 @@ const Toolbar = (props: ToolbarProps) => {
                 <ToolbarHeader 
                     setSearchResults = { setSearchResults }
                     handleBegin = { handleBegin }
-                    onFinishFlashcards = { onFinishFlashcards }
                     handleFreestyle = { handleFreestyle }
                     handleSkip = { handleSkip }
                     setIsSearchLoading = { setIsSearchLoading }

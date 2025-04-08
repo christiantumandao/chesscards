@@ -5,6 +5,7 @@ import { db } from "../../../../../firebase.config";
 import { doc, setDoc } from "@firebase/firestore";
 import { validateFolderName } from "../../../../../util/validate";
 import { CardsContext, UserContext } from "../../../../../util/contexts";
+import { Folder } from "../../../../../types/db";
 
 interface CreateFolderProps {
     setShowAddFolder: (val: boolean) => void
@@ -50,8 +51,10 @@ const CreateFolder = (props: CreateFolderProps) => {
                 name: folderName,
                 openings: [
 
-                ]
-            };
+                ],
+                arcadeHighscore: 0,
+                flashcardsHighscore: -1,
+            } as Folder;
 
             await setDoc(docRef, folderToAdd);
 

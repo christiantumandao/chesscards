@@ -6,7 +6,7 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { db } from "../../../../firebase.config";
 import { doc, setDoc } from "@firebase/firestore";
 import { AutoPlayContext, CardsContext, PlayContext, ToolbarContext, UserContext } from "../../../../util/contexts";
-import { Flashcard as FlashcardType } from "../../../../types/db";
+import { Flashcard as FlashcardType, Folder } from "../../../../types/db";
 
 interface FlashcardProps {
     flashcard: FlashcardType,
@@ -24,7 +24,7 @@ const Flashcard = (props: FlashcardProps) => {
     const { flashcards, setFlashcards, folders, setFolders } = useContext(CardsContext);
     const { playMode, flashcardIdx } = useContext(PlayContext);
     const { autoPlayOpening } = useContext(AutoPlayContext);
-    const { currentFolder, setCurrentFolder, toolbarTab, editFlashcardsMode } = useContext(ToolbarContext);
+    const { currentFolder, setCurrentFolder, toolbarTab, editFlashcardsMode, editFolderMode } = useContext(ToolbarContext);
     const { user } = useContext(UserContext);
 
     const [editName, setEditName] = useState(false);
@@ -132,11 +132,13 @@ const Flashcard = (props: FlashcardProps) => {
 
             const newFolder = {
                 name: currentFolder.name,
+                flashcardsHighscore: currentFolder.flashcardsHighscore,
+                arcadeHighscore: currentFolder.arcadeHighscore,
                 openings: currentFolder.openings.map((opening) => {
                 if (opening.moves === flashcard.moves) {
                     return {...opening, name: newName};
                 } else return opening;
-            })}
+            })} as Folder;
 
             await setDoc(ref, newFolder)
 
@@ -219,7 +221,7 @@ const Flashcard = (props: FlashcardProps) => {
             </div>
 
             {
-                (editName && editFlashcardsMode) ?
+                (editName && (editFlashcardsMode || editFolderMode)) ?
                     getEditFlashcardButton() :
                     getFlashcardButtons()
             }

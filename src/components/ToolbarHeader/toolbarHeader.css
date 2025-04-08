@@ -69,7 +69,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: stretch;
-    padding: 10px
+    padding: 15px 10px;
 
 }
 
@@ -100,7 +100,6 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     min-width: 100px;
 }
 
-.search-btns > input,
 .search-btns > button,
 .search-select > select {
     background-color: transparent;
@@ -195,13 +194,13 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 }
 
 
-/* testing styles*/
+/* testing options styles*/
 
 .selectcolor-container {
     width: 100%;
     height: var(--toolbarTopHeaderHeight);
     min-height: var(--toolbarTopHeaderHeight);
-    padding: 10px;
+    padding: 10px 0;
 
     display: flex;
     flex-direction: row;
@@ -209,39 +208,36 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     align-items: center;
 }
 
-.selectcolor-container > select,
-.selectcolor-container > button,
-.freestyle-container  > button {
+.selectcolor-container .begin-test {
+    background-color: var(--green);
+    margin: 0;
+    margin-right: auto;
+
+}
+
+.selectcolor-container > * {
+    margin: 0 5px;
+}
+
+.selectcolor-container > div:first-child {
+    margin-left: 15px;
+}
+
+.selectcolor-container > div:last-child,
+.selectcolor-container > button:last-child {
+    margin-right: 15px;
+}
+
+.selectcolor-container select,
+.selectcolor-container button,
+.freestyle-container button {
     border: var(--border);
     background-color: var(--darkGrey);
     border-radius: 5px;
     color: white;
     font-size: 14px;
     font-weight: bolder;
-    padding: 6px;
-    height: 100%;
-}
-
-.freestyle-container {
-    height: 100%;
-    margin-right: 8px;
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    justify-content: center;
-}
-.freestyle-container > button {
-    margin-left: 4px;
-}
-.freestyle-container > svg {
-    align-self: center;
-}
-
-.tooltip a {
-    color: white;
-}
-.tooltip a:hover {
-    color: gray;
+    padding: 10px 6px;
 }
 
 .select-element {
@@ -249,13 +245,10 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     height: 100%;
     width: auto;
 
-    border: var(--border);
-    border-radius: 5px;
-    background-color: var(--darkGrey);
-    color: white;
-
-    border-radius: 5px;
     position: relative;
+
+    display: flex;
+    flex-direction: row;
 }
 
 .select-element > select {
@@ -268,12 +261,17 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     padding-right: 28px;
     font-size: 14px;
     font-weight: bolder;
+
+    border: var(--border);
+    border-radius: 5px;
+    background-color: var(--darkGrey);
+    color: white;
+
+    border-radius: 5px;
 }
 
-.select-element > select:focus {
-    outline: none;
-}
 
+/* down arrow for select element */
 .select-element > svg {
     font-size: 12px;
     position: absolute;
@@ -281,27 +279,55 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     top: 50%;
 
     transform: translateY(-50%);
-    
 }
 
-.selectcolor-container > select:focus {
-    outline: none;
-}
-.selectcolor-container > button:hover,
-.select-element > select:hover,
-.freestyle-container  > button:hover {
+.selectcolor-container button:hover,
+.selectcolor-container select:hover {
     background-color: var(--hoverHighlightDarkGrey);
 }
 
-.selectcolor-container > button.begin-test:hover {
+.selectcolor-container select:focus {
+    outline: none;
+}
+
+.selectcolor-container button.begin-test:hover {
     color: white;
     border: 1px solid var(--green);
     background-color: var(--hoverHighlightGreen);
     
 }
 
+/* testing styles */
+
+.score-container {
+    width: auto;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.score-container label:first-child {
+    margin-right: 25px;
+}
+
+.score-container label,
+.selectcolor-element label {
+    font-size: 14px;
+}
+
+.selectcolor-element svg {
+    font-size: 12px;
+}
+
+.timer-container {
+    font-weight: bolder;
+    font-size: 20px;
+}
+
 button.exit-test {
-    margin-left: 10px;
     background-color: var(--red);
     border: 1px solid var(--lightRed);
 }
@@ -311,32 +337,11 @@ background-color: rgba(255,0,0,.3);
 border: 1px solid var(--red);
 }
 
-button.begin-test {
-    background-color: var(--green);
-    margin: 0;
-    margin-right: auto;
-
+.skip-btn {
+    margin-left: auto;
 }
 
-.playing-as {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: auto;
-    font-size: 16px;
-    margin-right: auto;
 
-}
-
-.selectcolor-container span {
-    font-weight: bolder;
-    margin-left: .5ch;
-    font-size: 16px;
-}
-.selectcolor-container span.black {
-    color: rgb(100,100,100);
-}
 
 
 

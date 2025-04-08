@@ -157,3 +157,22 @@ div > button.border-right {
 .buttons-container > button:hover {
     background-color: var(--hoverHighlightDarkGrey);
 }
+
+.body-header-highscore-container {
+    height: auto;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.body-header-highscore-container > div:first-child {
+    border-right: var(--border);
+    padding-right: 20px;
+}
+
+.body-header-highscore-container > div {
+    margin-right: 20px;
+}

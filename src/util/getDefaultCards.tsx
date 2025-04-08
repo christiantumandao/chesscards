@@ -33,6 +33,8 @@ export const getDefaultFolders = (): Folder[] => {
         
             {
                 name: "King's Pawn Openings",
+                flashcardsHighscore: -1,
+                arcadeHighscore:  0,
                 openings: [
                     {
                         eco: "C44",
@@ -53,9 +55,11 @@ export const getDefaultFolders = (): Folder[] => {
                         name: "King's Gambit Accepted: Modern Defense"
                     }
                 ]
-            },
+            } as Folder,
             {
                 name: "Queen's Pawn Openings",
+                flashcardsHighscore: -1,
+                arcadeHighscore:  0,
                 openings: [
                     {
                         eco: "D02",
@@ -76,7 +80,7 @@ export const getDefaultFolders = (): Folder[] => {
                         name: "Dutch: Queen's Knigh Variation"
                     }
                 ]
-            }
+            } as Folder
 
         ] as Folder[]) ;
 }

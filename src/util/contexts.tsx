@@ -46,9 +46,23 @@ export const PlayContext = createContext<PlayContextType>({
     playerMoveIdx: 0,
     flash: "",
 
+    localFlashcardsHighscore: -1, 
+    localFreestyleHighscore: 0,
+    setLocalFlashcardsHighscore: () => {}, 
+    setLocalFreestyleHighscore: () => {},
+
 
     trieHead: new Trie(),
     currTrie: new Trie(),
+
+    inGameCorrects: 0,
+    setInGameCorrects: () => {},
+
+    time: 0,
+    setTime: () => {},
+
+    testingSetName: 0,
+    setTestingSetName: () => {},
 
     setPlayMode: () => {},
     setTestingFlashcards: () => {},
@@ -58,7 +72,10 @@ export const PlayContext = createContext<PlayContextType>({
     setFlash: () => {},
 
     setTrieHead: () => {},
-    setCurrTrie: () => {}
+    setCurrTrie: () => {},
+    onFinishFlashcards: () => {},
+    onFinishFreestyle: () => {},
+    setHasSkippedFlashcard: () => {}
 })
 
 export const startingFen: string = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

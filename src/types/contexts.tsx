@@ -51,15 +51,30 @@ export interface PlayContextType {
     trieHead: Trie,
     currTrie: Trie,
 
+    testingSetName: 0 | string,
+    setTestingSetName: (val: 0 | string) => void,
+
+    localFlashcardsHighscore: number, 
+    localFreestyleHighscore: number,
+    setLocalFlashcardsHighscore: (val: number) => void, 
+    setLocalFreestyleHighscore: (val: number) => void,
+
     setPlayMode: (newVal: PlayModeType) => void,
+    inGameCorrects: number,
+    setInGameCorrects: (newVal: number) => void,
     setTestingFlashcards: (newVal: Flashcard[]) => void,
     setFlashcardIdx: (newVal: number) => void,
     setFlashcardMoves: (newVal: string[]) => void,
     setPlayerMoveIdx: (newVal: number) => void,
     setFlash: (newVal: "red" | "green" | "") => void,
 
+    setHasSkippedFlashcard: (newVal: boolean) => void,
     setTrieHead: (newVal: Trie) => void,
-    setCurrTrie: (newVal: Trie) => void
+    setCurrTrie: (newVal: Trie) => void,
+    onFinishFlashcards: (setCurrentFolder?: (newFolder: Folder) => void) => void,
+    onFinishFreestyle: (setCurrentFolder?: (val: Folder) => void) => void,
+    time: number,
+    setTime: (newVal: any) => void
 }
 
 export interface AutoPlayContextType {

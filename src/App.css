@@ -12,7 +12,7 @@
   --mobileNavIconHeight: 48px;
 
   --toolbarTitleHeight: 48px;
-  --toolbarTopHeaderHeight: 58px;
+  --toolbarTopHeaderHeight: 68px;
 
   --btnRadius: 5px;
   --defaultRadius: 10px;
@@ -171,6 +171,8 @@ input:focus, textarea:focus {
 .tooltip {
   visibility: hidden;
   position: absolute;
+  left: -40px;
+  top: 0;
   z-index: 200;
   
   height: auto;
@@ -178,7 +180,7 @@ input:focus, textarea:focus {
   max-width: none;
   text-align: center;
 
-  padding: 6px;
+  padding: 2px 6px;
   border-radius: 3px;
 
   font-size: 12px;
@@ -196,10 +198,21 @@ input:focus, textarea:focus {
 }
 
 .tooltip-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: .2s;
+    transition: .2s;
+    position: relative;
+  }
+
+.tooltip-container svg {
+    font-size: 22px;
+}
+
+.tooltip a {
+    font-size: 12px;
+    font-weight: 400;
+    color: white;
+}
+.tooltip a:hover {
+    color: gray;
 }
 
 .tooltip-container:hover {

@@ -20,19 +20,18 @@ const transitionSpeed = 750;
 
 interface GameProps {
     makeAMove: (newMove: MoveVerbose | string) => void
-    onFinishFlashcards: () => void
     lastSquare: string | null
-    setLastSquare: (newVal: string | null) => void
+    setLastSquare: (newVal: string | null) => void,
 }
 
-const Game = ({ makeAMove, onFinishFlashcards, lastSquare, setLastSquare }: GameProps) => {
+const Game = ({ makeAMove, lastSquare, setLastSquare }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame
      } = useContext(BoardStateContext);
 
     const { playMode, flashcardIdx, setFlashcardIdx, flashcardMoves, setFlashcardMoves, playerMoveIdx, setPlayerMoveIdx, testingFlashcards, flash, setFlash,
-            currTrie, trieHead, setCurrTrie,
+            currTrie, trieHead, setCurrTrie, setInGameCorrects, inGameCorrects, onFinishFlashcards
      } = useContext(PlayContext);
 
      const { autoPlay } = useContext(AutoPlayContext);
@@ -204,6 +203,8 @@ const Game = ({ makeAMove, onFinishFlashcards, lastSquare, setLastSquare }: Game
         setFlash("green");
         triggerCorrectAnimation();
         incrementCorrects();
+        setInGameCorrects(inGameCorrects + 1);
+        
     
         setTimeout(()=>{
             setGame(new Chess());
@@ -219,12 +220,15 @@ const Game = ({ makeAMove, onFinishFlashcards, lastSquare, setLastSquare }: Game
         setFlash("green");
         triggerCorrectAnimation();
         incrementCorrects();
+        setInGameCorrects(inGameCorrects + 1);
 
         setTimeout(()=>{
             if ((flashcardIdx + 1) >= testingFlashcards.length) {
                 onFinishFlashcards();
                 return;
+
             }
+
             const idx = flashcardIdx+1;
             const newFlashcard = testingFlashcards[idx];
             const newMoves = parseMovesIntoArray(newFlashcard.moves);

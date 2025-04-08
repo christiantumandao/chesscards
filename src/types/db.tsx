@@ -8,7 +8,9 @@ export interface Flashcard {
 
 export interface Folder {
     name: string,
-    openings: Flashcard[]
+    openings: Flashcard[],
+    arcadeHighscore: number,
+    flashcardsHighscore: number
 }
 
 export interface UserData {
@@ -19,4 +21,6 @@ export interface UserData {
     added: number,
     incorrect: number,
     correct: number,
+    flashcardsHighscore: number,
+    arcadeHighscore: number,
 }

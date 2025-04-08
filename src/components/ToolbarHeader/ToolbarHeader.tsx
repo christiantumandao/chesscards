@@ -18,16 +18,14 @@ import TopHeaderExplore from "./TopHeaderExplore";
 interface ToolbarHeaderProps {
     setSearchResults: (newVal: Flashcard[]) => void,
     handleBegin: () => void,
-    onFinishFlashcards: () => void,
     handleFreestyle: () => void,
-    handleSkip: () => void,
     setIsSearchLoading: (val: boolean) => void
 }
 
 const ToolbarHeader = (props: ToolbarHeaderProps) => {
 
-    const { setSearchResults, handleBegin, onFinishFlashcards, 
-            handleFreestyle, handleSkip, setIsSearchLoading
+    const { setSearchResults, handleBegin, 
+            handleFreestyle, setIsSearchLoading
     } = props;
 
     const currPath = useLocation();
@@ -110,10 +108,8 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
                     : 
                     (!addOpeningsToFolder && (toolbarTab === "Flashcards" || toolbarTab === "FolderFocus")) ?
                         <TopHeaderPlay 
-                            handleSkip = { handleSkip }
                             handleBegin = { handleBegin }
                             handleFreestyle = { handleFreestyle }
-                            onFinishFlashcards = { onFinishFlashcards }
                         />
                     : 
                     <div className="selectcolor-container"></div>

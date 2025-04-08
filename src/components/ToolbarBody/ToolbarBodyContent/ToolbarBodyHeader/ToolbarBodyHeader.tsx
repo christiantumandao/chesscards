@@ -5,6 +5,7 @@ import { db } from "../../../../firebase.config";
 import { FaRegEdit } from "react-icons/fa";
 import { CardsContext, PlayContext, ToolbarContext, UserContext } from "../../../../util/contexts";
 import "./toolbarBodyHeader.css";
+import { parseHighscoreTime } from "../../../../util/formatting";
 const ToolbarBodyHeader = () => {
 
     const { toolbarTab, setToolbarTab, 
@@ -14,8 +15,8 @@ const ToolbarBodyHeader = () => {
             setAddOpeningsToFolder
     } = useContext(ToolbarContext);
 
-    const { user } = useContext(UserContext);
-    const { playMode } = useContext(PlayContext);
+    const { user, userData } = useContext(UserContext);
+    const { playMode, localFlashcardsHighscore, localFreestyleHighscore } = useContext(PlayContext);
     const { folders, setFolders } = useContext(CardsContext);
 
 
@@ -105,6 +106,7 @@ const ToolbarBodyHeader = () => {
 
     const getBottomHeader = () => {
         return (
+            <>
             <div className="toolbar-body-bottom-header">
             {
                 (editFolderMode && user) ? 
@@ -133,6 +135,35 @@ const ToolbarBodyHeader = () => {
                     </button> 
                 : null  
             }
+            </div>
+            
+
+            
+            </>
+        )
+    }
+
+    const getHighScores = () => {
+        if (toolbarTab === "Folders" || playMode !== "") return null;
+
+
+        let arcadeHighscore = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.arcadeHighscore 
+            : (toolbarTab === "Flashcards" && userData) ? userData.arcadeHighscore 
+            : localFreestyleHighscore;
+
+        let flashcardsHighscore = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.flashcardsHighscore 
+        : (toolbarTab === "Flashcards" && userData) ? userData.flashcardsHighscore 
+        : localFlashcardsHighscore;
+
+        if (arcadeHighscore === -1) arcadeHighscore = 0;
+        if (flashcardsHighscore === -1) flashcardsHighscore = 0;
+
+        return (
+            <div className="body-header-highscore-container">
+                <div>Arcade: { arcadeHighscore }</div>
+                
+                
+                <div>Flashcards: { parseHighscoreTime(flashcardsHighscore) }</div>
             </div>
         )
     }
@@ -175,6 +206,7 @@ const ToolbarBodyHeader = () => {
         
         { getTopHeader() }
         { getBottomHeader() }
+        { getHighScores() }
 
         </div> 
     )

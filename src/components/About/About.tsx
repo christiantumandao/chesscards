@@ -54,7 +54,7 @@ const About = () => {
                     <article>
                         <h3 className="trie-header">
                             <TbBinaryTree />
-                            Trie-built flashcards (Freestyle)
+                            Trie-built flashcards (Arcade)
                         </h3>
                         <p>
                             User's flashcards will be compiled into a Trie-based data structure where "prefixes" are constructred from shared moves. 

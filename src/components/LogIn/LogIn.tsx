@@ -8,6 +8,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { auth, db } from "../../firebase.config";
 import { doc, setDoc } from "@firebase/firestore";
 import { UserContext } from "../../util/contexts";
+import { UserData } from "../../types/db";
 
 
 const LogIn = (props: LoginProps) => {
@@ -78,14 +79,19 @@ const LogIn = (props: LoginProps) => {
             .then( async (userCredential)=>{
                 const user = userCredential.user;
                 const docRef = doc(db, "userData", user.uid);
-                await setDoc(docRef, {
+
+                const newUserData = {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
                     correct: 0,
                     incorrect: 0,
-                    added: 0
-                })
+                    added: 0,
+                    flashcardsHighscore: -1,
+                    arcadeHighscore: 0,
+                } as UserData;
+
+                await setDoc(docRef, newUserData);
                 setPassword("");
                 setConfirmPassword("");
                 setEmail("");
