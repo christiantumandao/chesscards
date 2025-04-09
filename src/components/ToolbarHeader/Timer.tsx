@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { PlayContext, ToolbarContext } from '../../util/contexts';
+import { PlayContext } from '../../util/contexts';
 
 interface TimerProps {
     direction: "UP" | "DOWN"
@@ -8,7 +8,6 @@ interface TimerProps {
 const Timer = ({direction}: TimerProps) => {
 
     const { onFinishFlashcards, onFinishFreestyle, time, playMode, setTime } = useContext(PlayContext); 
-    const { setCurrentFolder } = useContext(ToolbarContext);
 
 
     useEffect(() => {
@@ -21,9 +20,9 @@ const Timer = ({direction}: TimerProps) => {
                     if (direction === "DOWN" && prev <= 0) {
                         clearInterval(intervalId);
 
-                        if (playMode === "flashcards") onFinishFlashcards(setCurrentFolder);
-                        else if (playMode === "freestyle") onFinishFreestyle(setCurrentFolder);
-                        else onFinishFlashcards(setCurrentFolder);
+                        if (playMode === "flashcards") onFinishFlashcards();
+                        else if (playMode === "freestyle") onFinishFreestyle();
+                        else onFinishFlashcards();
                         return 0;
                     }
                     return prev + incr;

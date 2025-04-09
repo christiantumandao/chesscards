@@ -16,17 +16,17 @@ interface ToolbarProps {
     undo: () => void,
     redo: () => void,
     restart: () => void, 
-    handleSkip: () => void,
     beginFreestyle: (color: Color, head: Trie, folderName: 0 | string) => void,
     testFlashcards: (color: Color, flashcardsToTest: Flashcard[], setName: string | 0) => void,
+    currentFolder: Folder | null,
+    setCurrentFolder: (val: Folder | null) => void
 }
 
 const Toolbar = (props: ToolbarProps) => {
 
     const { undo, redo, restart,
-            handleSkip,
-
             beginFreestyle, testFlashcards,
+            currentFolder, setCurrentFolder
     } = props;
 
     const { color } = useContext(BoardStateContext);
@@ -36,8 +36,6 @@ const Toolbar = (props: ToolbarProps) => {
 
     const [toolbarTab, setToolbarTab] = useState<ToolbarTab>("Flashcards");
     const [searchResults, setSearchResults] = useState<Flashcard[]>([]);
-
-    const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
 
     const [editFolderMode, setEditFolderMode] = useState<boolean>(false);
     const [editFlashcardsMode, setEditFlashcardsMode] = useState<boolean>(false);
@@ -106,7 +104,6 @@ const Toolbar = (props: ToolbarProps) => {
                     setSearchResults = { setSearchResults }
                     handleBegin = { handleBegin }
                     handleFreestyle = { handleFreestyle }
-                    handleSkip = { handleSkip }
                     setIsSearchLoading = { setIsSearchLoading }
                 />
 

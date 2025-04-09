@@ -15,16 +15,18 @@ import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 
-const animationSpeed = 100;
+const animationSpeed = 150;
 const transitionSpeed = 750;
 
 interface GameProps {
     makeAMove: (newMove: MoveVerbose | string) => void
     lastSquare: string | null
     setLastSquare: (newVal: string | null) => void,
+    incorrectAudio: HTMLAudioElement,
+    correctAudio: HTMLAudioElement
 }
 
-const Game = ({ makeAMove, lastSquare, setLastSquare }: GameProps) => {
+const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAudio }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame
@@ -101,6 +103,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare }: GameProps) => {
             triggerIncorrectAnimation();
             setTimeout(()=>{
                 incrementIncorrects();
+                incorrectAudio.play();
                 setPlayerMoveIdx(0);
                 setGame(new Chess());
                 setCurrTrie(trieHead);
@@ -133,6 +136,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare }: GameProps) => {
         } else {
             setFlash("red");
             incrementIncorrects();
+            incorrectAudio.play();
             triggerIncorrectAnimation();
             
             setTimeout(()=>{

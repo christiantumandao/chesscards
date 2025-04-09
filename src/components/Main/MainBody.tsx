@@ -14,6 +14,8 @@ const MainBody = () => {
 
     const { tab } = useContext(TabContext);;
 
+    const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
+
     // game state, always used when board is visible. this is in a context 
     const [game, setGame] = useState<Chess>(new Chess()); 
     const [history, setHistory] = useState<string[]>([startingFen]);  // holds the history of fens
@@ -65,6 +67,17 @@ const MainBody = () => {
     const captureAudio = useMemo( () => (
         new Audio("/src/assets/sounds/capture.mp3")
     ),[]);
+    const invalidAudio = useMemo(()=> (
+        new Audio("/src/assets/sounds/invalid.mp3")
+    ),[]);
+
+    const incorrectAudio = useMemo(()=> (
+        new Audio("/src/assets/sounds/incorrect.mp3")
+    ),[]);
+
+    const correctAudio = useMemo(()=> (
+        new Audio("/src/assets/sounds/incorrect.mp3")
+    ),[]);
 
 
 
@@ -80,7 +93,6 @@ const MainBody = () => {
         } else if (lastMove?.isKingsideCastle() || lastMove?.isQueensideCastle()) {
             castleAudio.play();
         } else {
-            console.log("playing standard sound");
             moveAudio.play();
         }
 
@@ -118,6 +130,9 @@ const MainBody = () => {
 
         } catch {
             console.error("Invalid move:", move);
+            if (playMode !== "") {
+                invalidAudio.play();
+            }
             return false;
         }
     },[currMove, game, history, moveHistory])
@@ -200,8 +215,6 @@ const MainBody = () => {
         setTime(6000);
         setHasSkippedFlashcard(false);
 
-        // game logic in Game component
-
     }
 
     const testFlashcards = (color: Color, flashcardsToTest: Flashcard[], setName: string | 0) => {
@@ -224,12 +237,10 @@ const MainBody = () => {
         setTestingSetName(setName);
         setTime(0);
         setHasSkippedFlashcard(false);
-
-        // game logic in Game component
     }
-
-    const onFinishFreestyle = (setCurrentFolder?: (val: Folder) => void) => {
+    const onFinishFreestyle = () => {
         try {
+            console.log("finishing freestyle");
             if (hasSkippedFlashcard) {
                 resetVariables();
                 return;
@@ -257,7 +268,7 @@ const MainBody = () => {
                         ...currFolder,
                         arcadeHighscore: score
                     } as Folder;
-                    if (setCurrentFolder) setCurrentFolder(newFolder);
+                    setCurrentFolder(newFolder);
     
                     const newFolders = folders.map((folder) => {
                         if (folder.name !== currFolder.name) return folder;
@@ -277,8 +288,7 @@ const MainBody = () => {
     }
 
 
-    const onFinishFlashcards = (setCurrentFolder?: (newVal: Folder) => void) => {
-
+    const onFinishFlashcards = () => {
         try {
             if (hasSkippedFlashcard || testFlashcards.length === 0) {
                 resetVariables();
@@ -286,13 +296,11 @@ const MainBody = () => {
             }
 
             // if playing from main flahscards set
-            console.log(userData);
             if (testingSetName === 0 && userData && (time < userData.flashcardsHighscore || userData.flashcardsHighscore === -1)) {
                 updateMainFlashcardsHighscore(time, userData.id);
 
                 const newUserData = { ...userData, flashcardsHighscore: time } as UserData;
                 setUserData(newUserData);
-                console.log("updated playData");
 
             } else if (testingSetName === 0 && !userData && (time < localFlashcardsHighscore || localFlashcardsHighscore === -1)) {
                 setLocalFlashcardsleHighscore(time);
@@ -307,7 +315,7 @@ const MainBody = () => {
 
                     const newFolder = { ...folder, flashcardsHighscore: time } as Folder;
 
-                    if (setCurrentFolder) setCurrentFolder(newFolder);
+                    setCurrentFolder(newFolder);
 
                     const newFolders = folders.map((f) => {
                         if (f.name !== newFolder.name) return f;
@@ -464,7 +472,8 @@ const MainBody = () => {
         setCurrTrie: setCurrTrie,
         setPlayMode: setPlayMode,
         onFinishFlashcards: onFinishFlashcards,
-        onFinishFreestyle: onFinishFreestyle
+        onFinishFreestyle: onFinishFreestyle,
+        resetVariables: resetVariables
 
     } as PlayContextType),[playMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx,
         trieHead, currTrie, flash,
@@ -485,6 +494,8 @@ const MainBody = () => {
                                 makeAMove = { makeAMove }
                                 lastSquare = { lastSquare }
                                 setLastSquare={ setLastSquare }
+                                incorrectAudio = { incorrectAudio }
+                                correctAudio = { correctAudio }
                             />
                             <Toolbar 
                                 undo = { undo } 
@@ -493,6 +504,9 @@ const MainBody = () => {
                     
                                 beginFreestyle = { beginFreestyle }
                                 testFlashcards = { testFlashcards }
+
+                                currentFolder = { currentFolder }
+                                setCurrentFolder = { setCurrentFolder }
 
                             />
 

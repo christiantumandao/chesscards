@@ -71,10 +71,11 @@ export interface PlayContextType {
     setHasSkippedFlashcard: (newVal: boolean) => void,
     setTrieHead: (newVal: Trie) => void,
     setCurrTrie: (newVal: Trie) => void,
-    onFinishFlashcards: (setCurrentFolder?: (newFolder: Folder) => void) => void,
-    onFinishFreestyle: (setCurrentFolder?: (val: Folder) => void) => void,
+    onFinishFlashcards: () => void,
+    onFinishFreestyle: () => void,
     time: number,
-    setTime: (newVal: any) => void
+    setTime: (newVal: any) => void,
+    resetVariables: () => void
 }
 
 export interface AutoPlayContextType {

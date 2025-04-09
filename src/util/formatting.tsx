@@ -70,7 +70,5 @@ export const parseHighscoreTime = (time: number) => {
     const seconds = Math.floor((time % 6000) / 100);
     const milliseconds = time % 100;
 
-    if (minutes === 0) return `${seconds}:${milliseconds}`;
-
     return `${minutes}:${seconds}:${milliseconds}`;
 }

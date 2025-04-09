@@ -22,13 +22,13 @@ type gameModeType = "standard" | "freestyle";
 const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => {
 
     const { playMode, inGameCorrects, localFlashcardsHighscore, localFreestyleHighscore,
-        onFinishFreestyle, onFinishFlashcards, setPlayerMoveIdx, 
-        setFlashcardMoves, setFlashcardIdx, testingFlashcards, flashcardIdx, setHasSkippedFlashcard,
+        onFinishFreestyle,
+        setPlayerMoveIdx, setFlashcardMoves, setFlashcardIdx, testingFlashcards, flashcardIdx, setHasSkippedFlashcard, resetVariables
      } = useContext(PlayContext);
     const { color, setColor, setGame, setMoveHistory, setCurrOpening } = useContext(BoardStateContext);
     const { flashcards, setFlashcards } = useContext(CardsContext);
     const { editFlashcardsMode, editFolderMode, currentFolder, 
-            toolbarTab, setCurrentFolder } = useContext(ToolbarContext);
+            toolbarTab } = useContext(ToolbarContext);
     const { userData } = useContext(UserContext);
 
     const [gameMode, setGameMode] = useState<gameModeType>("standard");
@@ -39,7 +39,7 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
         setHasSkippedFlashcard(true);
 
         if ((flashcardIdx + 1) >= testingFlashcards.length) {
-            onFinishFlashcards(setCurrentFolder); // cannot be called in freestyle so its fine
+            resetVariables(); // cannot be called in freestyle so its fine
             return;
         }
         const idx = flashcardIdx+1;
@@ -206,15 +206,9 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
     }
 
     const handleExit = () => {
-        
-        if (playMode === "flashcards") {
-            onFinishFlashcards(setCurrentFolder);
-        } else if (playMode === "freestyle") {
-            onFinishFreestyle(setCurrentFolder);
-        } else {
-            console.error("error: playing on timed playMode");
-        }
-    
+        if (playMode === "freestyle" || playMode === "timed") {
+            onFinishFreestyle();
+        } else resetVariables();
     }
 
 

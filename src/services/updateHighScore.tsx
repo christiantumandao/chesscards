@@ -44,7 +44,7 @@ export const updateFolderFreestyleHighscore = async (folderName: string, highsco
         const folderRef = doc(db, "userData", uid, "folders", folderName);
 
         await updateDoc(folderRef, {
-            freestyleHighscore: highscore
+            arcadeHighscore: highscore
         });      
     } catch (e) {
         console.error(e);

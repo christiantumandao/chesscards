@@ -45,7 +45,7 @@ export default function buildTrie(flashcards: Flashcard[]): Trie {
             addFlashcardMoves(parsedMoves, head);
         });
 
-        console.log(head);
+        //console.log(head);
         return head;
 
     } catch (e) {
