@@ -6,24 +6,22 @@ import { BsCaretDown } from "react-icons/bs";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import shuffleCards from "../../util/shuffleCards";
-import { Color } from "../../types/states";
+import { Color, PlayModeType } from "../../types/states";
 import Timer from "./Timer";
 import { Chess } from "chess.js";
 import { parseHighscoreTime, parseMovesIntoArray } from "../../util/formatting";
 import { incrementIncorrects } from "../../services/userSetters";
+import buildTrie, { Trie } from "../../util/Trie";
 
 interface TopHeaderPlayProps {
-    handleBegin: () => void,
-    handleFreestyle: () => void,
 }
 
-type gameModeType = "standard" | "freestyle";
 
-const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => {
+const TopHeaderPlay = ({  }: TopHeaderPlayProps) => {
 
-    const { playMode, inGameCorrects, localFlashcardsHighscore, localFreestyleHighscore,
-        onFinishFreestyle,
-        setPlayerMoveIdx, setFlashcardMoves, setFlashcardIdx, testingFlashcards, flashcardIdx, setHasSkippedFlashcard, resetVariables
+    const { playMode, inGameCorrects, localFlashcardsHighscore, localFreestyleHighscore, localTimedHighscore,
+        setPlayerMoveIdx, setFlashcardMoves, setFlashcardIdx, testingFlashcards, flashcardIdx, setHasSkippedFlashcard, resetVariables, setCurrTrie, trieHead, setTrieHead,
+        beginFreestyle, beginFlashcards, onFinishFlashcards,onFinishFreestyle
      } = useContext(PlayContext);
     const { color, setColor, setGame, setMoveHistory, setCurrOpening } = useContext(BoardStateContext);
     const { flashcards, setFlashcards } = useContext(CardsContext);
@@ -31,39 +29,81 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
             toolbarTab } = useContext(ToolbarContext);
     const { userData } = useContext(UserContext);
 
-    const [gameMode, setGameMode] = useState<gameModeType>("standard");
+    const [gameMode, setGameMode] = useState<PlayModeType>("flashcards");
 
 
     const handleSkip = () => {
-        incrementIncorrects();
+
         setHasSkippedFlashcard(true);
 
-        if ((flashcardIdx + 1) >= testingFlashcards.length) {
-            resetVariables(); // cannot be called in freestyle so its fine
-            return;
+        if (playMode === "flashcards") {
+            incrementIncorrects();
+            if ((flashcardIdx + 1) >= testingFlashcards.length) {
+                resetVariables(); // cannot be called in freestyle so its fine
+                return;
+            }
+            const idx = flashcardIdx+1;
+            const newFlashcard = testingFlashcards[idx];
+            const newMoves = parseMovesIntoArray(newFlashcard.moves);
+    
+            setGame(new Chess());
+    
+            setCurrOpening(newFlashcard);
+            setFlashcardIdx(idx);
+            setFlashcardMoves(newMoves);
+            setMoveHistory([]);
+    
+            setPlayerMoveIdx(0);
+        } else if (playMode === "freestyle" || playMode === "arcade") {
+            setGame(new Chess());
+            setCurrTrie(trieHead);
         }
-        const idx = flashcardIdx+1;
-        const newFlashcard = testingFlashcards[idx];
-        const newMoves = parseMovesIntoArray(newFlashcard.moves);
 
-        setGame(new Chess());
 
-        setCurrOpening(newFlashcard);
-        setFlashcardIdx(idx);
-        setFlashcardMoves(newMoves);
-        setMoveHistory([]);
+    }
 
-        setPlayerMoveIdx(0);
+    const handleBeginFreestyle = () => {
+        if (gameMode !== "freestyle" && gameMode !== "arcade") return;
+
+        let head = new Trie();
+
+        if (toolbarTab === "FolderFocus" && (!currentFolder || currentFolder.openings.length === 0)) return;
+        if (toolbarTab === "FolderFocus" && currentFolder && currentFolder.openings.length > 0) head = buildTrie(currentFolder?.openings);
+        else head = buildTrie(flashcards);  
+        setTrieHead(head);
+
+        const folderName = (currentFolder) ? currentFolder.name:0;
+        beginFreestyle(gameMode, color, head,folderName);
 
     }
 
 
+
+    const handleBeginFlashcards = () => {
+        if (gameMode !== "flashcards" && gameMode !== "timed") return;
+
+        if (toolbarTab === "FolderFocus" && (!currentFolder || currentFolder.openings.length === 0)) return;
+        if (toolbarTab === "FolderFocus" && currentFolder && currentFolder.openings.length > 0) beginFlashcards(gameMode, color, currentFolder.openings, currentFolder.name);
+        else beginFlashcards(gameMode, color, flashcards, 0);
+    }
+
     const handleStart = () => {
-        if (gameMode === "standard") {
-            handleBegin();
+        if (gameMode === "flashcards" || gameMode === "timed") {
+            handleBeginFlashcards();
         } else {
-            handleFreestyle();
+            handleBeginFreestyle();
         }
+    }
+
+    const handleExit = () => {
+        if (playMode === "timed") {
+            onFinishFlashcards();
+            return;
+        } else if (playMode === "arcade") {
+            onFinishFreestyle();
+            return;
+        }
+        resetVariables();
     }
 
     const getHeaderOptions = () => {
@@ -100,10 +140,12 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
                         <div className="select-element">
                             <select
                                 value = { gameMode }
-                                onChange = { (e) => setGameMode(e.target.value as gameModeType) }
+                                onChange = { (e) => setGameMode(e.target.value as PlayModeType) }
                             >
-                                <option value = "standard">Flashcards</option>
-                                <option value = "freestyle">Arcade</option>
+                                <option value = "flashcards">Flashcards</option>
+                                <option value = "timed">Timed</option>
+                                <option value = "freestyle">Freestyle</option>
+                                <option value = "arcade">Arcade</option>
                             </select>
                             <BsCaretDown />
 
@@ -133,23 +175,31 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
         let highscore: any = "";
 
         // userData.flashcardsHighscore
- 
+    
+
 
         if (playMode === "flashcards") {
             if (toolbarTab === "Flashcards" && userData) highscore = userData.flashcardsHighscore;
             else if (toolbarTab === "Flashcards" && !userData) highscore = localFlashcardsHighscore;
             else if (toolbarTab === "FolderFocus" && currentFolder) highscore = currentFolder.flashcardsHighscore;
 
-            highscore = parseHighscoreTime(highscore);
+            if (highscore === -1) highscore = "n/a";
+            else highscore = parseHighscoreTime(highscore);
         }
 
-        else if (playMode === "freestyle") {
+        else if (playMode === "arcade") {
             if (toolbarTab === "Flashcards" && userData) highscore = userData.arcadeHighscore;
             else if (toolbarTab === "Flashcards" && !userData) highscore = localFreestyleHighscore;
             else if (toolbarTab === "FolderFocus" && currentFolder) highscore = currentFolder.arcadeHighscore;
         }
+
+        else if (playMode === "timed") {
+            if (toolbarTab === "Flashcards" && userData) highscore = userData.timedHighscore;
+            else if (toolbarTab === "Flashcards" && !userData) highscore = localTimedHighscore;
+            else if (toolbarTab === "FolderFocus" && currentFolder) highscore = currentFolder.timedHighscore;
+        }
         
-        if (highscore === -1) return 0;
+        if (!highscore) highscore = 0;
 
         return highscore;
     }
@@ -157,34 +207,50 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
 
     const getPlayingHeader = () => {
 
-        const dir = (gameMode === "standard") ? "UP" 
-            : (gameMode === "freestyle") ? "DOWN" 
-            : ("UP");
+        const dir = (gameMode === "flashcards") ? "UP" 
+            : "DOWN"
             
         return (
             <>
 
                 <div className="score-container">
-                    <label>
-                        Score:
-                        <div className="score-number">
-                            { inGameCorrects }
-                        </div>
-                    </label>
+                    {
+                        (playMode !== "flashcards") ?
+                            <label>
+                                Score:
+                                <div className="score-number">
+                                    { inGameCorrects }
+                                </div>
+                            </label>
+                            : null
+                    }
 
-                    <label>
-                        High score:
-                        <div className="score-number">
-                            {
-                                getHighScore()
-                            }
 
-                        </div>
-                    </label>
+                    
+                    {
+                        (playMode !== "freestyle") ?
+                        <label>
+                            High score:
+                            <div className="score-number">
+                                {
+                                    getHighScore()
+                                }
+
+                            </div>
+                        </label>
+                        : null
+                    }
+
+                    
                 </div>
-                <Timer 
-                    direction = { dir }
-                />
+                {         
+                    (playMode !== "freestyle") ?       
+                        <Timer 
+                            direction = { dir }
+                        />
+                        : null
+                }
+
 
                 
 
@@ -203,12 +269,6 @@ const TopHeaderPlay = ({ handleBegin, handleFreestyle }: TopHeaderPlayProps) => 
 
             </>
         );
-    }
-
-    const handleExit = () => {
-        if (playMode === "freestyle" || playMode === "timed") {
-            onFinishFreestyle();
-        } else resetVariables();
     }
 
 

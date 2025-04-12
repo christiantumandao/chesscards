@@ -47,7 +47,12 @@ const SelectOpeningsInFolder = () => {
             const folderSnap = await getDoc(folderRef);
             if (folderSnap.exists()) {
 
-                const newFolder = folderSnap.data() as Folder;
+                const newFolder = {
+                    ...folderSnap.data(),
+                    arcadeHighscore: 0,
+                    flashcardsHighscore: -1,
+                    timedHighscore: 0,
+                } as Folder;
                 
                 selectedFlashcards.forEach(opening => {
                     newFolder.openings.push(opening);

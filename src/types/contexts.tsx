@@ -46,7 +46,6 @@ export interface PlayContextType {
     flashcardIdx: number,
     flashcardMoves: string[],
     playerMoveIdx: number,
-    flash: "red" | "green" | "",
 
     trieHead: Trie,
     currTrie: Trie,
@@ -58,6 +57,8 @@ export interface PlayContextType {
     localFreestyleHighscore: number,
     setLocalFlashcardsHighscore: (val: number) => void, 
     setLocalFreestyleHighscore: (val: number) => void,
+    localTimedHighscore: number,
+    setLocalTimedHighscore: (val: number) => void,
 
     setPlayMode: (newVal: PlayModeType) => void,
     inGameCorrects: number,
@@ -66,7 +67,6 @@ export interface PlayContextType {
     setFlashcardIdx: (newVal: number) => void,
     setFlashcardMoves: (newVal: string[]) => void,
     setPlayerMoveIdx: (newVal: number) => void,
-    setFlash: (newVal: "red" | "green" | "") => void,
 
     setHasSkippedFlashcard: (newVal: boolean) => void,
     setTrieHead: (newVal: Trie) => void,
@@ -75,7 +75,10 @@ export interface PlayContextType {
     onFinishFreestyle: () => void,
     time: number,
     setTime: (newVal: any) => void,
-    resetVariables: () => void
+    resetVariables: () => void,
+    beginFlashcards: (mode: "flashcards" | "timed",color: Color, flashcardsToTest: Flashcard[], setName: string | 0) => void,
+    beginFreestyle: (mode: "freestyle" | "arcade", color: Color, head: Trie, folderName: 0 | string) => void
+
 }
 
 export interface AutoPlayContextType {

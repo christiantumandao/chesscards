@@ -3,12 +3,12 @@ import "./toolbarHeader.css";
 
 import { formatCustomMoveHistory, formatName, parseMovesToString } from "../../util/formatting";
 import { db } from "../../firebase.config";
-import { doc, setDoc } from "@firebase/firestore";
+import { doc, setDoc, updateDoc } from "@firebase/firestore";
 
 import { CgAddR, CgCheckR } from "react-icons/cg";
 import { useLocation } from "react-router-dom";
 
-import { Flashcard } from "../../types/db"
+import { Flashcard, UserData } from "../../types/db"
 import { BoardStateContext, CardsContext, PlayContext, startingFen, TabContext, ToolbarContext, UserContext } from "../../util/contexts";
 
 import GetSignInMessageToolbar from "./GetSignInMessage";
@@ -17,15 +17,12 @@ import TopHeaderExplore from "./TopHeaderExplore";
 
 interface ToolbarHeaderProps {
     setSearchResults: (newVal: Flashcard[]) => void,
-    handleBegin: () => void,
-    handleFreestyle: () => void,
     setIsSearchLoading: (val: boolean) => void
 }
 
 const ToolbarHeader = (props: ToolbarHeaderProps) => {
 
-    const { setSearchResults, handleBegin, 
-            handleFreestyle, setIsSearchLoading
+    const { setSearchResults, setIsSearchLoading
     } = props;
 
     const currPath = useLocation();
@@ -38,7 +35,7 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
     const { addOpeningsToFolder, toolbarTab } = useContext(ToolbarContext);
     const { playMode }= useContext(PlayContext);
     const { flashcards, setFlashcards }= useContext(CardsContext);
-    const { user }= useContext(UserContext);
+    const { user, userData, setUserData }= useContext(UserContext);
     const { tab }= useContext(TabContext);
 
 
@@ -85,7 +82,26 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
             const newFlashcards = [...flashcards] as Flashcard[];
             newFlashcards.push({...currOpening, id: currOpening?.eco} as Flashcard);
             setFlashcards(newFlashcards);
-            setShowAddButton(false);       
+            setShowAddButton(false);    
+            
+            
+            if (userData) {
+                const newUserData: UserData = {
+                    ...userData,
+                    arcadeHighscore: 0,
+                    flashcardsHighscore: -1,
+                    timedHighscore: 0,
+                } 
+                setUserData(newUserData);
+                
+                const userRef = doc(db, "userData", userData.id);
+                await updateDoc(userRef, {
+                    arcadeHighscore: 0,
+                    flashcardsHighscore: -1,
+                    timedHighscore: 0
+                })
+            }
+
             
         } catch (e) {
             console.error(e);
@@ -108,8 +124,6 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
                     : 
                     (!addOpeningsToFolder && (toolbarTab === "Flashcards" || toolbarTab === "FolderFocus")) ?
                         <TopHeaderPlay 
-                            handleBegin = { handleBegin }
-                            handleFreestyle = { handleFreestyle }
                         />
                     : 
                     <div className="selectcolor-container"></div>

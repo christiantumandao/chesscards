@@ -10,7 +10,8 @@ export interface Folder {
     name: string,
     openings: Flashcard[],
     arcadeHighscore: number,
-    flashcardsHighscore: number
+    flashcardsHighscore: number,
+    timedHighscore: number
 }
 
 export interface UserData {
@@ -22,5 +23,6 @@ export interface UserData {
     incorrect: number,
     correct: number,
     flashcardsHighscore: number,
+    timedHighscore: number,
     arcadeHighscore: number,
 }

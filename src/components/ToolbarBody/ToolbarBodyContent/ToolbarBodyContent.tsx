@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import MovePair from "./Movepair/MovePair";
-import { deleteDoc, doc, setDoc } from "@firebase/firestore";
+import { deleteDoc, doc, setDoc, updateDoc } from "@firebase/firestore";
 import { db } from "../../../firebase.config";
 import Flashcard from "./Flashcard/Flashcard";
 import FolderFocus from "./Folders/FolderFocus";
 import Folders from "./Folders/Folders";
 import { useLocation } from "react-router-dom";
 import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarContext, UserContext } from "../../../util/contexts";
-import { Flashcard as FlashcardType, Folder } from "../../../types/db";
+import { Flashcard as FlashcardType, Folder, UserData } from "../../../types/db";
 import { BiLoaderAlt } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -25,6 +25,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
     const { user } = useContext(UserContext);
     const { playMode } = useContext(PlayContext);
     const { game, moveHistory } = useContext(BoardStateContext);
+    const { userData, setUserData } = useContext(UserContext);
 
 
     const currPath = useLocation();
@@ -39,7 +40,12 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
             try {
                 const ref = doc(db, "userData", user.uid, "folders", currentFolder.name);
 
-                const newCurrentFolder = { ...currentFolder } as Folder;
+                const newCurrentFolder = { 
+                    ...currentFolder,
+                    arcadeHighscore: 0,
+                    flashcardsHighscore: -1,
+                    timedHighscore: 0
+                 } as Folder;
                 newCurrentFolder.openings = currentFolder.openings.filter((opening) => (
                     opening.eco !== fc.eco &&
                     opening.name !== fc.name &&
@@ -65,7 +71,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
 
     // this is ONLY for deleting flashcards from main set
     const deleteFlashcardFromMain = async (fc: FlashcardType) => {
-        if (!user) {
+        if (!user || !userData) {
             console.error('User not signed in');
             return;
         };
@@ -81,6 +87,21 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
 
             const newFlashcards = flashcards.filter((f)=>f.id !== fc.id);
             setFlashcards(newFlashcards);
+
+            const newUserData: UserData = {
+                ...userData,
+                arcadeHighscore: 0,
+                flashcardsHighscore: -1,
+                timedHighscore: 0,
+            } 
+            setUserData(newUserData);
+            
+            const userRef = doc(db, "userData", userData.id);
+            await updateDoc(userRef, {
+                arcadeHighscore: 0,
+                flashcardsHighscore: -1,
+                timedHighscore: 0
+            })
 
             
         } catch (e) {
@@ -197,7 +218,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
             :
             (flashcards && currPath.pathname === "/flashcards") ?
                 getFlashcards()
-            
+
             // if searched, none found
             /*: (searchResults && searchResults.length === 1 && currPath.pathname === "/" && searchResults[0] === "empty" && !currOpening) ?
                 <h1 className="empty-query-message">

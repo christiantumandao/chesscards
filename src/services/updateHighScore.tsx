@@ -50,3 +50,25 @@ export const updateFolderFreestyleHighscore = async (folderName: string, highsco
         console.error(e);
     }
 }
+
+export const updateFolderTimedHighscore = async (folderName: string, score: number, uid: string) => {
+    try {
+        const folderRef = doc(db, "userData", uid, "folders", folderName);
+        await updateDoc(folderRef, {
+            timedHighscore: score
+        });    
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export const updateMainTimedHighscore = async (score: number, uid: string) => {
+    try {
+        const folderRef = doc(db, "userData", uid);
+        await updateDoc(folderRef, {
+            timedHighscore: score
+        });   
+    } catch (e) {
+        console.error(e);
+    }
+}

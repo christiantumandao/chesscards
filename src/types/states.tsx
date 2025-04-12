@@ -5,4 +5,4 @@ export interface MoveVerbose {
 }
 
 export type Color = "white" | "black" | "both";
-export type PlayModeType = "" | "flashcards" | "freestyle" | "timed";
+export type PlayModeType = "" | "flashcards" | "freestyle" | "arcade" | "timed";

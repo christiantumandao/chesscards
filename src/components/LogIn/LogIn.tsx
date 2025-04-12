@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import "./login.css";
 import "../../styles/loading.css";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginProps } from "./types";
 
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase.config";
@@ -10,6 +9,9 @@ import { doc, setDoc } from "@firebase/firestore";
 import { UserContext } from "../../util/contexts";
 import { UserData } from "../../types/db";
 
+export interface LoginProps {
+    login: boolean
+}
 
 const LogIn = (props: LoginProps) => {
 
@@ -80,7 +82,7 @@ const LogIn = (props: LoginProps) => {
                 const user = userCredential.user;
                 const docRef = doc(db, "userData", user.uid);
 
-                const newUserData = {
+                const newUserData: UserData = {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
@@ -88,6 +90,7 @@ const LogIn = (props: LoginProps) => {
                     incorrect: 0,
                     added: 0,
                     flashcardsHighscore: -1,
+                    timedHighscore: 0,
                     arcadeHighscore: 0,
                 } as UserData;
 

@@ -137,6 +137,62 @@ const Profile = () => {
         )
     }
 
+    const getProfileStatistics = () => {
+        return (
+
+                <section className="profile-blobcontent">
+                    <h3>Statistics</h3>
+        
+                    <div className="profile-field">
+                        <div>Cards Correct</div>
+                        <div className="stat">{userData?.correct || null}</div>
+                    </div>
+                    <div className="profile-field">
+                        <div>Cards Incorrect</div>
+                        <div className="stat">{(userData) ? userData.incorrect : null}</div>
+                    </div>
+                    <div className="profile-field">
+                        <div>Total Cards Completed</div>
+                        <div className="stat">{(userData) ? userData.incorrect + userData.correct : null}</div>
+                    </div>
+                    <div className="profile-field">
+                        <div>Accuracy</div>
+                        <div className="stat">{(userData) ? (userData.correct + userData.incorrect === 0) ? 0 : ((userData.correct)/(userData.incorrect + userData.correct)).toFixed(2) : null}</div>
+                    </div>
+                </section>
+        )
+    }
+
+    const getProfileHighscores = () => {
+        return (
+            <section className="profile-blobcontent">
+                <br />
+                <h3>High Scores</h3>
+
+                <div className="profile-field">
+                    <div>Flashcards</div>
+                    <div className="stat">
+                    {(userData?.flashcardsHighscore === -1) ? "n/a" : userData?.flashcardsHighscore}
+                    </div>
+                </div>
+
+                <div className="profile-field">
+                    <div>Timed</div>
+                    <div className="stat">
+                    {(userData?.timedHighscore === 0) ? "n/a" : userData?.timedHighscore}
+                    </div>
+                </div>
+
+                <div className="profile-field">
+                    <div>Arcade</div>
+                    <div className="stat">
+                    {(userData?.arcadeHighscore === 0) ? "n/a" : userData?.arcadeHighscore}
+                    </div>
+                </div>
+            </section>
+        );
+    }
+    if (!userData) return
     return (
         <div className="page profile-wrapper">
 
@@ -188,30 +244,11 @@ const Profile = () => {
 
                 </section>
             </div>
-
             <div className="profile-blob">
-
-            <section className="profile-blobcontent">
-                    <h3>Statistics</h3>
-
-                    <div className="profile-field">
-                        <div>Cards Correct</div>
-                        <div className="stat">{userData?.correct || null}</div>
-                    </div>
-                    <div className="profile-field">
-                        <div>Cards Incorrect</div>
-                        <div className="stat">{(userData) ? userData.incorrect : null}</div>
-                    </div>
-                    <div className="profile-field">
-                        <div>Total Cards Completed</div>
-                        <div className="stat">{(userData) ? userData.incorrect + userData.correct : null}</div>
-                    </div>
-                    <div className="profile-field">
-                        <div>Accuracy</div>
-                        <div className="stat">{(userData) ? (userData.correct + userData.incorrect === 0) ? 0 : ((userData.correct)/(userData.incorrect + userData.correct)).toFixed(2) : null}</div>
-                    </div>
-                </section>
+                { getProfileStatistics() }
+                { getProfileHighscores() }
             </div>
+
 
             <div className="profile-blob">
                 <section className="profile-blobcontent profile-red-btns">

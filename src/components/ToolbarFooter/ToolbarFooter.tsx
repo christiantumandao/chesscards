@@ -33,7 +33,6 @@ const ToolbarFooter = ({restart, undo, redo }: ToolbarFooterProps) => {
 
     const handleUploadPGN = () => {
         try {
-            console.log("loading pgn");
             if (pgn.length === 0) return;
 
             const newGame = new Chess();
@@ -50,7 +49,6 @@ const ToolbarFooter = ({restart, undo, redo }: ToolbarFooterProps) => {
             setMoveHistory(newMoveHistory);
             setCurrMove(newMoveHistory.length - 1);
 
-            //console.log(newHistory);
             const newHistory: string[] = [];
             const temp = new Chess();
             temp.loadPgn(pgn);
@@ -75,7 +73,6 @@ const ToolbarFooter = ({restart, undo, redo }: ToolbarFooterProps) => {
 
     const handleUploadFEN = () => {
         try {
-            console.log("loading fen");
 
             if (!validateFen(fen)) {
                 setLoadInErrorMessage("Invalid FEN format");

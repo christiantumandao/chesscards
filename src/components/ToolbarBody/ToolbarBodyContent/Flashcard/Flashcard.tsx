@@ -44,7 +44,7 @@ const Flashcard = (props: FlashcardProps) => {
 
         try {
             setIsLoading(true);
-            if (toolbarTab === "Flashcards") await deleteFlashcard(flashcard);
+            if (toolbarTab === "Flashcards") deleteFlashcard(flashcard);
             else if (toolbarTab === "FolderFocus" && currentFolder) await deleteFlashcard(flashcard);
             else {
                 console.error("Error resolving flashcard/folder for deletion");
@@ -205,7 +205,7 @@ const Flashcard = (props: FlashcardProps) => {
 
     return (
         <div 
-            className={(isLoading) ? "shimmer flashcard-wrapper" : (playMode === "flashcards" && idx === flashcardIdx) ? "flashcard-wrapper flashcard-highlight" : "flashcard-wrapper"} 
+            className={(isLoading) ? "shimmer flashcard-wrapper" : ((playMode === "timed" || playMode === "flashcards") && idx === flashcardIdx) ? "flashcard-wrapper flashcard-highlight" : "flashcard-wrapper"} 
             onClick ={ () => {
                 if (playMode === "") autoPlayOpening(flashcard)
             }}>

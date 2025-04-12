@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import EditFolderName from "../Folders/EditFolderName/EditFolderName";
 import { deleteDoc, doc } from "@firebase/firestore";
 import { db } from "../../../../firebase.config";
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaRegQuestionCircle } from "react-icons/fa";
 import { CardsContext, PlayContext, ToolbarContext, UserContext } from "../../../../util/contexts";
 import "./toolbarBodyHeader.css";
 import { parseHighscoreTime } from "../../../../util/formatting";
@@ -16,7 +16,7 @@ const ToolbarBodyHeader = () => {
     } = useContext(ToolbarContext);
 
     const { user, userData } = useContext(UserContext);
-    const { playMode, localFlashcardsHighscore, localFreestyleHighscore } = useContext(PlayContext);
+    const { playMode, localFlashcardsHighscore, localFreestyleHighscore, localTimedHighscore } = useContext(PlayContext);
     const { folders, setFolders } = useContext(CardsContext);
 
 
@@ -34,6 +34,7 @@ const ToolbarBodyHeader = () => {
 
     // CONDITIONAL COMPONENTS
 
+    // TOP HEADER ==================================================================
     const getTopHeader = () => {
         return (
             <div className="toolbar-body-top-header">   
@@ -103,39 +104,40 @@ const ToolbarBodyHeader = () => {
     }
 
 
+    // BOTTOM HEADER ======================================================================
 
     const getBottomHeader = () => {
         return (
             <>
-            <div className="toolbar-body-bottom-header">
-            {
-                (editFolderMode && user) ? 
-                    <EditFolderName /> 
-                :
-                <h3>
+                <div className="toolbar-body-bottom-header">
                 {
-                    (toolbarTab === "Folders") ?
-                        "Folders" :
-                    (toolbarTab === "FolderFocus" && currentFolder) ?
-                        currentFolder.name :
-                        "Flashcards"
+                    (editFolderMode && user) ? 
+                        <EditFolderName /> 
+                    :
+                        <h3>
+                        {
+                            (toolbarTab === "Folders") ?
+                                "Folders" :
+                            (toolbarTab === "FolderFocus" && currentFolder) ?
+                                currentFolder.name :
+                                "Flashcards"
+                        }
+                        </h3>
                 }
-                </h3>
-            }
 
-            {
-                (toolbarTab === "FolderFocus" && !editFolderMode && user && playMode === "") ?
-                    <button onClick = { () => setEditFolderMode(true) }className="edit-folder-btn">
-                        <FaRegEdit />
-                    </button>
-                :  
-                (toolbarTab === "Flashcards" && !editFlashcardsMode && user && playMode === "") ? 
-                    <button onClick = { () => setEditFlashcardsMode(true) }className="edit-folder-btn">
-                        <FaRegEdit />
-                    </button> 
-                : null  
-            }
-            </div>
+                {
+                    (toolbarTab === "FolderFocus" && !editFolderMode && user && playMode === "") ?
+                        <button onClick = { () => setEditFolderMode(true) }className="edit-folder-btn">
+                            <FaRegEdit />
+                        </button>
+                    :  
+                    (toolbarTab === "Flashcards" && !editFlashcardsMode && user && playMode === "") ? 
+                        <button onClick = { () => setEditFlashcardsMode(true) }className="edit-folder-btn">
+                            <FaRegEdit />
+                        </button> 
+                    : null  
+                }
+                </div>
             
 
             
@@ -147,23 +149,38 @@ const ToolbarBodyHeader = () => {
         if (toolbarTab === "Folders" || playMode !== "") return null;
 
 
-        let arcadeHighscore = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.arcadeHighscore 
+        let arcadeHighscore:any = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.arcadeHighscore 
             : (toolbarTab === "Flashcards" && userData) ? userData.arcadeHighscore 
             : localFreestyleHighscore;
 
-        let flashcardsHighscore = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.flashcardsHighscore 
-        : (toolbarTab === "Flashcards" && userData) ? userData.flashcardsHighscore 
-        : localFlashcardsHighscore;
+        let flashcardsHighscore: any = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.flashcardsHighscore 
+            : (toolbarTab === "Flashcards" && userData) ? userData.flashcardsHighscore 
+            : localFlashcardsHighscore;
 
-        if (arcadeHighscore === -1) arcadeHighscore = 0;
-        if (flashcardsHighscore === -1) flashcardsHighscore = 0;
+        // todo
+        let timedHighscore: any = (toolbarTab === "FolderFocus" && currentFolder) ? currentFolder.timedHighscore 
+            : (toolbarTab === "Flashcards" && userData) ? userData.timedHighscore 
+            : localTimedHighscore;
+
+        if (!flashcardsHighscore || flashcardsHighscore === -1 ) flashcardsHighscore = "n/a";
+        else flashcardsHighscore = parseHighscoreTime(flashcardsHighscore);
+        if (!timedHighscore || timedHighscore === -1 ) timedHighscore = "n/a";
+        if (!arcadeHighscore || arcadeHighscore === -1 ) arcadeHighscore = "n/a";
+
 
         return (
             <div className="body-header-highscore-container">
-                <div>Arcade: { arcadeHighscore }</div>
-                
-                
-                <div>Flashcards: { parseHighscoreTime(flashcardsHighscore) }</div>
+
+                <div className="tooltip-container">
+                    <FaRegQuestionCircle />
+                    <div className="tooltip">
+                        Highscores will clear upon adding/deleting flashcards
+                    </div>
+                </div>
+
+                <div className="highscore">Flashcards: { flashcardsHighscore }</div>
+                <div className="highscore">Timed: { timedHighscore }</div>
+                <div className="highscore">Arcade: { arcadeHighscore }</div>
             </div>
         )
     }
@@ -174,27 +191,21 @@ const ToolbarBodyHeader = () => {
             if (!currentFolder) {
                 console.error("Current folder is null");
                 return;
-            }
-            if (!user) {
+            } else if (!user) {
                 console.error("Error: user not found");
                 return;
             }
 
-
             const folderToDelete = currentFolder.name;
+            const docRef = doc(db, "userData", user.uid, "folders", folderToDelete);
+            await deleteDoc(docRef);
 
-            const docRef = doc(db, "userData", user.uid, "folders", currentFolder.name);
-            await deleteDoc(docRef)
-                .then(()=>{
-                    const newFolders = folders.filter((folder) => folder.name !== folderToDelete);
-                    setFolders(newFolders);
-                    setCurrentFolder(null);
-                    setEditFolderMode(false);
-                    setToolbarTab("Folders");
-                })
-                .catch((e)=>{
-                    console.error(e);
-                })
+            const newFolders = folders.filter((folder) => folder.name !== folderToDelete);
+            setFolders(newFolders);
+            setCurrentFolder(null);
+            setEditFolderMode(false);
+            setToolbarTab("Folders");
+
         } catch (e) {
             console.error(e);
         }

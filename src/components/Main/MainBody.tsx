@@ -8,7 +8,7 @@ import Game from "../Game/Game";
 import Toolbar from "../Toolbar/Toolbar";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { AutoPlayContextType, BoardStateContextType, PlayContextType } from "../../types/contexts";
-import { updateFolderFlashcardsHighscore, updateFolderFreestyleHighscore, updateMainFlashcardsHighscore, updateMainFreestyleHighscore } from "../../services/updateHighScore";
+import { updateFolderFlashcardsHighscore, updateFolderFreestyleHighscore, updateFolderTimedHighscore, updateMainFlashcardsHighscore, updateMainFreestyleHighscore, updateMainTimedHighscore } from "../../services/updateHighScore";
 
 const MainBody = () => {
 
@@ -43,19 +43,19 @@ const MainBody = () => {
     const [flashcardIdx, setFlashcardIdx] = useState<number>(0);            // idx for testingFlashcards
     const [flashcardMoves, setFlashcardMoves] = useState<string[]>([]);
     const [playerMoveIdx, setPlayerMoveIdx] = useState<number>(0);          // the move idx in testing a flashcard
-    const [flash, setFlash] = useState<"green" | "red" | "">("");
 
     const [trieHead, setTrieHead] = useState<Trie>(new Trie());
     const [currTrie, setCurrTrie] = useState<Trie>(new Trie());
 
     const [localFreestyleHighscore, setLocalFreestyleHighscore] = useState<number>(0);
     const [localFlashcardsHighscore, setLocalFlashcardsleHighscore] = useState<number>(-1);
+    const [localTimedHighscore, setLocalTimedHighscore] = useState<number>(0);
 
 
     const { userData, setUserData } = useContext(UserContext);
-    const { flashcards, setFolders, folders } = useContext(CardsContext);
+    const { setFolders, folders } = useContext(CardsContext);
 
-    const moveAudio = useMemo( () => (
+    /*const moveAudio = useMemo( () => (
         new Audio("/src/assets/sounds/move-self.mp3")
     ),[]);
     const checkAudio = useMemo( () => (
@@ -66,9 +66,9 @@ const MainBody = () => {
     ),[]);
     const captureAudio = useMemo( () => (
         new Audio("/src/assets/sounds/capture.mp3")
-    ),[]);
-    const invalidAudio = useMemo(()=> (
-        new Audio("/src/assets/sounds/invalid.mp3")
+    ),[]); */
+    const invalidMoveAudio = useMemo(()=> (
+        new Audio("/src/assets/sounds/invalidMove.mp3")
     ),[]);
 
     const incorrectAudio = useMemo(()=> (
@@ -86,14 +86,14 @@ const MainBody = () => {
 
         }
         else if (game.isCheck() || game.isCheckmate()) {
-            checkAudio.play();
+            new Audio("/src/assets/sounds/check.mp3").play();
         }
         else if (lastMove?.isCapture()) {
-            captureAudio.play();
+            new Audio("/src/assets/sounds/capture.mp3").play();
         } else if (lastMove?.isKingsideCastle() || lastMove?.isQueensideCastle()) {
-            castleAudio.play();
+            new Audio("/src/assets/sounds/castle.mp3").play();
         } else {
-            moveAudio.play();
+            new Audio("/src/assets/sounds/move-self.mp3").play();
         }
 
     },[game, lastMove, currMove]);
@@ -124,15 +124,14 @@ const MainBody = () => {
                 const newMoveHistory = moveHistory.slice(0, currMove);
                 newMoveHistory.push(gameCopy.history()[0]);
                 setMoveHistory(newMoveHistory);
-            }
-
+            }    
+            
             return true;
 
         } catch {
             console.error("Invalid move:", move);
-            if (playMode !== "") {
-                invalidAudio.play();
-            }
+            invalidMoveAudio.play();
+
             return false;
         }
     },[currMove, game, history, moveHistory])
@@ -179,7 +178,7 @@ const MainBody = () => {
 
         setPlayMode("");
         setInGameCorrects(0);
-        setTestingFlashcards([]);
+        setTestingFlashcards([]); 
         setFlashcardIdx(0);
         setFlashcardMoves([]);
         setPlayerMoveIdx(0);
@@ -196,16 +195,15 @@ const MainBody = () => {
 }
 
 
-    const beginFreestyle = (color: Color, head: Trie, folderName: 0 | string) => {
+    const beginFreestyle = (mode: "freestyle" | "arcade", color: Color, head: Trie, folderName: 0 | string) => {
         if (Object.keys(head.children).length === 0) {
             console.error("No flashcards to build trie off of");
             return;
         }
-        
         setColor(color);
         setTrieHead(head);
         setCurrTrie(head);
-        setPlayMode("freestyle"); //double check
+        setPlayMode(mode); //double check
         setPlayerMoveIdx(0);
         setGame(new Chess());
         setMoveHistory([]);
@@ -217,14 +215,17 @@ const MainBody = () => {
 
     }
 
-    const testFlashcards = (color: Color, flashcardsToTest: Flashcard[], setName: string | 0) => {
-        if (flashcards.length === 0) {
+    const beginFlashcards = (mode: "flashcards" | "timed",color: Color, flashcardsToTest: Flashcard[], setName: string | 0) => {
+        if (flashcardsToTest.length === 0) {
             console.error("Do not have any flashcards to begin testing");
             return;
         }
+
+        if (mode === "flashcards") setTime(0);
+        else setTime(6000);
         const firstMoveSet = parseMovesIntoArray(flashcardsToTest[0].moves);
         setTestingFlashcards(flashcardsToTest);
-        setPlayMode("flashcards");
+        setPlayMode(mode);
         setFlashcardIdx(0);
         setFlashcardMoves(firstMoveSet);
         setPlayerMoveIdx(0);
@@ -235,13 +236,11 @@ const MainBody = () => {
         setColor(color);
         setInGameCorrects(0);
         setTestingSetName(setName);
-        setTime(0);
         setHasSkippedFlashcard(false);
     }
     const onFinishFreestyle = () => {
         try {
-            console.log("finishing freestyle");
-            if (hasSkippedFlashcard) {
+            if (hasSkippedFlashcard || playMode === "freestyle") {
                 resetVariables();
                 return;
             }
@@ -290,40 +289,14 @@ const MainBody = () => {
 
     const onFinishFlashcards = () => {
         try {
-            if (hasSkippedFlashcard || testFlashcards.length === 0) {
+            if (hasSkippedFlashcard || testingFlashcards.length === 0) {
                 resetVariables();
                 return;
             }
 
-            // if playing from main flahscards set
-            if (testingSetName === 0 && userData && (time < userData.flashcardsHighscore || userData.flashcardsHighscore === -1)) {
-                updateMainFlashcardsHighscore(time, userData.id);
 
-                const newUserData = { ...userData, flashcardsHighscore: time } as UserData;
-                setUserData(newUserData);
-
-            } else if (testingSetName === 0 && !userData && (time < localFlashcardsHighscore || localFlashcardsHighscore === -1)) {
-                setLocalFlashcardsleHighscore(time);
-            }
-
-            // if playing from folders set
-            if (testingSetName !== 0) {
-                const folder = folders.find(f => f.name === testingSetName) as Folder;
-
-                if (time < folder.flashcardsHighscore || folder.flashcardsHighscore === -1) {
-                    if (userData) updateFolderFlashcardsHighscore(folder.name, time, userData.id);
-
-                    const newFolder = { ...folder, flashcardsHighscore: time } as Folder;
-
-                    setCurrentFolder(newFolder);
-
-                    const newFolders = folders.map((f) => {
-                        if (f.name !== newFolder.name) return f;
-                        else return newFolder;
-                    })
-                    setFolders(newFolders);
-                }
-            }
+            if (playMode === "flashcards") handleUpdateFlashcardsHighscore();
+            else handleUpdateTimedHighscore();
 
         } catch (e) {
             console.error(e);
@@ -331,6 +304,80 @@ const MainBody = () => {
             resetVariables();
         }
  
+    }
+
+    const handleUpdateFlashcardsHighscore = () => {
+        // if playing from main flahscards set
+        if (testingSetName === 0 && userData && (time < userData.flashcardsHighscore || userData.flashcardsHighscore === -1)) {
+            updateMainFlashcardsHighscore(time, userData.id);
+
+            const newUserData = { ...userData, flashcardsHighscore: time } as UserData;
+            setUserData(newUserData);
+
+        } else if (testingSetName === 0 && !userData && (time < localFlashcardsHighscore || localFlashcardsHighscore === -1)) {
+            setLocalFlashcardsleHighscore(time);
+        }
+
+        // if playing from folders set
+        if (testingSetName !== 0) {
+            const folder = folders.find(f => f.name === testingSetName) as Folder;
+
+            if (time < folder.flashcardsHighscore || folder.flashcardsHighscore === -1) {
+                if (userData) updateFolderFlashcardsHighscore(folder.name, time, userData.id);
+
+                const newFolder = { ...folder, flashcardsHighscore: time } as Folder;
+
+                setCurrentFolder(newFolder);
+
+                const newFolders = folders.map((f) => {
+                    if (f.name !== newFolder.name) return f;
+                    else return newFolder;
+                })
+                setFolders(newFolders);
+            }
+        }
+    }
+
+    const handleUpdateTimedHighscore = () => {
+        // upplaying from main set
+        if (testingSetName === 0 && userData && inGameCorrects > userData.timedHighscore) {
+            updateMainTimedHighscore(inGameCorrects, userData.id);
+
+
+
+            const newUserData: UserData = {
+                ...userData,
+                timedHighscore: inGameCorrects
+            };
+            setUserData(newUserData);
+
+
+        } else if (testingSetName === 0 && !userData && inGameCorrects > localTimedHighscore) {
+            setLocalTimedHighscore(inGameCorrects);
+        }
+
+        // if playting from a folder
+        else if (testingSetName !== 0) {
+            const folder = folders.find((f) => f.name === testingSetName) as Folder;
+
+            if (inGameCorrects > folder.timedHighscore) {
+                if (userData) updateFolderTimedHighscore(folder.name, inGameCorrects, userData.id);
+
+                const newFolder: Folder = {
+                    ...folder,
+                    timedHighscore: inGameCorrects
+                } as Folder;
+                setCurrentFolder(newFolder);
+
+                const newFolders = folders.map((f) => {
+                    if (f.name !== newFolder.name) return f;
+                    else return newFolder;
+                })
+                setFolders(newFolders);
+
+            }
+
+        }
     }
 
 
@@ -408,76 +455,91 @@ const MainBody = () => {
     },[playMode, currMove]);
     
 
-    const boardContextProviderValue = useMemo(()=> ({
-        game: game,
-        history: history,
-        moveHistory: moveHistory,
-        currMove: currMove,
-        currOpening: currOpening,
-        color: color,
+    const boardContextProviderValue = useMemo(()=> {
+        
+        const boardValues: BoardStateContextType = {
+            game: game,
+            history: history,
+            moveHistory: moveHistory,
+            currMove: currMove,
+            currOpening: currOpening,
+            color: color,
 
-        setGame: setGame,
-        setHistory: setHistory,
-        setMoveHistory: setMoveHistory,
-        setCurrMove: setCurrMove,
-        setCurrOpening,
-        setColor: setColor
-      } as BoardStateContextType),[game, history, moveHistory, currMove, currOpening, color]);
+            setGame: setGame,
+            setHistory: setHistory,
+            setMoveHistory: setMoveHistory,
+            setCurrMove: setCurrMove,
+            setCurrOpening,
+            setColor: setColor
+        }
+        return boardValues;
 
-      const autoPlayContextProviderValue = useMemo(()=>({
-        autoPlay,
-        autoPlayIdx,
-        autoPlayMoves,
+    },[game, history, moveHistory, currMove, currOpening, color]);
 
-        setAutoPlay,
-        setAutoPlayIdx,
-        setAutoPlayMoves,
+    const autoPlayContextProviderValue = useMemo(()=>{
 
-        autoPlayOpening
-      } as AutoPlayContextType),[autoPlay, autoPlayIdx, autoPlayMoves]);
+        const autoPlayValues: AutoPlayContextType = {autoPlay,
+            autoPlayIdx,
+            autoPlayMoves,
 
-    const playContextProviderValue = useMemo(()=> ({
-        testingFlashcards: testingFlashcards,
-        flashcardIdx: flashcardIdx,
-        flashcardMoves: flashcardMoves,
-        playerMoveIdx: playerMoveIdx,
+            setAutoPlay,
+            setAutoPlayIdx,
+            setAutoPlayMoves,
 
-        localFlashcardsHighscore: localFlashcardsHighscore, 
-        localFreestyleHighscore: localFreestyleHighscore,
-        setLocalFlashcardsHighscore: setLocalFlashcardsleHighscore,
-        setLocalFreestyleHighscore: setLocalFreestyleHighscore,
+            autoPlayOpening
+        }
+        return autoPlayValues;
 
-        time: time,
-        setTime: setTime,
+      },[autoPlay, autoPlayIdx, autoPlayMoves]);
 
-        flash: flash,
+    const playContextProviderValue = useMemo(()=> {
 
-        trieHead: trieHead,
-        currTrie: currTrie,
+        const playValues: PlayContextType = {
+            testingFlashcards: testingFlashcards,
+            flashcardIdx: flashcardIdx,
+            flashcardMoves: flashcardMoves,
+            playerMoveIdx: playerMoveIdx,
 
-        playMode: playMode,
-        inGameCorrects,
-        testingSetName,
-        setHasSkippedFlashcard,
-        setTestingSetName,
-        setInGameCorrects,
+            localFlashcardsHighscore: localFlashcardsHighscore, 
+            localFreestyleHighscore: localFreestyleHighscore,
+            localTimedHighscore: localTimedHighscore,
+            setLocalTimedHighscore: setLocalTimedHighscore,
+            setLocalFlashcardsHighscore: setLocalFlashcardsleHighscore,
+            setLocalFreestyleHighscore: setLocalFreestyleHighscore,
 
-        setFlash: setFlash,
-        setTestingFlashcards: setTestingFlashcards,
-        setFlashcardIdx: setFlashcardIdx,
-        setFlashcardMoves: setFlashcardMoves,
-        setPlayerMoveIdx: setPlayerMoveIdx,
+            time: time,
+            setTime: setTime,
 
-        setTrieHead: setTrieHead,
-        setCurrTrie: setCurrTrie,
-        setPlayMode: setPlayMode,
-        onFinishFlashcards: onFinishFlashcards,
-        onFinishFreestyle: onFinishFreestyle,
-        resetVariables: resetVariables
 
-    } as PlayContextType),[playMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx,
-        trieHead, currTrie, flash,
-        localFlashcardsHighscore, localFreestyleHighscore,
+            trieHead: trieHead,
+            currTrie: currTrie,
+
+            playMode: playMode,
+            inGameCorrects,
+            testingSetName,
+            setHasSkippedFlashcard,
+            setTestingSetName,
+            setInGameCorrects,
+
+            setTestingFlashcards: setTestingFlashcards,
+            setFlashcardIdx: setFlashcardIdx,
+            setFlashcardMoves: setFlashcardMoves,
+            setPlayerMoveIdx: setPlayerMoveIdx,
+
+            setTrieHead: setTrieHead,
+            setCurrTrie: setCurrTrie,
+            setPlayMode: setPlayMode,
+            onFinishFlashcards: onFinishFlashcards,
+            onFinishFreestyle: onFinishFreestyle,
+            resetVariables: resetVariables,
+            beginFlashcards: beginFlashcards, 
+            beginFreestyle: beginFreestyle
+        }
+        return playValues;
+
+    }, [playMode, testingFlashcards, flashcardIdx, flashcardMoves, playerMoveIdx,
+        trieHead, currTrie,
+        localFlashcardsHighscore, localFreestyleHighscore, localTimedHighscore,
         time, testingSetName, inGameCorrects
     ]);
 
@@ -501,9 +563,6 @@ const MainBody = () => {
                                 undo = { undo } 
                                 redo = { redo }
                                 restart = { restart }
-                    
-                                beginFreestyle = { beginFreestyle }
-                                testFlashcards = { testFlashcards }
 
                                 currentFolder = { currentFolder }
                                 setCurrentFolder = { setCurrentFolder }

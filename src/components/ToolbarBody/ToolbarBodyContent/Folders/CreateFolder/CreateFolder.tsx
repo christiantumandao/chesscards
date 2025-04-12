@@ -54,6 +54,7 @@ const CreateFolder = (props: CreateFolderProps) => {
                 ],
                 arcadeHighscore: 0,
                 flashcardsHighscore: -1,
+                timedHighscore: 0,
             } as Folder;
 
             await setDoc(docRef, folderToAdd);

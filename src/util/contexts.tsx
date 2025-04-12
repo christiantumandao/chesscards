@@ -44,12 +44,13 @@ export const PlayContext = createContext<PlayContextType>({
     flashcardIdx: 0,
     flashcardMoves: [],
     playerMoveIdx: 0,
-    flash: "",
 
     localFlashcardsHighscore: -1, 
     localFreestyleHighscore: 0,
     setLocalFlashcardsHighscore: () => {}, 
     setLocalFreestyleHighscore: () => {},
+    localTimedHighscore: 0,
+    setLocalTimedHighscore: () => {},
 
 
     trieHead: new Trie(),
@@ -69,14 +70,15 @@ export const PlayContext = createContext<PlayContextType>({
     setFlashcardIdx: () => {},
     setFlashcardMoves: () => {},
     setPlayerMoveIdx: () => {},
-    setFlash: () => {},
 
     setTrieHead: () => {},
     setCurrTrie: () => {},
     onFinishFlashcards: () => {},
     onFinishFreestyle: () => {},
     setHasSkippedFlashcard: () => {},
-    resetVariables: () => {}
+    resetVariables: () => {},
+    beginFlashcards: () => {},
+    beginFreestyle: () => {}
 })
 
 export const startingFen: string = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

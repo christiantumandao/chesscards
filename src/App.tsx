@@ -20,6 +20,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { getUserData, getUserFlashcards, getUserFolders } from './services/userGetters';
 import { getDefaultCards, getDefaultFolders } from './util/getDefaultCards';
+import { CardsContextType, TabContextType, UserContextType } from './types/contexts';
 
 function App() {
 
@@ -34,24 +35,39 @@ function App() {
   // CONTEXT PROVIDER VALUES ====================================================
 
   // prevent updates for every rerender 
-  const cardsContextProviderValue = useMemo(()=> ({
-    flashcards: flashcards, 
-    setFlashcards: setFlashcards,
-    folders: folders,
-    setFolders: setFolders,
-  }),[flashcards, folders])
+  const cardsContextProviderValue = useMemo(()=> {
 
-  const tabContextProviderValue = useMemo(() => ({
-    tab: tab,
-    setTab: setTab
-  }), [tab]);
+    const cardsValues: CardsContextType = {
+      flashcards: flashcards, 
+      setFlashcards: setFlashcards,
+      folders: folders,
+      setFolders: setFolders,
+    }
+    return cardsValues;
 
-  const userContextProviderValue = useMemo(()=>({
-    user: user,
-    userData: userData,
-    setUser: setUser,
-    setUserData
-  }), [user, userData]);
+  },[flashcards, folders])
+
+  const tabContextProviderValue = useMemo(() => {
+
+    const tabValues: TabContextType = {
+      tab: tab,
+      setTab: setTab
+    }
+    return tabValues;
+
+  }, [tab]);
+
+  const userContextProviderValue = useMemo(()=>{
+
+    const userValues: UserContextType = {
+      user: user,
+      userData: userData,
+      setUser: setUser,
+      setUserData
+    }
+    return userValues;
+
+  }, [user, userData]);
 
   // ==========================================================================
 
@@ -60,9 +76,9 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
-        const userData = await getUserData(user.uid);
-        const userFlashcards = await getUserFlashcards(user.uid)
-        const userFolders = await getUserFolders(user.uid);
+        const userData: UserData | null = await getUserData(user.uid);
+        const userFlashcards: Flashcard[] = await getUserFlashcards(user.uid)
+        const userFolders: Folder[] = await getUserFolders(user.uid);
 
         setUser(user);
         setUserData(userData);
@@ -70,13 +86,11 @@ function App() {
         setFolders(userFolders);
 
       } else {
-
+        const defaultCards: Flashcard[] = getDefaultCards();
+        const defaultFolders: Folder[] = getDefaultFolders();
+        
         setUser(null);
         setUserData(null);
-
-        // TO DO: load in default cards
-        const defaultCards = getDefaultCards();
-        const defaultFolders = getDefaultFolders();
         setFlashcards(defaultCards);
         setFolders(defaultFolders);
 

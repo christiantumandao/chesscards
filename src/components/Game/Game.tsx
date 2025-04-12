@@ -15,7 +15,7 @@ import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 
-const animationSpeed = 150;
+const animationSpeed = 100;
 const transitionSpeed = 750;
 
 interface GameProps {
@@ -29,11 +29,11 @@ interface GameProps {
 const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAudio }: GameProps) => {
 
     const { game, color,
-        setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame
+        setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory
      } = useContext(BoardStateContext);
 
-    const { playMode, flashcardIdx, setFlashcardIdx, flashcardMoves, setFlashcardMoves, playerMoveIdx, setPlayerMoveIdx, testingFlashcards, flash, setFlash,
-            currTrie, trieHead, setCurrTrie, setInGameCorrects, inGameCorrects, onFinishFlashcards
+    const { playMode, flashcardIdx, setFlashcardIdx, flashcardMoves, setFlashcardMoves, playerMoveIdx, setPlayerMoveIdx, testingFlashcards,
+            currTrie, trieHead, setCurrTrie, setInGameCorrects, inGameCorrects, onFinishFlashcards, setTime, time
      } = useContext(PlayContext);
 
      const { autoPlay } = useContext(AutoPlayContext);
@@ -56,19 +56,25 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
     // useEffect 1
     // when using a flashcard, the bot must play first:
     useEffect(()=>{
+        
         setTimeout(()=>{
-            if (playMode === "flashcards" && color==='black' && playerMoveIdx===0 && flashcardMoves) {
-                makeAMove(flashcardMoves[0]);
+            if ((playMode === "flashcards" || playMode === "timed")  && 
+                color==='black' && playerMoveIdx===0 && 
+                flashcardMoves) {
+                    makeAMove(flashcardMoves[0]);
 
-            } else if (playMode === "freestyle" && color === 'black' && playerMoveIdx === 0 && currTrie) {
-                // making random move among children in currTrie node
-                const childrenArr = Object.keys(currTrie.children);
-                const randomIdx = Math.floor(Math.random() * childrenArr.length);
-                makeAMove(childrenArr[randomIdx]);
+            } else if ((playMode === "freestyle" || playMode === "arcade") && 
+                color === 'black' && 
+                playerMoveIdx === 0 && 
+                currTrie) {
+                    // making random move among children in currTrie node
+                    const childrenArr = Object.keys(currTrie.children);
+                    const randomIdx = Math.floor(Math.random() * childrenArr.length);
+                    makeAMove(childrenArr[randomIdx]);
             }
         }, animationSpeed);
-    },[playMode, playerMoveIdx,
-        flashcardMoves, color])
+
+    },[playMode, playerMoveIdx, flashcardMoves, color])
 
     // useEffect 2
     // for updating the title of opening is being played in toolbar
@@ -80,8 +86,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
             const moveHistory = game.history();
             const move = moveHistory[moveHistory.length - 1];
             if (game.fen() === startingFen) return;
-            else if (playMode === "flashcards") validateMove_flashcards(move);
-            else if (playMode === "freestyle") validateMove_freestyle(move);
+            else if (playMode === "flashcards" || playMode === "timed") validateMove_flashcards(move);
+            else if (playMode === "freestyle" || playMode === "arcade") validateMove_freestyle(move);
         } 
     },[game, currPath, playMode]);
 
@@ -92,6 +98,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
 
         if (isCorrect) {
             const nextTrie = currTrie.children[move];
+
+            // if last move in the flashcard
             if (Object.keys(nextTrie.children).length === 0) {
                 onNextFreestyle();
             } else {
@@ -99,7 +107,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
             }
 
         } else {
-            setFlash("red");
             triggerIncorrectAnimation();
             setTimeout(()=>{
                 incrementIncorrects();
@@ -134,7 +141,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
             }
 
         } else {
-            setFlash("red");
             incrementIncorrects();
             incorrectAudio.play();
             triggerIncorrectAnimation();
@@ -204,10 +210,15 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
     }
 
     const onNextFreestyle = () => {
-        setFlash("green");
         triggerCorrectAnimation();
         incrementCorrects();
         setInGameCorrects(inGameCorrects + 1);
+
+        if (playMode === "arcade") {
+            const increment = Math.floor((moveHistory.length / 2) * 100);
+            setTime(time + increment);
+            //console.log("increment: ", increment);
+        }
         
     
         setTimeout(()=>{
@@ -221,16 +232,36 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
 
 
     const onNextFlashcard = () => {
-        setFlash("green");
         triggerCorrectAnimation();
         incrementCorrects();
         setInGameCorrects(inGameCorrects + 1);
 
-        setTimeout(()=>{
-            if ((flashcardIdx + 1) >= testingFlashcards.length) {
-                onFinishFlashcards();
-                return;
+        if (playMode === "timed") {
+            const increment = Math.floor((moveHistory.length / 2) * 100);
+            setTime(time + increment);
+            //console.log("increment: ", increment);
+        }
 
+
+        setTimeout(()=>{
+
+            if (flashcardIdx + 1 >= testingFlashcards.length) {
+                switch (playMode) {
+                    case "flashcards":
+                        onFinishFlashcards();
+                        break;
+                    case "timed":
+                        const newFlashcard = testingFlashcards[0];
+                        const newMoves = parseMovesIntoArray(newFlashcard.moves);
+                        setGame(new Chess());
+                        setCurrOpening(newFlashcard);
+                        setFlashcardIdx(0);
+                        setFlashcardMoves(newMoves);
+                        setMoveHistory([]);
+                        setPlayerMoveIdx(0);
+                        break;
+                }
+                return;
             }
 
             const idx = flashcardIdx+1;

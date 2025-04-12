@@ -90,10 +90,6 @@ body {
   padding: 10px;
 }
 
-div.more-wrapper.page {
-  overflow-y: scroll;
-}
-
 
 .error-message {
   text-align: center;
@@ -171,8 +167,8 @@ input:focus, textarea:focus {
 .tooltip {
   visibility: hidden;
   position: absolute;
-  left: -40px;
-  top: 0;
+  top: 50%;
+  right: 0;
   z-index: 200;
   
   height: auto;
@@ -180,8 +176,8 @@ input:focus, textarea:focus {
   max-width: none;
   text-align: center;
 
-  padding: 2px 6px;
-  border-radius: 3px;
+  padding: 6px;
+  border-radius: 2px;
 
   font-size: 12px;
   white-space: nowrap;
@@ -191,7 +187,6 @@ input:focus, textarea:focus {
   opacity: .4;
   box-shadow: var(--defaultShadow);
 
-  transform: translate(-50%, 60%);
   opacity: 0;
   transition: opacity 0.2s;
 

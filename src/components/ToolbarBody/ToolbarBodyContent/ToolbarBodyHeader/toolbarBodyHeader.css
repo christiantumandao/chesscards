@@ -168,11 +168,24 @@ div > button.border-right {
     align-items: flex-start;
 }
 
-.body-header-highscore-container > div:first-child {
+.body-header-highscore-container > .highscore:first-child {
     border-right: var(--border);
     padding-right: 20px;
 }
+.body-header-highscore-container > .highscore:last-child {
+    border-left: var(--border);
+    padding-left: 20px;
+}
 
-.body-header-highscore-container > div {
+.body-header-highscore-container > .highscore {
     margin-right: 20px;
+}
+
+.body-header-highscore-container > .tooltip-container {
+    margin-right: 10px;
+}
+
+.body-header-highscore-container > .tooltip-container:hover > .tooltip {
+    right: auto;
+    left: 80%;
 }
