@@ -98,7 +98,7 @@ const MainBody = () => {
 
     },[game, lastMove, currMove]);
 
-
+    // input is a string if it is autoplayed
     const  makeAMove = useCallback( (move: MoveVerbose | string) => {
         try {
             const isFirstMove = (game.fen() === startingFen);
@@ -555,6 +555,7 @@ const MainBody = () => {
                             <Game 
                                 makeAMove = { makeAMove }
                                 lastSquare = { lastSquare }
+                                lastMove = { lastMove }
                                 setLastSquare={ setLastSquare }
                                 incorrectAudio = { incorrectAudio }
                                 correctAudio = { correctAudio }

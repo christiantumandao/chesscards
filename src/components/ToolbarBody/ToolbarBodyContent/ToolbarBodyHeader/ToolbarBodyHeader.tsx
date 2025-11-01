@@ -162,10 +162,10 @@ const ToolbarBodyHeader = () => {
             : (toolbarTab === "Flashcards" && userData) ? userData.timedHighscore 
             : localTimedHighscore;
 
-        if (!flashcardsHighscore || flashcardsHighscore === -1 ) flashcardsHighscore = "n/a";
+        if (!flashcardsHighscore || flashcardsHighscore === -1 ) flashcardsHighscore = "-";
         else flashcardsHighscore = parseHighscoreTime(flashcardsHighscore);
-        if (!timedHighscore || timedHighscore === -1 ) timedHighscore = "n/a";
-        if (!arcadeHighscore || arcadeHighscore === -1 ) arcadeHighscore = "n/a";
+        if (!timedHighscore || timedHighscore === -1 ) timedHighscore = "-";
+        if (!arcadeHighscore || arcadeHighscore === -1 ) arcadeHighscore = "-";
 
 
         return (

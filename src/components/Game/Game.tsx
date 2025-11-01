@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState, useMemo } from "react";
 
 import "./game.css";
 
@@ -6,8 +6,8 @@ import 'firebase/firestore';
 import checkmarkIcon from "../../assets/checkmark.svg" ;
 import xIcon from "../../assets/xMark.svg" ;
 
-import { Chessboard } from "react-chessboard";
-import { Chess, Square } from "chess.js";
+import { Chessboard, PieceDropHandlerArgs, PieceHandlerArgs, SquareDataType } from "react-chessboard";
+import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
 import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
@@ -15,18 +15,21 @@ import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 
+import { generateBoard } from "react-chessboard";
+
 const animationSpeed = 100;
 const transitionSpeed = 750;
 
 interface GameProps {
     makeAMove: (newMove: MoveVerbose | string) => void
-    lastSquare: string | null
+    lastSquare: string | null,
     setLastSquare: (newVal: string | null) => void,
     incorrectAudio: HTMLAudioElement,
-    correctAudio: HTMLAudioElement
+    correctAudio: HTMLAudioElement,
+    lastMove: Move | undefined
 }
 
-const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAudio }: GameProps) => {
+const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory
@@ -38,8 +41,47 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
 
      const { autoPlay } = useContext(AutoPlayContext);
 
+     const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
+        if (!targetSquare) return false;
+        const move = makeAMove({
+          from: sourceSquare,
+          to: targetSquare,
+          promotion: "q", // always promote to a queen for example simplicity
+        });
+
+        if (move === null) return false;
+        return true;
+    }
+    
+    const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
+
+    const boardOptions = useMemo(()=> ({
+        position: game.fen() ,
+        onPieceDrop: onDrop,
+        
+
+        // this is to prevent animation when player makes the move
+        animationDuration: (autoPlay || playMode !== "") ? animationSpeed : 0 ,
+
+        boardOrientation:  (color==='both') ? 'white' : color,
+        customBoardStyle:  (window.innerWidth > 425) ?                  
+            { borderRadius: '5px' } : {} ,
+        customDropSquareStyle: { boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' },
+        arePiecesDraggable: true ,
+        squareStyles,
+    }),[game, playMode, autoPlay, animationSpeed, color, squareStyles])
+
+
+
 
     const currPath = useLocation();
+
+
+    useEffect(() => {
+        const _color = (color === "both") ? "white" : color;
+        const board = generateBoard(8,8, _color);
+
+    },[]);
 
     /* Game Logic
         if applicable, useEffect1 will fire
@@ -315,17 +357,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
             console.error('Error finding opening ', error);
         }
     }
-    
-    const onDrop = (sourceSquare: Square, targetSquare: Square): boolean => {
-        const move = makeAMove({
-          from: sourceSquare,
-          to: targetSquare,
-          promotion: "q", // always promote to a queen for example simplicity
-        });
-
-        if (move === null) return false;
-        return true;
-    } 
 
     const triggerCorrectAnimation = () => {
 
@@ -334,45 +365,75 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
         imgElement.src = checkmarkIcon;  // Replace with your image URL
         target?.appendChild(imgElement);
 
-        if (target == null) return;
+        if (target != null) {
 
-        target.style.position = "relative";
-        imgElement.style.position = "absolute";
-        imgElement.style.top = "-10px";
-        imgElement.style.right = "-10px";
-        imgElement.style.height = "2rem";
-        imgElement.style.width = "2rem";
-        imgElement.style.zIndex = "100";
+            target.style.position = "relative";
+            imgElement.style.position = "absolute";
+            imgElement.style.top = "-10px";
+            imgElement.style.right = "-10px";
+            imgElement.style.height = "2rem";
+            imgElement.style.width = "2rem";
+            imgElement.style.zIndex = "100";
+        }
+
+        console.log(lastMove)
+
+        if (lastMove) {
+            setSquareStyles({      
+                [lastMove.to]: {
+                    backgroundColor: 'rgba(0,255,0,0.4)'
+                },
+                [lastMove.from]: {
+                    backgroundColor: 'rgba(0,255, 0,.2'
+                }
+
+            })
+        }
 
         setTimeout(()=> {
             imgElement.remove();
             setLastSquare(null);
+            setSquareStyles({});
         },transitionSpeed);
         
     }
 
     const triggerIncorrectAnimation = () => {
 
+        console.log(lastMove);
+
         const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
         const imgElement = document.createElement("img");
         imgElement.src = xIcon;  // Replace with your image URL
         target?.appendChild(imgElement);
 
-        if (target == null) {
-            return;
+        if (lastSquare && lastMove && lastMove.from) {
+            setSquareStyles({      
+                [lastMove.to]: {
+                    backgroundColor: 'rgba(255,0,0,0.4)'
+                },
+                [lastMove.from]: {
+                    backgroundColor: 'rgba(255, 0, 0,.2'
+                }
+
+            })
+        }
+
+        if (target != null) {
+            target.style.position = "relative";
+            imgElement.style.position = "absolute";
+            imgElement.style.top = "-10px";
+            imgElement.style.right = "-10px";
+            imgElement.style.height = "25px";
+            imgElement.style.width = "25px";
+            imgElement.style.zIndex = "100";
         };
 
-        target.style.position = "relative";
-        imgElement.style.position = "absolute";
-        imgElement.style.top = "-10px";
-        imgElement.style.right = "-10px";
-        imgElement.style.height = "2rem";
-        imgElement.style.width = "2rem";
-        imgElement.style.zIndex = "100";
 
         setTimeout(()=> {
             imgElement.remove();
             setLastSquare(null);
+            setSquareStyles({});
         },transitionSpeed);
         
     }
@@ -383,21 +444,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, incorrectAudio, correctAud
         <div className="game-wrapper">
             <div className={"gamegui-container"}>
 
-                <Chessboard 
-                    position = { game.fen() }
-                    onPieceDrop = { onDrop }
-                    
-
-                    // this is to prevent animation when player makes the move
-                    animationDuration = { (autoPlay || playMode !== "") ? animationSpeed : 0 }
-
-                    boardOrientation = { (color==='both') ? 'white' : color }
-                    customBoardStyle = { (window.innerWidth > 425) ?                  
-                        { borderRadius: '5px' } : {} }
-                    customDropSquareStyle = {{ boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' }}
-                    arePiecesDraggable = { true }
-
-
+                <Chessboard options = { boardOptions }
                 />
             </div>
         </div>

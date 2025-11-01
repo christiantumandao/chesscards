@@ -6,6 +6,7 @@
     padding: 40px;
     flex: 1 1 0;
 
+    align-self: center;
 }
 
 .gamegui-container {

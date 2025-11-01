@@ -29,3 +29,17 @@
     margin-left: 5px;
     font-size: 14px;
 }
+
+.add-folder-sign-in-msg {
+    padding: 6px 10px;
+    background-color: var(--eigen);
+    color: white;
+    font-weight: bolder;
+    margin-top: 6px;
+    border: var(--border);
+    border-radius: 5px;
+}
+
+.add-folder-sign-in-msg:hover {
+    background-color: var(--hoverHighlightDarkGrey);
+}

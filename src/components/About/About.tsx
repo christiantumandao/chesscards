@@ -9,9 +9,9 @@ import { TbBinaryTree } from "react-icons/tb";
 const About = () => {
     return (
         <div className="more-wrapper page">
+            
             <div className="more-blob">
                 <h1>Chess Flashcards</h1>
-
 
                 <section className="tutorial-container">
                     <article>
@@ -101,8 +101,8 @@ const About = () => {
 
             <div className="more-blob">
                 <h4>Credits:</h4>
-                <p style={{fontSize: "1rem"}}>Christian Tumandao</p>
-                <p style={{fontSize: "1rem"}}>Built on React and GCP</p>
+                <p className="credits">Christian Tumandao</p>
+                <p className="credits">Built on React and GCP</p>
             </div>
         </div>
     )
