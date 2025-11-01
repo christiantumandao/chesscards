@@ -117,7 +117,7 @@ function App() {
                 <Route path="/log-in" element={<LogIn login={true}/>}></Route>
                 <Route path="/sign-up" element={<LogIn  login={false}/>}></Route>
                 <Route path="/profile" element={<Profile />}></Route>
-                <Route path="/flashcards" element={<MainBody/>}></Route>
+                <Route path="/flashcards" element={<MainBody />}></Route>
               </Routes>
 
             </TabContext.Provider>

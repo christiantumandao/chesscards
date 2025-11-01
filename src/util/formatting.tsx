@@ -66,9 +66,8 @@ export  const formatCustomMoveHistory = (moveHistory: string[], currMove: number
 }
 
 export const parseHighscoreTime = (time: number) => {
-    const minutes = Math.floor((time % 360000) / 6000);
-    const seconds = Math.floor((time % 6000) / 100);
-    const milliseconds = time % 100;
+    const minutes = Math.floor(time / 60)
+    const seconds = time % 60;
 
-    return `${minutes}:${seconds}:${milliseconds}`;
+    return `${minutes}:${seconds}`;
 }

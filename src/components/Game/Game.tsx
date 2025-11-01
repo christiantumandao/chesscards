@@ -257,7 +257,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
         setInGameCorrects(inGameCorrects + 1);
 
         if (playMode === "arcade") {
-            const increment = Math.floor((moveHistory.length / 2) * 100);
+            const increment = Math.floor((moveHistory.length / 2));
             setTime(time + increment);
             //console.log("increment: ", increment);
         }
@@ -279,7 +279,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
         setInGameCorrects(inGameCorrects + 1);
 
         if (playMode === "timed") {
-            const increment = Math.floor((moveHistory.length / 2) * 100);
+            const increment = Math.floor((moveHistory.length / 2));
             setTime(time + increment);
             //console.log("increment: ", increment);
         }

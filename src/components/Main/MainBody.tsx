@@ -114,6 +114,7 @@ const MainBody = () => {
             
             if (typeof move === "string") {
                 setLastSquare(move);
+
             } else {
                 setLastSquare(move.to);
             }
@@ -210,7 +211,7 @@ const MainBody = () => {
         setHistory([startingFen]);
         setInGameCorrects(0);
         setTestingSetName(folderName);
-        setTime(6000);
+        setTime(60);
         setHasSkippedFlashcard(false);
 
     }
@@ -222,7 +223,7 @@ const MainBody = () => {
         }
 
         if (mode === "flashcards") setTime(0);
-        else setTime(6000);
+        else setTime(60);
         const firstMoveSet = parseMovesIntoArray(flashcardsToTest[0].moves);
         setTestingFlashcards(flashcardsToTest);
         setPlayMode(mode);
@@ -247,7 +248,7 @@ const MainBody = () => {
             const score = inGameCorrects;
             
             // if playing from main flashcards set and new higscore
-            if (userData && testingSetName === 0 && userData.arcadeHighscore < score) {
+            if (userData && testingSetName === 0 && userData.arcadeHighscore > score) {
                 updateMainFreestyleHighscore(score, userData.id);
 
                 setUserData({
@@ -374,6 +375,7 @@ const MainBody = () => {
                     else return newFolder;
                 })
                 setFolders(newFolders);
+                console.log("updated highscore")
 
             }
 
