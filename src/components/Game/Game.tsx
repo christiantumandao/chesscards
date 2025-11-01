@@ -360,6 +360,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
 
     const triggerCorrectAnimation = () => {
 
+        /*
         const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
         const imgElement = document.createElement("img");
         imgElement.src = checkmarkIcon;  // Replace with your image URL
@@ -374,9 +375,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
             imgElement.style.height = "2rem";
             imgElement.style.width = "2rem";
             imgElement.style.zIndex = "100";
-        }
+        } */
 
-        console.log(lastMove)
 
         if (lastMove) {
             setSquareStyles({      
@@ -391,7 +391,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
         }
 
         setTimeout(()=> {
-            imgElement.remove();
+            //imgElement.remove();
             setLastSquare(null);
             setSquareStyles({});
         },transitionSpeed);
@@ -400,12 +400,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
 
     const triggerIncorrectAnimation = () => {
 
-        console.log(lastMove);
-
-        const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
-        const imgElement = document.createElement("img");
-        imgElement.src = xIcon;  // Replace with your image URL
-        target?.appendChild(imgElement);
 
         if (lastSquare && lastMove && lastMove.from) {
             setSquareStyles({      
@@ -418,6 +412,12 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
 
             })
         }
+        /*
+
+        const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
+        const imgElement = document.createElement("img");
+        imgElement.src = xIcon;  // Replace with your image URL
+        target?.appendChild(imgElement);
 
         if (target != null) {
             target.style.position = "relative";
@@ -427,11 +427,11 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
             imgElement.style.height = "25px";
             imgElement.style.width = "25px";
             imgElement.style.zIndex = "100";
-        };
+        }; */
 
 
         setTimeout(()=> {
-            imgElement.remove();
+            //imgElement.remove();
             setLastSquare(null);
             setSquareStyles({});
         },transitionSpeed);
