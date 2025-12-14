@@ -260,7 +260,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     padding: 6px;
     padding-right: 28px;
     font-size: 14px;
-    font-weight: bolder;
+    font-weight: 500;
 
     border: var(--border);
     border-radius: 5px;
@@ -316,6 +316,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 .score-container label,
 .selectcolor-element label {
     font-size: 14px;
+    font-weight: bolder;
 }
 
 .selectcolor-element svg {

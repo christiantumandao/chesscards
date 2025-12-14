@@ -71,3 +71,5 @@ export const parseHighscoreTime = (time: number) => {
 
     return `${minutes}:${seconds}`;
 }
+
+
