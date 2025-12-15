@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext, useMemo } from "react";
+import { useState, useEffect, useCallback, useContext, useMemo, useRef } from "react";
 import { Flashcard, Folder, UserData } from "../../types/db";
 import { Chess, Move } from "chess.js";
 import { Trie } from "../../util/Trie";
@@ -9,6 +9,34 @@ import Toolbar from "../Toolbar/Toolbar";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { AutoPlayContextType, BoardStateContextType, PlayContextType } from "../../types/contexts";
 import { updateFolderFlashcardsHighscore, updateFolderFreestyleHighscore, updateFolderTimedHighscore, updateMainFlashcardsHighscore, updateMainFreestyleHighscore, updateMainTimedHighscore } from "../../services/updateHighScore";
+
+import moveAudio from "/src/assets/sounds/move-self.mp3";
+import castleAudio from "/src/assets/sounds/castle.mp3"
+import captureAudio from "/src/assets/sounds/capture.mp3"
+import incorrectAudio from "/src/assets/sounds/incorrect.mp3" //change audio
+import correctAudio from "/src/assets/sounds/correct.mp3" //get audio
+import checkAudio from "/src/assets/sounds/check.mp3"
+import illegalAudio from "/src/assets/sounds/illegal.mp3" // change audio
+
+const audios = {
+    move: moveAudio,
+    capture: captureAudio,
+    incorrect: incorrectAudio,
+    correct: correctAudio,
+    check: checkAudio,
+    illegal: illegalAudio,
+    castle: castleAudio
+} as const;
+type AudioType = keyof typeof audios;
+
+/*    const moveAudio = useRef<HTMLAudioElement | null>(null);
+    const castleAudio = useRef<HTMLAudioElement | null>(null);
+    const captureAudio = useRef<HTMLAudioElement | null>(null);
+    const incorrectAudio = useRef<HTMLAudioElement | null>(null);
+    const correctAudio = useRef<HTMLAudioElement | null>(null);
+    const checkAudio = useRef<HTMLAudioElement | null>(null);
+    const invalidMoveAudio = useRef<HTMLAudioElement | null>(null);*/
+
 
 const MainBody = () => {
 
@@ -55,29 +83,6 @@ const MainBody = () => {
     const { userData, setUserData } = useContext(UserContext);
     const { setFolders, folders } = useContext(CardsContext);
 
-    /*const moveAudio = useMemo( () => (
-        new Audio("/src/assets/sounds/move-self.mp3")
-    ),[]);
-    const checkAudio = useMemo( () => (
-        new Audio("/src/assets/sounds/check.mp3")
-    ),[]);
-    const castleAudio = useMemo( () => (
-        new Audio("/src/assets/sounds/castle.mp3")
-    ),[]);
-    const captureAudio = useMemo( () => (
-        new Audio("/src/assets/sounds/capture.mp3")
-    ),[]); */
-    const invalidMoveAudio = useMemo(()=> (
-        new Audio("/src/assets/sounds/invalidMove.mp3")
-    ),[]);
-
-    const incorrectAudio = useMemo(()=> (
-        new Audio("/src/assets/sounds/incorrect.mp3")
-    ),[]);
-
-    const correctAudio = useMemo(()=> (
-        new Audio("/src/assets/sounds/incorrect.mp3")
-    ),[]);
 
 
 
@@ -86,14 +91,18 @@ const MainBody = () => {
 
         }
         else if (game.isCheck() || game.isCheckmate()) {
-            new Audio("/src/assets/sounds/check.mp3").play();
+            //new Audio("/src/assets/sounds/check.mp3").play();
+            playSound("check");
         }
         else if (lastMove?.isCapture()) {
-            new Audio("/src/assets/sounds/capture.mp3").play();
+            //new Audio("/src/assets/sounds/capture.mp3").play();
+            playSound("capture");
         } else if (lastMove?.isKingsideCastle() || lastMove?.isQueensideCastle()) {
-            new Audio("/src/assets/sounds/castle.mp3").play();
+            //new Audio("/src/assets/sounds/castle.mp3").play();
+            playSound("castle");
         } else {
-            new Audio("/src/assets/sounds/move-self.mp3").play();
+            //new Audio("/src/assets/sounds/move-self.mp3").play();
+            playSound("move");
         }
 
     },[game, lastMove, currMove]);
@@ -131,7 +140,7 @@ const MainBody = () => {
 
         } catch {
             console.error("Invalid move:", move);
-            invalidMoveAudio.play();
+            playSound("illegal");
 
             return false;
         }
@@ -545,6 +554,10 @@ const MainBody = () => {
         time, testingSetName, inGameCorrects
     ]);
 
+    const playSound = (audio: AudioType) => {
+        new Audio(audios[audio]).play(); 
+    }
+
 
     return (
         <div className="mainbody">
@@ -559,8 +572,7 @@ const MainBody = () => {
                                 lastSquare = { lastSquare }
                                 lastMove = { lastMove }
                                 setLastSquare={ setLastSquare }
-                                incorrectAudio = { incorrectAudio }
-                                correctAudio = { correctAudio }
+                                playSound = { playSound }
                             />
                             <Toolbar 
                                 undo = { undo } 
@@ -579,4 +591,6 @@ const MainBody = () => {
     )
 }
 
+
+export type { AudioType };
 export default MainBody;

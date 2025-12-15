@@ -14,6 +14,7 @@ import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "..
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
+import { AudioType } from "../Main/MainBody";
 
 import { generateBoard } from "react-chessboard";
 
@@ -24,12 +25,11 @@ interface GameProps {
     makeAMove: (newMove: MoveVerbose | string) => void
     lastSquare: string | null,
     setLastSquare: (newVal: string | null) => void,
-    incorrectAudio: HTMLAudioElement,
-    correctAudio: HTMLAudioElement,
+    playSound: (audio: AudioType) => void,
     lastMove: Move | undefined
 }
 
-const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }: GameProps) => {
+const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory
@@ -139,6 +139,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
         const isCorrect = childrenArr.includes(move);
 
         if (isCorrect) {
+            
             const nextTrie = currTrie.children[move];
 
             // if last move in the flashcard
@@ -152,7 +153,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
             triggerIncorrectAnimation();
             setTimeout(()=>{
                 incrementIncorrects();
-                incorrectAudio.play();
+                playSound("incorrect");
                 setPlayerMoveIdx(0);
                 setGame(new Chess());
                 setCurrTrie(trieHead);
@@ -173,7 +174,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
         const isCorrect = (flashcardMoves[playerMoveIdx] === move);
         if (isCorrect) {
             // next flashcard
-            if ((playerMoveIdx + 1) >= flashcardMoves.length) {
+            if ((playerMoveIdx + 1) === flashcardMoves.length) {
+                playSound("correct");
                 onNextFlashcard();
             // next move in flashcard
             } else {
@@ -184,7 +186,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, incorrectAudio }
 
         } else {
             incrementIncorrects();
-            incorrectAudio.play();
+            playSound("incorrect");
             triggerIncorrectAnimation();
             
             setTimeout(()=>{
