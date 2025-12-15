@@ -58,6 +58,9 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     const boardOptions = useMemo(()=> ({
         position: game.fen() ,
         onPieceDrop: onDrop,
+        dropSquareStyle: {
+            boxShadow: 'inset 0px 0px 0px 5px rgba(255,255,255,.5)'
+        },
         
 
         // this is to prevent animation when player makes the move
