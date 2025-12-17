@@ -5,13 +5,8 @@ import { FaArrowLeft, FaArrowRight, FaArrowsAltV, FaRedo } from "react-icons/fa"
 import { BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
 import { Chess, validateFen } from "chess.js";
 import { useLocation } from "react-router-dom";
+import { ToolbarFooterProps } from "./types";
 
-interface ToolbarFooterProps {
-    restart: () => void,
-    undo: () => void,
-    redo: () => void,
-
-}
 
 const ToolbarFooter = ({restart, undo, redo }: ToolbarFooterProps) => {
 

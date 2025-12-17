@@ -3,11 +3,9 @@ import { useEffect, useContext, useState, useMemo } from "react";
 import "./game.css";
 
 import 'firebase/firestore';
-import checkmarkIcon from "../../assets/checkmark.svg" ;
-import xIcon from "../../assets/xMark.svg" ;
 
-import { Chessboard, PieceDropHandlerArgs, PieceHandlerArgs, SquareDataType } from "react-chessboard";
-import { Chess, Move, Square } from "chess.js";
+import { Chessboard, PieceDropHandlerArgs } from "react-chessboard";
+import { Chess, Move } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
 import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
@@ -16,7 +14,7 @@ import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 import { AudioType } from "../Main/MainBody";
 
-import { generateBoard } from "react-chessboard";
+//import { generateBoard } from "react-chessboard";
 
 const animationSpeed = 100;
 const transitionSpeed = 750;
@@ -80,11 +78,11 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     const currPath = useLocation();
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         const _color = (color === "both") ? "white" : color;
         const board = generateBoard(8,8, _color);
 
-    },[]);
+    },[]);*/
 
     /* Game Logic
         if applicable, useEffect1 will fire

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useContext, useMemo } from "react";
 import { Flashcard, Folder, UserData } from "../../types/db";
 import { Chess, Move } from "chess.js";
 import { Trie } from "../../util/Trie";
@@ -28,14 +28,6 @@ const audios = {
     castle: castleAudio
 } as const;
 type AudioType = keyof typeof audios;
-
-/*    const moveAudio = useRef<HTMLAudioElement | null>(null);
-    const castleAudio = useRef<HTMLAudioElement | null>(null);
-    const captureAudio = useRef<HTMLAudioElement | null>(null);
-    const incorrectAudio = useRef<HTMLAudioElement | null>(null);
-    const correctAudio = useRef<HTMLAudioElement | null>(null);
-    const checkAudio = useRef<HTMLAudioElement | null>(null);
-    const invalidMoveAudio = useRef<HTMLAudioElement | null>(null);*/
 
 
 const MainBody = () => {
