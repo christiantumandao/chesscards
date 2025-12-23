@@ -100,7 +100,7 @@ const MainBody = () => {
     },[game, lastMove, currMove]);
 
     // input is a string if it is autoplayed
-    const  makeAMove = useCallback( (move: MoveVerbose | string) => {
+    const  makeAMove = useCallback( (move: MoveVerbose | string): boolean => {
         try {
             const isFirstMove = (game.fen() === startingFen);
             const gameCopy = new Chess(game.fen());

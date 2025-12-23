@@ -1,11 +1,11 @@
-import { useEffect, useContext, useState, useMemo } from "react";
+import { useEffect, useContext, useState } from "react";
 
 import "./game.css";
 
 import 'firebase/firestore';
 
-import { Chessboard, PieceDropHandlerArgs } from "react-chessboard";
-import { Chess, Move } from "chess.js";
+import { Chessboard, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chessboard";
+import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
 import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
@@ -20,7 +20,7 @@ const animationSpeed = 100;
 const transitionSpeed = 750;
 
 interface GameProps {
-    makeAMove: (newMove: MoveVerbose | string) => void
+    makeAMove: (newMove: MoveVerbose | string) => boolean
     lastSquare: string | null,
     setLastSquare: (newVal: string | null) => void,
     playSound: (audio: AudioType) => void,
@@ -51,26 +51,11 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         return true;
     }
     
-    const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
+    //const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
+    const [moveFrom, setMoveFrom] = useState('');
+    const [optionSquares, setOptionSquares] = useState({});
 
-    const boardOptions = useMemo(()=> ({
-        position: game.fen() ,
-        onPieceDrop: onDrop,
-        dropSquareStyle: {
-            boxShadow: 'inset 0px 0px 0px 5px rgba(255,255,255,.5)'
-        },
-        
 
-        // this is to prevent animation when player makes the move
-        animationDuration: (autoPlay || playMode !== "") ? animationSpeed : 0 ,
-
-        boardOrientation:  (color==='both') ? 'white' : color,
-        customBoardStyle:  (window.innerWidth > 425) ?                  
-            { borderRadius: '5px' } : {} ,
-        customDropSquareStyle: { boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' },
-        arePiecesDraggable: true ,
-        squareStyles,
-    }),[game, playMode, autoPlay, animationSpeed, color, squareStyles])
 
 
 
@@ -363,26 +348,9 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
     const triggerCorrectAnimation = () => {
 
-        /*
-        const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
-        const imgElement = document.createElement("img");
-        imgElement.src = checkmarkIcon;  // Replace with your image URL
-        target?.appendChild(imgElement);
-
-        if (target != null) {
-
-            target.style.position = "relative";
-            imgElement.style.position = "absolute";
-            imgElement.style.top = "-10px";
-            imgElement.style.right = "-10px";
-            imgElement.style.height = "2rem";
-            imgElement.style.width = "2rem";
-            imgElement.style.zIndex = "100";
-        } */
-
-
         if (lastMove) {
-            setSquareStyles({      
+            console.log("test");
+            setOptionSquares({      
                 [lastMove.to]: {
                     backgroundColor: 'rgba(0,255,0,0.4)'
                 },
@@ -396,7 +364,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         setTimeout(()=> {
             //imgElement.remove();
             setLastSquare(null);
-            setSquareStyles({});
+            setOptionSquares({});
         },transitionSpeed);
         
     }
@@ -405,7 +373,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
 
         if (lastSquare && lastMove && lastMove.from) {
-            setSquareStyles({      
+            setOptionSquares({      
                 [lastMove.to]: {
                     backgroundColor: 'rgba(255,0,0,0.4)'
                 },
@@ -415,31 +383,130 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
             })
         }
-        /*
-
-        const target = document.querySelector(`[data-square='${lastSquare}']`) as HTMLElement;
-        const imgElement = document.createElement("img");
-        imgElement.src = xIcon;  // Replace with your image URL
-        target?.appendChild(imgElement);
-
-        if (target != null) {
-            target.style.position = "relative";
-            imgElement.style.position = "absolute";
-            imgElement.style.top = "-10px";
-            imgElement.style.right = "-10px";
-            imgElement.style.height = "25px";
-            imgElement.style.width = "25px";
-            imgElement.style.zIndex = "100";
-        }; */
-
 
         setTimeout(()=> {
             //imgElement.remove();
             setLastSquare(null);
-            setSquareStyles({});
+            setOptionSquares({});
         },transitionSpeed);
         
     }
+
+
+    const onSquareClick = ({ square, piece }: SquareHandlerArgs) => {
+      // piece clicked to move
+      if (!moveFrom && piece) {
+        // get the move options for the square
+        const hasMoveOptions = getMoveOptions(square as Square);
+
+        // if move options, set the moveFrom to the square
+        if (hasMoveOptions) {
+          setMoveFrom(square);
+        }
+
+        // return early
+        return;
+      }
+
+      // square clicked to move to, check if valid move
+      const moves = game.moves({
+        square: moveFrom as Square,
+        verbose: true
+      });
+      const foundMove = moves.find(m => m.from === moveFrom && m.to === square);
+
+      // not a valid move
+      if (!foundMove) {
+        // check if clicked on new piece
+        const hasMoveOptions = getMoveOptions(square as Square);
+
+        // if new piece, setMoveFrom, otherwise clear moveFrom
+        setMoveFrom(hasMoveOptions ? square : '');
+
+        // return early
+        return;
+      }
+
+        const res: boolean = makeAMove({
+            from: moveFrom,
+            to: square,
+            promotion: 'q'
+        });
+        if (res === false) {
+            // if invalid, setMoveFrom and getMoveOptions
+            const hasMoveOptions = getMoveOptions(square as Square);
+
+            // if new piece, setMoveFrom, otherwise clear moveFrom
+            if (hasMoveOptions) {
+            setMoveFrom(square);
+            }
+
+            // return early
+            return;
+        }
+
+        setMoveFrom('');
+        setOptionSquares({}); 
+    }
+
+    const getMoveOptions = (square: Square) => {
+      // get the moves for the square
+      const moves = game.moves({
+        square,
+        verbose: true
+      });
+
+      // if no moves, clear the option squares
+      if (moves.length === 0) {
+        setOptionSquares({});
+        return false;
+      }
+
+      // create a new object to store the option squares
+      const newSquares: Record<string, React.CSSProperties> = {};
+
+      // loop through the moves and set the option squares
+      for (const move of moves) {
+        newSquares[move.to] = {
+          background: game.get(move.to) && game.get(move.to)?.color !== game.get(square)?.color ? 'radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)' // larger circle for capturing
+          : 'radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)',
+          // smaller circle for moving
+          borderRadius: '50%'
+        };
+      }
+
+      // set the square clicked to move from to yellow
+      newSquares[square] = {
+        background: 'rgba(255, 255, 0, 0.4)'
+      };
+
+      // set the option squares
+      setOptionSquares(newSquares);
+
+      // return true to indicate that there are move options
+      return true;
+    }
+
+    const boardOptions = {
+        position: game.fen() ,
+        onPieceDrop: onDrop,
+        dropSquareStyle: {
+            boxShadow: 'inset 0px 0px 0px 5px rgba(255,255,255,.5)'
+        },
+
+        onSquareClick,
+
+        // this is to prevent animation when player makes the move
+        animationDuration: (autoPlay || playMode !== "") ? animationSpeed : 0 ,
+
+        boardOrientation:  (color==='both') ? 'white' : color,
+        customBoardStyle:  (window.innerWidth > 425) ?                  
+            { borderRadius: '5px' } : {} ,
+        customDropSquareStyle: { boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' },
+        arePiecesDraggable: true ,
+        squareStyles: optionSquares,
+        id: 'click-or-drag-to-move'
+    };
 
 
 
