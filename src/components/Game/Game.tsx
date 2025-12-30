@@ -27,6 +27,12 @@ interface GameProps {
     lastMove: Move | undefined
 }
 
+interface Arrow {
+    startSquare: string,
+    endSquare: string,
+    color: string
+}
+
 const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: GameProps) => {
 
     const { game, color,
@@ -54,11 +60,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     //const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
     const [moveFrom, setMoveFrom] = useState('');
     const [optionSquares, setOptionSquares] = useState({});
-
-
-
-
-
+    const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
 
     const currPath = useLocation();
 
@@ -172,6 +174,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
         } else {
             incrementIncorrects();
+            drawCorrectArrow(flashcardMoves[playerMoveIdx]);
             playSound("incorrect");
             triggerIncorrectAnimation();
             
@@ -182,10 +185,30 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 setHistory([startingFen]);
                 setMoveHistory([]);
                 setCurrMove(0);
+                setDisplayedArrows([]);
             },transitionSpeed)
             
         }
         
+    }
+
+    const drawCorrectArrow = (move: string) => {
+
+        try {
+            const gameCopy = new Chess();
+            gameCopy.loadPgn(game.pgn());
+            gameCopy.undo();
+            const correctMove = gameCopy.move(move, {verbose: true} as any);
+            console.log(correctMove);
+            const arrow = [{
+                startSquare: correctMove.from,
+                endSquare: correctMove.to,
+                color: "orange"
+            }] as Arrow[];
+            setDisplayedArrows(arrow);
+        } catch (e) {
+            console.error(`Error drawing arrow: ${e}`);
+        }
     }
 
 
@@ -505,7 +528,9 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         customDropSquareStyle: { boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' },
         arePiecesDraggable: true ,
         squareStyles: optionSquares,
-        id: 'click-or-drag-to-move'
+        id: 'click-or-drag-to-move',
+
+        arrows: displayedArrows
     };
 
 
