@@ -131,6 +131,9 @@ const MainBody = () => {
             return true;
 
         } catch {
+            if (typeof move !== "string" && move.from === move.to) {
+                return false;
+            } 
             console.error("Invalid move:", move);
             playSound("illegal");
 

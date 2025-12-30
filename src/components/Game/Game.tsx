@@ -199,7 +199,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             gameCopy.loadPgn(game.pgn());
             gameCopy.undo();
             const correctMove = gameCopy.move(move, {verbose: true} as any);
-            console.log(correctMove);
             const arrow = [{
                 startSquare: correctMove.from,
                 endSquare: correctMove.to,
