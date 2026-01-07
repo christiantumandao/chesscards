@@ -78,6 +78,7 @@ const MainBody = () => {
 
 
 
+    // sound effects
     useEffect(()=> {
         if (game.fen() === startingFen) {
 
@@ -146,6 +147,8 @@ const MainBody = () => {
     useEffect(()=> {
 
         const autoPlayMove = () => {
+
+            // if autoplay is finished
             if (autoPlayIdx === autoPlayMoves.length) {
                 setTimeout(()=>{
                     setAutoPlay(false);
@@ -153,7 +156,6 @@ const MainBody = () => {
             }
             else {
                 setTimeout(()=> {
-                
                     makeAMove(autoPlayMoves[autoPlayIdx]);
                     setAutoPlayIdx(autoPlayIdx + 1);
                 },500);

@@ -43,14 +43,16 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             currTrie, trieHead, setCurrTrie, setInGameCorrects, inGameCorrects, onFinishFlashcards, setTime, time
      } = useContext(PlayContext);
 
-     const { autoPlay } = useContext(AutoPlayContext);
+    const { autoPlay } = useContext(AutoPlayContext);
 
-     const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
+
+    // 
+    const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
         if (!targetSquare) return false;
         const move = makeAMove({
           from: sourceSquare,
           to: targetSquare,
-          promotion: "q", // always promote to a queen for example simplicity
+          promotion: "q", // always promote to a queen for simplicity
         });
 
         if (move === null) return false;
@@ -330,30 +332,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             setPlayerMoveIdx(0);
         },transitionSpeed);
     }
-    
-  
-   /* const findOpening = async () => {
-        try {
-            const currFen = game.fen();
-            if (currFen === startingFen) return;
 
-            const openingsCollection = collection(db, 'openings');
-            
-            const q =  query(openingsCollection, where("fen", "==",currFen));
-
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
-              const match = querySnapshot.docs[0].data() as Flashcard;
-              setCurrOpening(match);
-            } else {
-              // opening not in db
-              setCurrOpening(null);
-            }
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-    } */
 
     const handleFindOpening = async () => {
         try {
@@ -384,7 +363,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         }
 
         setTimeout(()=> {
-            //imgElement.remove();
             setLastSquare(null);
             setOptionSquares({});
         },transitionSpeed);
@@ -407,7 +385,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         }
 
         setTimeout(()=> {
-            //imgElement.remove();
             setLastSquare(null);
             setOptionSquares({});
         },transitionSpeed);
