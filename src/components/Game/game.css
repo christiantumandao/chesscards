@@ -4,9 +4,7 @@
     width: 100vh;
     min-width: 440px;
     padding: 40px;
-    flex: 1 1 0;
-
-    align-self: center;
+    flex: 1 1 1;
 }
 
 .gamegui-container {

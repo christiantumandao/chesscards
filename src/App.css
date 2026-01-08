@@ -228,7 +228,7 @@ input:focus, textarea:focus {
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1250px) {
   .navbar-wrapper {
     display: none;
   }
