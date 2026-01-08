@@ -36,7 +36,7 @@ interface Arrow {
 const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: GameProps) => {
 
     const { game, color,
-        setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory
+        setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory, currMove
      } = useContext(BoardStateContext);
 
     const { playMode, flashcardIdx, setFlashcardIdx, flashcardMoves, setFlashcardMoves, playerMoveIdx, setPlayerMoveIdx, testingFlashcards,
@@ -111,7 +111,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     // for checking and proceding in flashcard testing
     useEffect(()=> {
         if (playMode === "") {
-            handleFindOpening(); 
+            if (game.fen() === startingFen) setCurrOpening(null);
+            else handleFindOpening(); 
         } else if (currPath.pathname === "/flashcards") {
             const moveHistory = game.history();
             const move = moveHistory[moveHistory.length - 1];
@@ -361,7 +362,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             const currFen = game.fen();
             if (currFen === startingFen) return;
 
-            const res = await findOpening(game.fen());
+            const res = await findOpening(game.fen(), moveHistory, currMove);
 
             setCurrOpening(res);
         } catch (error) {
