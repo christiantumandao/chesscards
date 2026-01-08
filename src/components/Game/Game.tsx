@@ -8,7 +8,7 @@ import { Chessboard, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chess
 import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
-import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
+import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen } from "../../util/contexts";
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
@@ -44,6 +44,10 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
      } = useContext(PlayContext);
 
     const { autoPlay } = useContext(AutoPlayContext);
+
+    const { positionEvaluation, setPositionEvaluation, depth, setDepth, 
+            bestLine, setBestLine, possibleMate, setPossibleMate, engine
+    } = useContext(EngineContext);
 
 
     // 
@@ -122,6 +126,12 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             else if (playMode === "freestyle" || playMode === "arcade") validateMove_freestyle(move);
         } 
     },[game, currPath, playMode]);
+
+    useEffect(() => {
+        if (playMode === "") {
+            findBestMove();
+        }
+    },[game.fen()])
 
     const validateMove_freestyle = (move: string) => {
         if (!move) return;
@@ -369,6 +379,45 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         
     }
 
+    // find the best move
+    function findBestMove() {
+        if (!engine) return;
+        try {
+            console.log("called");
+            engine.evaluatePosition(game.fen(), 18);
+            engine.onMessage(({
+                positionEvaluation,
+                possibleMate,
+                pv,
+                depth
+            }) => {
+                // ignore messages with a depth less than 10
+                if (depth && depth < 10) {
+                return;
+                }
+
+                // update the position evaluation
+                if (positionEvaluation) {
+                setPositionEvaluation((game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) / 100);
+                }
+
+                // update the possible mate, depth and best line
+                if (possibleMate) {
+                setPossibleMate(possibleMate);
+                }
+                if (depth) {
+                setDepth(depth);
+                }
+                if (pv) {
+                setBestLine(pv);
+                }
+            });
+        } catch (e) {
+            console.error(`Error evaluating position ${e}`);
+        }
+
+    }
+
     const triggerIncorrectAnimation = () => {
 
 
@@ -514,7 +563,9 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     return (
         <div className="game-wrapper">
             <div className={"gamegui-container"}>
-
+                <div>
+                    { positionEvaluation }
+                </div>
                 <Chessboard options = { boardOptions }
                 />
             </div>

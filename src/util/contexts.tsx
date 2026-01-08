@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { AutoPlayContextType, BoardStateContextType, CardsContextType, PlayContextType, TabContextType, ToolbarContextType, UserContextType } from "../types/contexts";
+import { AutoPlayContextType, BoardStateContextType, CardsContextType, EngineContextType, PlayContextType, TabContextType, ToolbarContextType, UserContextType } from "../types/contexts";
 import { Chess } from "chess.js";
 import { Trie } from "./Trie";
 
@@ -108,3 +108,14 @@ export const ToolbarContext = createContext<ToolbarContextType>({
     setAddOpeningsToFolder: () => {},
 });
 
+export const EngineContext = createContext<EngineContextType>({
+    positionEvaluation: 0,
+    setPositionEvaluation: () => {},
+    depth: 10,
+    setDepth: () => {},
+    bestLine: '',
+    setBestLine: () => {},
+    possibleMate: '',
+    setPossibleMate: () => {},
+    engine: null
+})
