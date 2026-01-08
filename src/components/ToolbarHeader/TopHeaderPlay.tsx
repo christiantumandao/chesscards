@@ -12,6 +12,8 @@ import { Chess } from "chess.js";
 import { parseHighscoreTime, parseMovesIntoArray } from "../../util/formatting";
 import { incrementIncorrects } from "../../services/userSetters";
 import buildTrie, { Trie } from "../../util/Trie";
+import { ImShuffle } from "react-icons/im";
+
 
 interface TopHeaderPlayProps {
 }
@@ -165,7 +167,7 @@ const TopHeaderPlay = ({  }: TopHeaderPlayProps) => {
                     onClick ={ ()=> shuffleCards(flashcards, setFlashcards) } 
                     className="shuffle-button selectcolor-element"
                 >
-                    Shuffle
+                    <ImShuffle />
                 </button>
             </>
         )
