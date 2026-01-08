@@ -139,9 +139,10 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
         } else {
             triggerIncorrectAnimation();
+            playSound("incorrect");
             setTimeout(()=>{
                 incrementIncorrects();
-                playSound("incorrect");
+                
                 setPlayerMoveIdx(0);
                 setGame(new Chess());
                 setCurrTrie(trieHead);
