@@ -70,17 +70,20 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
             const flashcardMoves = (currOpening) ? currOpening.moves : parseMovesToString(moveHistory);
             const flashcardECO = (currOpening) ? currOpening.eco : "usr";
             const flashcardName = (currOpening) ? currOpening.name : flashcardMoves;
+            console.log(currOpening);
 
             const docRef = doc(db, "userData", user.uid, "flashcards", flashcardECO);
-            await setDoc(docRef, {
+
+            const openingToAdd = {
                 fen: game.fen(),
-                eco: flashcardECO, 
+                eco: flashcardECO,
                 moves: flashcardMoves,
-                name: flashcardName,
-            });
+                name: flashcardName
+            };
+            await setDoc(docRef, openingToAdd);
 
             const newFlashcards = [...flashcards] as Flashcard[];
-            newFlashcards.push({...currOpening, id: currOpening?.eco} as Flashcard);
+            newFlashcards.push({...openingToAdd, id: openingToAdd?.eco} as Flashcard);
             setFlashcards(newFlashcards);
             setShowAddButton(false);    
             

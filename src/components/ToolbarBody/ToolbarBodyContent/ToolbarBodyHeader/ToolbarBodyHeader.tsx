@@ -76,7 +76,6 @@ const ToolbarBodyHeader = () => {
     }
 
     const getFlashcardsOrFolders = () => {
-        console.log(currentFolder);
         return (
             <div className="folders-flashcards-button-container">
                 <button
