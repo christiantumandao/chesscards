@@ -127,20 +127,6 @@ div.toolbar-body-top-header button.delete-folder-btn:hover {
 }
 
 .flashcards-folders-btn-selected {
-    background-color: var(--eigen);
-    border: none;
-
-    flex-grow: 1;
-    color: #303030;
-    font-size: 14px;
-    font-weight: bolder;
-    padding: .5rem;
-}
-div > button.border-right {
-    border-right: var(--border);
-}
-
-.flashcards-folders-btn {
     border: none;
 
     flex-grow: 1;
@@ -150,6 +136,24 @@ div > button.border-right {
     font-size: 14px;
     font-weight: bolder;
     padding: .5rem;
+}
+div > button.border-right {
+    border-right: var(--border);
+}
+
+.flashcards-folders-btn {
+    background-color: var(--eigen);
+    border: none;
+
+    flex-grow: 1;
+    color: #303030;
+    font-size: 14px;
+    font-weight: bolder;
+    padding: .5rem;
+}
+
+.flashcards-folders-btn:hover {
+    color: #505050;
 }
 
 .flashcards-folders-btn:hover,
