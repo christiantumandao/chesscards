@@ -8,7 +8,7 @@ import { Chessboard, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chess
 import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
-import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen, TabContext } from "../../util/contexts";
+import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen } from "../../util/contexts";
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
@@ -46,10 +46,9 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     const { autoPlay } = useContext(AutoPlayContext);
 
     const { positionEvaluation, setPositionEvaluation, depth, setDepth, 
-            bestLine, setBestLine, possibleMate, setPossibleMate, engine
+            setBestLine, possibleMate, setPossibleMate, engine
     } = useContext(EngineContext);
 
-    const { tab } = useContext(TabContext);
 
 
     // 
