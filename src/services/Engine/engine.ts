@@ -1,11 +1,4 @@
-/*!
- * Stockfish.js (http://github.com/nmrugg/stockfish.js)
- * License: GPL
- */
 
-/*
- * Description of the universal chess interface (UCI)  https://gist.github.com/aliostad/f4470274f39d29b788c1b09519e67372/
- */
 
 const stockfish = new Worker('./stockfish.wasm.js');
 

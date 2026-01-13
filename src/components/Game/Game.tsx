@@ -62,6 +62,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         // will be restarted by useeffect that calls findbestmove
         if (engine) {
             engine.stop();
+            setBestLine('');
         }
 
         if (move === null) return false;
@@ -399,7 +400,10 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
                 // update the position evaluation
                 if (positionEvaluation) {
-                    setPositionEvaluation((game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) / 100);
+                    const cp = (game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) /100;
+                    setPositionEvaluation(Math.round(cp * 10) / 10);
+
+                    //setPositionEvaluation(Math.round(cp * 10) / 10);
                 }
 
                 // update the possible mate, depth and best line
@@ -410,7 +414,16 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                     setDepth(depth);
                 }
                 if (pv) {
-                    setBestLine(pv);
+                    const newBestLine = pv?.split(' ')?.[0]
+                    setBestLine(newBestLine);
+                    if (playMode === "" && newBestLine) {
+                        const arrow = {
+                            startSquare: newBestLine.substring(0, 2) as Square,
+                            endSquare: newBestLine.substring(2, 4) as Square,
+                            color: 'orange'
+                        } as Arrow
+                        setDisplayedArrows([arrow] as Arrow[]);
+                    }
                 }
             });
         } catch (e) {
@@ -567,7 +580,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 <div className='eval-bar-container'>
                     <p>{ positionEvaluation }</p>
                     <div className="eval-bar" style = {{
-                        height: `${(positionEvaluation)*50+50}%`,
+                        height: `${((positionEvaluation + 1) / 2) * 100}%`,
                     }}></div>
                 </div>
                 <div className="board-container">
