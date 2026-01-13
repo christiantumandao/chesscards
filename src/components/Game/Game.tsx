@@ -8,7 +8,7 @@ import { Chessboard, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chess
 import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
-import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen } from "../../util/contexts";
+import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen, TabContext } from "../../util/contexts";
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
@@ -49,6 +49,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             bestLine, setBestLine, possibleMate, setPossibleMate, engine
     } = useContext(EngineContext);
 
+    const { tab } = useContext(TabContext);
+
 
     // 
     const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
@@ -63,6 +65,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         if (engine) {
             engine.stop();
             setBestLine('');
+            setDisplayedArrows([]);
         }
 
         if (move === null) return false;
@@ -123,8 +126,18 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     // for checking and proceding in flashcard testing
     useEffect(()=> {
         if (playMode === "") {
-            if (game.fen() === startingFen) setCurrOpening(null);
-            else handleFindOpening(); 
+            if (game.fen() === startingFen) {
+                setCurrOpening(null);
+                setDisplayedArrows([]);
+                setBestLine('');
+                setPossibleMate("");
+            }
+            else {
+                handleFindOpening(); 
+                setDisplayedArrows([]);
+                setBestLine('');
+                setPossibleMate("");
+            }
         } else if (currPath.pathname === "/flashcards") {
             const moveHistory = game.history();
             const move = moveHistory[moveHistory.length - 1];
@@ -137,8 +150,12 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     useEffect(() => {
         if (playMode === "") {
             findBestMove();
+        } else {
+            engine?.stop();
+            setDisplayedArrows([]);
+            setPositionEvaluation(0);
         }
-    },[game.fen()])
+    },[game.fen(), playMode]) 
 
     const validateMove_freestyle = (move: string) => {
         if (!move) return;
@@ -389,7 +406,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
     // find the best move
     function findBestMove() {
-        if (!engine) return;
+        if (!engine || playMode !== "") return;
         try {
             engine.evaluatePosition(game.fen(), depth);
             engine.onMessage( ({ positionEvaluation, possibleMate, pv, depth }) => {
@@ -401,7 +418,10 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 // update the position evaluation
                 if (positionEvaluation) {
                     const cp = (game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) /100;
-                    setPositionEvaluation(Math.round(cp * 10) / 10);
+                    let score = cp;
+                    if (score > 10) score = 10
+                    else if (score < -10) score = -10
+                    setPositionEvaluation(Math.round(score * 10) / 10);
 
                     //setPositionEvaluation(Math.round(cp * 10) / 10);
                 }
@@ -409,6 +429,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 // update the possible mate, depth and best line
                 if (possibleMate) {
                     setPossibleMate(possibleMate);
+                    console.log(`possible mate ${possibleMate}`)
                 }
                 if (depth) {
                     setDepth(depth);
@@ -572,17 +593,18 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         arrows: displayedArrows
     };
 
-
-
     return (
         <div className="game-wrapper">
             <div className="gamegui-container">
+                
+
                 <div className='eval-bar-container'>
-                    <p>{ positionEvaluation }</p>
+                    <p>{ (possibleMate) ? `M${possibleMate}` : positionEvaluation }</p>
                     <div className="eval-bar" style = {{
-                        height: `${((positionEvaluation + 1) / 2) * 100}%`,
+                        height: `${(50 + (positionEvaluation*5))}%`,
                     }}></div>
                 </div>
+                
                 <div className="board-container">
                     <Chessboard options = { boardOptions }
                     />
