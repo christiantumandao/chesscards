@@ -2,11 +2,10 @@
     width: 360px;
     height: 100vh;
     min-height: 500px;
-    max-height: 100vh;
 
     width: 20%;
     max-width: 780px;
-    min-width: 300px;
+    min-width: 320px;
     flex: 1 1 0;
     margin-right: 20px;
 
@@ -31,7 +30,6 @@
     display: flex;
     flex-direction: column;
     box-shadow: var(--defaultShadow);
-    flex-grow: 1;
 }
 
 
@@ -39,17 +37,33 @@
 .toolbar-body {
     padding: 15px;
     margin-bottom: var(--toolbarFootHeight);
+    background-color: var(--eigen);
     /*min-height: 200px;*/
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: auto;
     position: relative;
 }
 
+.toolbar-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.toolbar-body::-webkit-scrollbar-track {
+  background: var(--eigen);
+}
+
+
 .toolbar-body-folder-highlight {
     /*background-color: #37323E;*/
-    background-color: var(--mediumGrey);
+    background-color: grey;
     -webkit-box-shadow: inset 0px 0px 30px 1px rgba(0,0,0,0.7);
     -moz-box-shadow: inset 0px 0px 30px 1px rgba(0,0,0,0.7);
     box-shadow: inset 0px 0px 10px 1px rgba(0,0,0,0.7);
+}
+
+
+.toolbar-body {
+  scrollbar-width: thin;
+  scrollbar-color: grey var(--eigen);
 }

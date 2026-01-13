@@ -443,7 +443,8 @@ const MainBody = () => {
             setLastMove(undefined);
         }
         else {
-            setCurrMove(currMove -1);
+            const newCurrMove = currMove-1;
+            setCurrMove(newCurrMove);
 
             const prevMove = history[currMove - 1];
             const newGame = new Chess(prevMove);

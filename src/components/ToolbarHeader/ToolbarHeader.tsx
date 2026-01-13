@@ -66,25 +66,28 @@ const ToolbarHeader = (props: ToolbarHeaderProps) => {
                 return;
             }
 
-
+            // preparing object to add to db and local
             const flashcardMoves = (currOpening) ? currOpening.moves : parseMovesToString(moveHistory);
             const flashcardECO = (currOpening) ? currOpening.eco : "usr";
             const flashcardName = (currOpening) ? currOpening.name : flashcardMoves;
-
-            const docRef = doc(db, "userData", user.uid, "flashcards", flashcardECO);
-            await setDoc(docRef, {
+            const openingToAdd = {
                 fen: game.fen(),
-                eco: flashcardECO, 
+                eco: flashcardECO,
                 moves: flashcardMoves,
-                name: flashcardName,
-            });
+                name: flashcardName
+            };
 
+            // adding to db
+            const docRef = doc(db, "userData", user.uid, "flashcards", flashcardECO);
+            await setDoc(docRef, openingToAdd);
+
+            // adding to local
             const newFlashcards = [...flashcards] as Flashcard[];
-            newFlashcards.push({...currOpening, id: currOpening?.eco} as Flashcard);
+            newFlashcards.push({...openingToAdd, id: openingToAdd?.eco} as Flashcard);
             setFlashcards(newFlashcards);
             setShowAddButton(false);    
             
-            
+            // if the user is logged in, we reset their highscores
             if (userData) {
                 const newUserData: UserData = {
                     ...userData,

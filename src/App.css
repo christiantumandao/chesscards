@@ -61,27 +61,24 @@ select > option {
 
 body {
   font-family: 'Inter', sans-serif;
-  overscroll-behavior: none;
-
 }
 
 .App {
   max-height: 100vh;
+
 }
 
 
 
 .mainbody {
-  min-width: calc(100vw - var(--navbarWidth));
-  height: auto;
-  min-height: 100%;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
 
   margin-left: var(--navbarWidth);
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 }
 
 
@@ -99,7 +96,7 @@ body {
 }
 
 input {
-  padding: .2rem .5rem;
+  padding: 10px 12px;
   font-size: .9rem;;
   letter-spacing: .2ch;
 
@@ -185,7 +182,6 @@ input:focus, textarea:focus {
   color: white;
 
   background-color: var(--darkGreen);
-  opacity: .4;
   box-shadow: var(--defaultShadow);
 
   opacity: 0;
@@ -320,7 +316,7 @@ div.small-modal-buttons > button {
 }
 div.game-wrapper {
     height: auto;
-    width: 100vw;
+    width: 100%;
     min-width: 0 !important;
     max-width: none !important;
     padding: 20px;
@@ -339,7 +335,7 @@ div.toolbar-container {
 }
 div.toolbar-body {
   max-height: 60vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-bottom: 0;
   overscroll-behavior: none;
 }
@@ -478,7 +474,7 @@ div.toolbar-body {
     margin-bottom: 0;
 
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   div.toolbar-header {

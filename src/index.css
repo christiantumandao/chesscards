@@ -23,11 +23,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
- /* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;*/
-}
-
 html {
   /*background-color: #2b3b31;
   overscroll-behavior: auto;
@@ -41,6 +36,8 @@ background-image: linear-gradient(139deg, #00000029 57%, transparent 57.05%),lin
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
+  overscroll-behavior: none;
+
 }
 
 

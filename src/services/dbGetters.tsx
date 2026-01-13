@@ -1,12 +1,22 @@
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { Flashcard } from "../types/db";
-import { parseQuery } from "../util/formatting";
+import { parseMovesToString, parseQuery } from "../util/formatting";
+import { startingFen } from "../util/contexts";
 
-export const findOpening = async (currFen: string): Promise<Flashcard | null> => {
+export const findOpening = async (currFen: string, moveHistory: string[], currMove: number): Promise<Flashcard | null> => {
     try {
+        if (currFen === startingFen) return null;
+        const focusedMoveHistory = moveHistory.slice(0, currMove);
+        const serializedMoveHistory = parseMovesToString(focusedMoveHistory);
+
+        /*
         const openingsCollection = collection(db, 'openings');
         const q =  query(openingsCollection, where("fen", "==",currFen));
+        */
+
+        const openingsCollection = collection(db, 'openings');
+        const q =  query(openingsCollection, where("moves", "==",serializedMoveHistory));
 
         const querySnapshot = await getDocs(q);
         
@@ -15,6 +25,7 @@ export const findOpening = async (currFen: string): Promise<Flashcard | null> =>
           return match;
 
         } else { // opening not in db
+          console.log("not found")
           return null;
         }
       } catch (error) {

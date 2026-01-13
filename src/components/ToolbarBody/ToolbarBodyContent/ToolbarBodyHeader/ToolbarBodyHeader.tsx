@@ -76,7 +76,6 @@ const ToolbarBodyHeader = () => {
     }
 
     const getFlashcardsOrFolders = () => {
-        console.log(currentFolder);
         return (
             <div className="folders-flashcards-button-container">
                 <button
@@ -172,14 +171,18 @@ const ToolbarBodyHeader = () => {
         return (
             <div className="body-header-highscore-container">
 
-                <div className="tooltip-container">
-                    <FaRegQuestionCircle />
-                    <div className="tooltip">
-                        Highscores will clear upon adding/deleting flashcards
-                    </div>
-                </div>
 
-                <div className="highscore">Flashcards: { flashcardsHighscore }</div>
+                
+                <div className="highscore highscore-flashcards">
+                    
+                    <span className="tooltip-container">
+                        <FaRegQuestionCircle />
+                        <div className="tooltip">
+                            Highscores will clear upon adding/deleting flashcards
+                        </div>
+                    </span>
+                    Flashcards: { flashcardsHighscore }
+                </div>
                 <div className="highscore">Timed: { timedHighscore }</div>
                 <div className="highscore">Arcade: { arcadeHighscore }</div>
             </div>
