@@ -5,6 +5,7 @@ import { Chess } from "chess.js"
 import { Trie } from "../util/Trie"
 import { Color, PlayModeType } from "./states"
 import { ToolbarTab } from "../components/Toolbar/types"
+import Engine from "../services/Engine/engine"
 
 export interface CardsContextType {
     flashcards: Flashcard[],
@@ -104,4 +105,16 @@ export interface ToolbarContextType {
     setEditFlashcardsMode: (newVal: boolean) => void,
     addOpeningsToFolder: boolean
     setAddOpeningsToFolder: (newVal: boolean) => void,
+}
+
+export interface EngineContextType {
+    positionEvaluation: number,
+    setPositionEvaluation: (newVal: number) => void,
+    depth: number,
+    setDepth: (newVal: number) => void,
+    bestLine: string,
+    setBestLine: (newVal: string) => void,
+    possibleMate: string,
+    setPossibleMate: (newVal: string) => void,
+    engine: null | Engine
 }

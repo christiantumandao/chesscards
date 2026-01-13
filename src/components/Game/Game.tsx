@@ -8,7 +8,7 @@ import { Chessboard, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chess
 import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
-import { AutoPlayContext, BoardStateContext, PlayContext, startingFen } from "../../util/contexts";
+import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen, TabContext } from "../../util/contexts";
 import { MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
@@ -43,15 +43,30 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             currTrie, trieHead, setCurrTrie, setInGameCorrects, inGameCorrects, onFinishFlashcards, setTime, time
      } = useContext(PlayContext);
 
-     const { autoPlay } = useContext(AutoPlayContext);
+    const { autoPlay } = useContext(AutoPlayContext);
 
-     const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
+    const { positionEvaluation, setPositionEvaluation, depth, setDepth, 
+            bestLine, setBestLine, possibleMate, setPossibleMate, engine
+    } = useContext(EngineContext);
+
+    const { tab } = useContext(TabContext);
+
+
+    // 
+    const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
         if (!targetSquare) return false;
         const move = makeAMove({
           from: sourceSquare,
           to: targetSquare,
-          promotion: "q", // always promote to a queen for example simplicity
+          promotion: "q", // always promote to a queen for simplicity
         });
+
+        // will be restarted by useeffect that calls findbestmove
+        if (engine) {
+            engine.stop();
+            setBestLine('');
+            setDisplayedArrows([]);
+        }
 
         if (move === null) return false;
         return true;
@@ -111,8 +126,18 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     // for checking and proceding in flashcard testing
     useEffect(()=> {
         if (playMode === "") {
-            if (game.fen() === startingFen) setCurrOpening(null);
-            else handleFindOpening(); 
+            if (game.fen() === startingFen) {
+                setCurrOpening(null);
+                setDisplayedArrows([]);
+                setBestLine('');
+                setPossibleMate("");
+            }
+            else {
+                handleFindOpening(); 
+                setDisplayedArrows([]);
+                setBestLine('');
+                setPossibleMate("");
+            }
         } else if (currPath.pathname === "/flashcards") {
             const moveHistory = game.history();
             const move = moveHistory[moveHistory.length - 1];
@@ -121,6 +146,16 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             else if (playMode === "freestyle" || playMode === "arcade") validateMove_freestyle(move);
         } 
     },[game, currPath, playMode]);
+
+    useEffect(() => {
+        if (playMode === "") {
+            findBestMove();
+        } else {
+            engine?.stop();
+            setDisplayedArrows([]);
+            setPositionEvaluation(0);
+        }
+    },[game.fen(), playMode]) 
 
     const validateMove_freestyle = (move: string) => {
         if (!move) return;
@@ -332,30 +367,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             setPlayerMoveIdx(0);
         },transitionSpeed);
     }
-    
-  
-   /* const findOpening = async () => {
-        try {
-            const currFen = game.fen();
-            if (currFen === startingFen) return;
 
-            const openingsCollection = collection(db, 'openings');
-            
-            const q =  query(openingsCollection, where("fen", "==",currFen));
-
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
-              const match = querySnapshot.docs[0].data() as Flashcard;
-              setCurrOpening(match);
-            } else {
-              // opening not in db
-              setCurrOpening(null);
-            }
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-    } */
 
     const handleFindOpening = async () => {
         try {
@@ -386,11 +398,59 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         }
 
         setTimeout(()=> {
-            //imgElement.remove();
             setLastSquare(null);
             setOptionSquares({});
         },transitionSpeed);
         
+    }
+
+    // find the best move
+    function findBestMove() {
+        if (!engine || playMode !== "") return;
+        try {
+            engine.evaluatePosition(game.fen(), depth);
+            engine.onMessage( ({ positionEvaluation, possibleMate, pv, depth }) => {
+                // ignore messages with a depth less than 10
+                if (depth && depth < 10) {
+                    return;
+                }
+
+                // update the position evaluation
+                if (positionEvaluation) {
+                    const cp = (game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) /100;
+                    let score = cp;
+                    if (score > 10) score = 10
+                    else if (score < -10) score = -10
+                    setPositionEvaluation(Math.round(score * 10) / 10);
+
+                    //setPositionEvaluation(Math.round(cp * 10) / 10);
+                }
+
+                // update the possible mate, depth and best line
+                if (possibleMate) {
+                    setPossibleMate(possibleMate);
+                    console.log(`possible mate ${possibleMate}`)
+                }
+                if (depth) {
+                    setDepth(depth);
+                }
+                if (pv) {
+                    const newBestLine = pv?.split(' ')?.[0]
+                    setBestLine(newBestLine);
+                    if (playMode === "" && newBestLine) {
+                        const arrow = {
+                            startSquare: newBestLine.substring(0, 2) as Square,
+                            endSquare: newBestLine.substring(2, 4) as Square,
+                            color: 'orange'
+                        } as Arrow
+                        setDisplayedArrows([arrow] as Arrow[]);
+                    }
+                }
+            });
+        } catch (e) {
+            console.error(`Error evaluating position ${e}`);
+        }
+
     }
 
     const triggerIncorrectAnimation = () => {
@@ -409,7 +469,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         }
 
         setTimeout(()=> {
-            //imgElement.remove();
             setLastSquare(null);
             setOptionSquares({});
         },transitionSpeed);
@@ -534,15 +593,24 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         arrows: displayedArrows
     };
 
-
-
     return (
         <div className="game-wrapper">
-            <div className={"gamegui-container"}>
+            <div className="gamegui-container">
+                
 
-                <Chessboard options = { boardOptions }
-                />
+                <div className='eval-bar-container'>
+                    <p>{ (possibleMate) ? `M${possibleMate}` : positionEvaluation }</p>
+                    <div className="eval-bar" style = {{
+                        height: `${(50 + (positionEvaluation*5))}%`,
+                    }}></div>
+                </div>
+                
+                <div className="board-container">
+                    <Chessboard options = { boardOptions }
+                    />
+                </div>
             </div>
+
         </div>
     );
 }

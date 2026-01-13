@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback, useContext, useMemo } from "react";
+import { useState, useEffect, useCallback, useContext, useMemo, createContext } from "react";
 import { Flashcard, Folder, UserData } from "../../types/db";
 import { Chess, Move } from "chess.js";
 import { Trie } from "../../util/Trie";
 import { Color, MoveVerbose, PlayModeType } from "../../types/states"; 
-import { AutoPlayContext, BoardStateContext, CardsContext, PlayContext, startingFen, TabContext, UserContext } from "../../util/contexts";
+import { AutoPlayContext, BoardStateContext, CardsContext, EngineContext, PlayContext, startingFen, TabContext, UserContext } from "../../util/contexts";
 import Game from "../Game/Game";
 import Toolbar from "../Toolbar/Toolbar";
 import { parseMovesIntoArray } from "../../util/formatting";
-import { AutoPlayContextType, BoardStateContextType, PlayContextType } from "../../types/contexts";
+import { AutoPlayContextType, BoardStateContextType, EngineContextType, PlayContextType } from "../../types/contexts";
 import { updateFolderFlashcardsHighscore, updateFolderFreestyleHighscore, updateFolderTimedHighscore, updateMainFlashcardsHighscore, updateMainFreestyleHighscore, updateMainTimedHighscore } from "../../services/updateHighScore";
 
 import moveAudio from "/src/assets/sounds/move-self.mp3";
@@ -17,6 +17,7 @@ import incorrectAudio from "/src/assets/sounds/incorrect.mp3" //change audio
 import correctAudio from "/src/assets/sounds/correct.mp3" //get audio
 import checkAudio from "/src/assets/sounds/check.mp3"
 import illegalAudio from "/src/assets/sounds/illegal.mp3" // change audio
+import Engine from "../../services/Engine/engine";
 
 const audios = {
     move: moveAudio,
@@ -30,9 +31,18 @@ const audios = {
 type AudioType = keyof typeof audios;
 
 
+
 const MainBody = () => {
 
-    const { tab } = useContext(TabContext);;
+    const { tab } = useContext(TabContext);
+
+    const engine = useMemo(() => new Engine(), []);
+
+    // store engine variables
+    const [positionEvaluation, setPositionEvaluation] = useState(0);
+    const [depth, setDepth] = useState(18);
+    const [bestLine, setBestLine] = useState('');
+    const [possibleMate, setPossibleMate] = useState('');
 
     const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
 
@@ -78,6 +88,7 @@ const MainBody = () => {
 
 
 
+    // sound effects
     useEffect(()=> {
         if (game.fen() === startingFen) {
 
@@ -146,6 +157,8 @@ const MainBody = () => {
     useEffect(()=> {
 
         const autoPlayMove = () => {
+
+            // if autoplay is finished
             if (autoPlayIdx === autoPlayMoves.length) {
                 setTimeout(()=>{
                     setAutoPlay(false);
@@ -153,7 +166,6 @@ const MainBody = () => {
             }
             else {
                 setTimeout(()=> {
-                
                     makeAMove(autoPlayMoves[autoPlayIdx]);
                     setAutoPlayIdx(autoPlayIdx + 1);
                 },500);
@@ -550,6 +562,21 @@ const MainBody = () => {
         time, testingSetName, inGameCorrects
     ]);
 
+    const EngineContextProviderValue = useMemo(()=> {
+        const engineValues: EngineContextType = {
+            positionEvaluation,
+            setPositionEvaluation,
+            depth,
+            setDepth,
+            bestLine,
+            setBestLine,
+            possibleMate,
+            setPossibleMate,
+            engine: engine
+        }
+        return engineValues;
+    },[positionEvaluation, depth, bestLine, possibleMate]);
+
     const playSound = (audio: AudioType) => {
         new Audio(audios[audio]).play(); 
     }
@@ -562,24 +589,26 @@ const MainBody = () => {
                 <BoardStateContext.Provider value = { boardContextProviderValue }>
                     <PlayContext.Provider value = { playContextProviderValue }>
                         <AutoPlayContext.Provider value = { autoPlayContextProviderValue }>
+                            <EngineContext.Provider value = { EngineContextProviderValue }>
+        
+                                <Game 
+                                    makeAMove = { makeAMove }
+                                    lastSquare = { lastSquare }
+                                    lastMove = { lastMove }
+                                    setLastSquare={ setLastSquare }
+                                    playSound = { playSound }
+                                />
+                                <Toolbar 
+                                    undo = { undo } 
+                                    redo = { redo }
+                                    restart = { restart }
 
-                            <Game 
-                                makeAMove = { makeAMove }
-                                lastSquare = { lastSquare }
-                                lastMove = { lastMove }
-                                setLastSquare={ setLastSquare }
-                                playSound = { playSound }
-                            />
-                            <Toolbar 
-                                undo = { undo } 
-                                redo = { redo }
-                                restart = { restart }
+                                    currentFolder = { currentFolder }
+                                    setCurrentFolder = { setCurrentFolder }
 
-                                currentFolder = { currentFolder }
-                                setCurrentFolder = { setCurrentFolder }
+                                />
 
-                            />
-
+                            </EngineContext.Provider>
                         </AutoPlayContext.Provider>
                     </PlayContext.Provider>
                 </BoardStateContext.Provider>
