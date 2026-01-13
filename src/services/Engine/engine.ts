@@ -45,6 +45,7 @@ export default class Engine {
   private transformSFMessageData(e: MessageEvent<string>) {
     const uciMessage = e?.data ?? e;
 
+
     return {
       uciMessage,
       bestMove: uciMessage.match(/bestmove\s+(\S+)/)?.[1],
@@ -53,7 +54,7 @@ export default class Engine {
       possibleMate: uciMessage.match(/mate\s+(\S+)/)?.[1],
       pv: uciMessage.match(/ pv\s+(.*)/)?.[1],
       depth: Number(uciMessage.match(/ depth\s+(\S+)/)?.[1] ?? 0),
-    };
+    }; 
   }
 
   init() {

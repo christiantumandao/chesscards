@@ -40,7 +40,7 @@ const MainBody = () => {
 
     // store engine variables
     const [positionEvaluation, setPositionEvaluation] = useState(0);
-    const [depth, setDepth] = useState(10);
+    const [depth, setDepth] = useState(18);
     const [bestLine, setBestLine] = useState('');
     const [possibleMate, setPossibleMate] = useState('');
 

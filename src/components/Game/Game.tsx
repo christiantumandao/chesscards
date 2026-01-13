@@ -59,6 +59,11 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
           promotion: "q", // always promote to a queen for simplicity
         });
 
+        // will be restarted by useeffect that calls findbestmove
+        if (engine) {
+            engine.stop();
+        }
+
         if (move === null) return false;
         return true;
     }
@@ -385,33 +390,27 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     function findBestMove() {
         if (!engine) return;
         try {
-            console.log("called");
-            engine.evaluatePosition(game.fen(), 18);
-            engine.onMessage(({
-                positionEvaluation,
-                possibleMate,
-                pv,
-                depth
-            }) => {
+            engine.evaluatePosition(game.fen(), depth);
+            engine.onMessage( ({ positionEvaluation, possibleMate, pv, depth }) => {
                 // ignore messages with a depth less than 10
                 if (depth && depth < 10) {
-                return;
+                    return;
                 }
 
                 // update the position evaluation
                 if (positionEvaluation) {
-                setPositionEvaluation((game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) / 100);
+                    setPositionEvaluation((game.turn() === 'w' ? 1 : -1) * Number(positionEvaluation) / 100);
                 }
 
                 // update the possible mate, depth and best line
                 if (possibleMate) {
-                setPossibleMate(possibleMate);
+                    setPossibleMate(possibleMate);
                 }
                 if (depth) {
-                setDepth(depth);
+                    setDepth(depth);
                 }
                 if (pv) {
-                setBestLine(pv);
+                    setBestLine(pv);
                 }
             });
         } catch (e) {
@@ -564,13 +563,19 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
     return (
         <div className="game-wrapper">
-            <div className={"gamegui-container"}>
-                <div>
-                    { positionEvaluation }
+            <div className="gamegui-container">
+                <div className='eval-bar-container'>
+                    <p>{ positionEvaluation }</p>
+                    <div className="eval-bar" style = {{
+                        height: `${(positionEvaluation)*50+50}%`,
+                    }}></div>
                 </div>
-                <Chessboard options = { boardOptions }
-                />
+                <div className="board-container">
+                    <Chessboard options = { boardOptions }
+                    />
+                </div>
             </div>
+
         </div>
     );
 }
