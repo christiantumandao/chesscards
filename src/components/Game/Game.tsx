@@ -49,7 +49,12 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             setBestLine, possibleMate, setPossibleMate, engine
     } = useContext(EngineContext);
 
+    //const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
+    const [moveFrom, setMoveFrom] = useState('');
+    const [optionSquares, setOptionSquares] = useState({});
+    const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
 
+    const currPath = useLocation();
 
     // 
     const onDrop = ({sourceSquare, targetSquare}: PieceDropHandlerArgs): boolean => {
@@ -70,13 +75,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         if (move === null) return false;
         return true;
     }
-    
-    //const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
-    const [moveFrom, setMoveFrom] = useState('');
-    const [optionSquares, setOptionSquares] = useState({});
-    const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
-
-    const currPath = useLocation();
 
 
     /*useEffect(() => {

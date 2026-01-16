@@ -13,7 +13,6 @@ export const findOpening = async (currFen: string, moveHistory: string[], currMo
 
         const cachedOpening = getCachedOpening(serializedMoveHistory);
         if (cachedOpening) {
-          console.log("getting cache");
           return cachedOpening;
         }
 
@@ -29,7 +28,6 @@ export const findOpening = async (currFen: string, moveHistory: string[], currMo
         
         if (!querySnapshot.empty) {
           const match = querySnapshot.docs[0].data() as Flashcard;
-          console.log("setting into cache");
           setCachedOpening(serializedMoveHistory, match);
           return match;
 
