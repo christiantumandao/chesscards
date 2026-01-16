@@ -3,12 +3,19 @@ import { db } from "../firebase.config";
 import { Flashcard } from "../types/db";
 import { parseMovesToString, parseQuery } from "../util/formatting";
 import { startingFen } from "../util/contexts";
+import { getCachedOpening, setCachedOpening } from "./cache";
 
 export const findOpening = async (currFen: string, moveHistory: string[], currMove: number): Promise<Flashcard | null> => {
     try {
         if (currFen === startingFen) return null;
         const focusedMoveHistory = moveHistory.slice(0, currMove);
         const serializedMoveHistory = parseMovesToString(focusedMoveHistory);
+
+        const cachedOpening = getCachedOpening(serializedMoveHistory);
+        if (cachedOpening) {
+          console.log("getting cache");
+          return cachedOpening;
+        }
 
         /*
         const openingsCollection = collection(db, 'openings');
@@ -22,6 +29,8 @@ export const findOpening = async (currFen: string, moveHistory: string[], currMo
         
         if (!querySnapshot.empty) {
           const match = querySnapshot.docs[0].data() as Flashcard;
+          console.log("setting into cache");
+          setCachedOpening(serializedMoveHistory, match);
           return match;
 
         } else { // opening not in db
