@@ -241,6 +241,7 @@ input:focus, textarea:focus {
     max-width: none !important;
     padding: 20px;
     padding-top: 10px;
+    align-self: flex-start;
     flex: 1 1 0;
 }
 
@@ -285,7 +286,7 @@ input:focus, textarea:focus {
   }
   div.navbar-icon {
     margin-top: 5px;
-    margin-left: 20px;
+    margin-left: 5px;
   }
   div.toolbar-container {
     border-top-right-radius: 5px;
@@ -297,11 +298,14 @@ input:focus, textarea:focus {
     border-radius: 0;
   }
 
+
   div.toolbar-wrapper {
     width: 360px;
     height: auto;
 
-    padding: 0 20px; 
+    padding: 0; 
+    margin: 0;
+    border-radius: 0;
 
     width: 100%;
     max-width: 100%;
@@ -314,12 +318,55 @@ div.small-modal-message,
 div.small-modal-buttons > button {
   font-size: 14px;
 }
+
+div.gamegui-container {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: 0;
+}
+
+div.eval-bar-container {
+    height: 20px;
+    width: 100%;
+    background-color: black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    border-radius: 0;
+    color: var(--lightGreen);
+    font-size: 12px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+
+div.eval-bar-container > div.eval-bar {
+    position: absolute;
+    background-color: white;
+
+    left: 0;
+    top: 0;
+
+    min-height: 100%;
+    max-height: 100%;
+    width: 50%;
+
+
+    border-radius: 0;
+
+    transition: .5s ease-in-out;
+}
+
 div.game-wrapper {
     height: auto;
     width: 100%;
     min-width: 0 !important;
     max-width: none !important;
-    padding: 20px;
+    padding:0;
     flex: 1 1 0;
     padding-top: 10px;
 }

@@ -431,6 +431,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 if (depth) {
                     setDepth(depth);
                 }
+                // show arrows for best move by engine
                 if (pv) {
                     const newBestLine = pv?.split(' ')?.[0]
                     setBestLine(newBestLine);
@@ -571,7 +572,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         position: game.fen() ,
         onPieceDrop: onDrop,
         dropSquareStyle: {
-            boxShadow: 'inset 0px 0px 0px 5px rgba(255,255,255,.5)'
+            boxShadow: 'inset 0px 0px 0px 4px rgba(255,255,255,.5)'
         },
 
         onSquareClick,
