@@ -4,10 +4,10 @@
     min-height: 500px;
 
     width: 20%;
-    max-width: 780px;
+    max-width: 500px;
     min-width: 320px;
     flex: 1 1 0;
-    margin-right: 20px;
+
 
     display: flex;
     justify-content: center;
