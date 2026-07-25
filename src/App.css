@@ -9,7 +9,7 @@
 :root {
   --navbarWidth: 200px;
   --toolbarFootHeight: auto;
-  --mobileTBFootHeight: 50px;
+  --mobileTBFootHeight: clamp(64px, auto, 100px);
   --mobileNavIconHeight: 48px;
 
   --toolbarTitleHeight: 48px;
@@ -64,27 +64,15 @@ body {
 }
 
 .App {
+  height: 100vh;
   max-height: 100vh;
 
+  display: grid;
+  grid-template-rows: 64px 1fr;
 }
-
-
-
-.mainbody {
-  height: 100%;
-  max-height: 100%;
-
-  margin-left: var(--navbarWidth);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
 
 .page {
   max-width: calc(100vw - var(--navbarWidth));
-  margin-left: var(--navbarWidth);
   padding: 10px;
 }
 
@@ -228,10 +216,7 @@ input:focus, textarea:focus {
   .navbar-wrapper {
     display: none;
   }
-  div.navbar-icon {
-    display: flex;
-    height: var(--mobileNavIconHeight)
-  }
+
   .mainbody {
     margin: 0;
   }
@@ -239,10 +224,7 @@ input:focus, textarea:focus {
     height: 100%;
     min-width: 0 !important;
     max-width: none !important;
-    padding: 20px;
-    padding-top: 10px;
     align-self: flex-start;
-    flex: 1 1 0;
 }
 
 
@@ -251,8 +233,7 @@ input:focus, textarea:focus {
     height: 100%;
   }
   div.toolbar-wrapper {
-    padding-top:10px;
-    height: calc(100vh - 40px);
+
     margin-bottom: 20px;
   }
 
@@ -278,32 +259,26 @@ input:focus, textarea:focus {
     height: auto;
     width: 100% !important;
   }
-  .mainbody {
+  div.mainbody {
     flex-direction: column;
     height: auto;
     min-height: none;
     max-height: none;
-  }
-  div.navbar-icon {
-    margin-top: 5px;
-    margin-left: 5px;
+    padding: 0;
   }
   div.toolbar-container {
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
     
   }
-
   .toolbar-title {
     border-radius: 0;
   }
-
-
   div.toolbar-wrapper {
     width: 360px;
     height: auto;
 
-    padding: 0; 
+    padding: 1rem; 
     margin: 0;
     border-radius: 0;
 
@@ -317,12 +292,6 @@ input:focus, textarea:focus {
 div.small-modal-message,
 div.small-modal-buttons > button {
   font-size: 14px;
-}
-
-div.gamegui-container {
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto;
-  gap: 0;
 }
 
 div.eval-bar-container {
@@ -344,31 +313,22 @@ div.eval-bar-container {
 }
 
 
-div.eval-bar-container > div.eval-bar {
-    position: absolute;
-    background-color: white;
 
-    left: 0;
-    top: 0;
-
-    min-height: 100%;
-    max-height: 100%;
-    width: 50%;
-
-
-    border-radius: 0;
-
-    transition: .5s ease-in-out;
-}
 
 div.game-wrapper {
     height: auto;
-    width: 100%;
+    width: auto;
+    align-self: center;
     min-width: 0 !important;
     max-width: none !important;
-    padding:0;
+    padding:1rem;
+    padding-bottom: 0;
     flex: 1 1 0;
-    padding-top: 10px;
+}
+
+div.game-container {
+  place-items: center;
+  width: auto;
 }
 
 div.buttons-container > button:hover {
@@ -382,6 +342,7 @@ div.toolbar-container {
 }
 div.toolbar-body {
   max-height: 60vh;
+  min-height: 200px;
   overflow-y: auto;
   padding-bottom: 0;
   overscroll-behavior: none;
@@ -420,6 +381,31 @@ div.toolbar-body {
     display: none;
   }
 
+  div.eval-bar-container > div.eval-bar {
+      position: absolute;
+      background-color: white;
+
+      left: 0;
+      top: 0;
+
+      min-height: 100%;
+      max-height: 100%;
+      width: 50%;
+
+
+      border-radius: 0;
+
+      transition: .5s ease-in-out;
+  }
+
+  div.game-container {
+    grid-template-columns: 1fr;
+    grid-template-rows:  24px 1fr;
+  }
+  div.board-container {
+    max-width: none;
+  }
+
   div.game-wrapper {
     padding: 0;
   }
@@ -436,9 +422,9 @@ div.toolbar-body {
   }
   div.mainbody {
     height: auto;
+    gap: 0;
     min-height: none;
     max-height: none;
-    margin-top: calc(var(--mobileNavIconHeight) + var(--toolbarTitleHeight) + var(--toolbarTopHeaderHeight));
   }
 
   h2.toolbar-title {
@@ -446,11 +432,11 @@ div.toolbar-body {
   }
 
   div.toolbar-description {
-    order:1;
+
   }
 
   form.search-container {
-    order: 2;
+
     padding: 10px 15px;
     margin: 0;
   }
@@ -475,10 +461,10 @@ div.toolbar-body {
   }
 
   div.toolbar-header > .toolbar-description {
-    order: 2;
+
   }
   div.toolbar-header > .selectcolor-container {
-    order: 1;
+
     border-top: var(--border);
   }
 
@@ -493,8 +479,12 @@ div.toolbar-body {
 
   div.toolbar-footer {
     margin: 0;
-    order: 2;
+
     height: var(--mobileTBFootHeight);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
   }
 
   div.buttons-container > button {
@@ -509,7 +499,7 @@ div.toolbar-body {
   }
 
   div.toolbar-body {
-    order: 3;
+
 
     height: 100%;
     max-height: none;
@@ -525,13 +515,7 @@ div.toolbar-body {
   }
 
   div.toolbar-header {
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: var(--mobileNavIconHeight);
-    width: 100%;
-    background-color: var(--eigen);
-    box-shadow: var(--defaultShadow);
+
   }
 
   div.flashcards-container {

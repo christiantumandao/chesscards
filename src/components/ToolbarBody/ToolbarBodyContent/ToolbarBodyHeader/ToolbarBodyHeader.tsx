@@ -78,6 +78,7 @@ const ToolbarBodyHeader = () => {
     const getFlashcardsOrFolders = () => {
         return (
             <div className="folders-flashcards-button-container">
+                
                 <button
                     className={(toolbarTab === "Flashcards") ? "flashcards-folders-btn-selected border-right" :"flashcards-folders-btn border-right"}
                     disabled = { (toolbarTab === "Flashcards" || playMode !== "") }

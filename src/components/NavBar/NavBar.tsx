@@ -179,10 +179,10 @@ const NavBar = () => {
         </div>
       
 
-        {
+        {/*
             (showMobileNav) ? 
                 getMobileNav()
-            : null
+            : null*/
         }
 
         </>

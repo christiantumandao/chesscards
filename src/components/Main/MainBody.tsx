@@ -9,6 +9,7 @@ import Toolbar from "../Toolbar/Toolbar";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { AutoPlayContextType, BoardStateContextType, EngineContextType, PlayContextType } from "../../types/contexts";
 import { updateFolderFlashcardsHighscore, updateFolderFreestyleHighscore, updateFolderTimedHighscore, updateMainFlashcardsHighscore, updateMainFreestyleHighscore, updateMainTimedHighscore } from "../../services/updateHighScore";
+import "./mainBody.css"
 
 import moveAudio from "/src/assets/sounds/move-self.mp3";
 import castleAudio from "/src/assets/sounds/castle.mp3"

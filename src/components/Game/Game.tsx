@@ -581,8 +581,17 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         animationDuration: (autoPlay || playMode !== "") ? animationSpeed : 0 ,
 
         boardOrientation:  (color==='both') ? 'white' : color,
-        customBoardStyle:  (window.innerWidth > 425) ?                  
-            { borderRadius: "5px", overflow: "hidden" } : {} ,
+
+        boardStyle:  { 
+            borderRadius: "5px", 
+            height: "100%",
+            width: "100%",
+            aspectRatio: "1",
+            minWidth: "0",
+            minHeight: "0",
+
+        },
+
         customDropSquareStyle: { boxShadow: 'inset 0 0 1px 6px rgba(255,255,255,0.4)' },
         arePiecesDraggable: true ,
         squareStyles: optionSquares,
@@ -590,17 +599,28 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
         arrows: displayedArrows
     };
+    
+    console.log(window.innerWidth);
 
     return (
         <div className="game-wrapper">
-            <div className="gamegui-container">
-                
 
+            <div className="game-container">            
+                
                 <div className='eval-bar-container'>
                     <p>{ (possibleMate) ? `M${possibleMate}` : positionEvaluation }</p>
-                    <div className="eval-bar" style = {{
+                    <div className="eval-bar" style = {
+                        window.innerWidth <= 425 ? 
+                        {
+                            
+                            width: `${(50 + (positionEvaluation*5))}%`
+                        }
+                        :
+                        {
                         height: `${(50 + (positionEvaluation*5))}%`,
-                    }}></div>
+                        }   
+                    
+                    }></div>
                 </div>
                 
                 <div className="board-container">
@@ -608,7 +628,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                     />
                 </div>
             </div>
-
         </div>
     );
 }
