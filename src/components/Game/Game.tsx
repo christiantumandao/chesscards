@@ -583,10 +583,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
         boardOrientation:  (color==='both') ? 'white' : color,
 
         boardStyle:  { 
-            borderRadius: "5px", 
-            height: "100%",
+            borderRadius: (window.innerWidth) <= 425 ? "0" : "5px", 
             width: "100%",
-            aspectRatio: "1",
             minWidth: "0",
             minHeight: "0",
 
@@ -601,6 +599,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     };
     
     console.log(window.innerWidth);
+
+
 
     return (
         <div className="game-wrapper">

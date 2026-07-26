@@ -3,6 +3,7 @@
     max-width: 800px;
     min-width: 360px;
     width: 35%;
+    flex: 1;
 
 
     display: flex;

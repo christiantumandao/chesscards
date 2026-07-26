@@ -89,6 +89,7 @@ const NavBar = () => {
         )
     }
 
+    
     const getMobileNav = () => {
         return (
             <div className="mobilenav-wrapper">
@@ -135,6 +136,7 @@ const NavBar = () => {
             </div>
         )
     }
+    
 
     return (
         <>
@@ -142,7 +144,13 @@ const NavBar = () => {
 
             <h2>Chess Flashcards</h2>
 
-            <nav>
+            <div className={ (showMobileNav) ? "hidden navbar-icon" : "navbar-icon"}>
+                <a onClick = { ()=> setShowMobileNav(true)}>
+                    <IoReorderThree />
+                </a>
+            </div>          
+        
+            <nav className="horizontal-nav">
                 <button
                     className={(tab === "explore") ? "selected-tab" : ""} 
                     onClick = { () => { nav("/"); setTab("explore"); }}
@@ -169,20 +177,17 @@ const NavBar = () => {
                     About
                 </button>
             </nav>
+
+            
             
         </div>
         
-        <div className={ (showMobileNav) ? "hidden navbar-icon" : "navbar-icon"}>
-            <button onClick = { ()=> setShowMobileNav(true)}>
-                <IoReorderThree />
-            </button>
-        </div>
       
 
-        {/*
+        {
             (showMobileNav) ? 
                 getMobileNav()
-            : null*/
+            : null
         }
 
         </>

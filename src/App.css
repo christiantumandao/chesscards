@@ -69,6 +69,15 @@ body {
 
   display: grid;
   grid-template-rows: 64px 1fr;
+
+  background-color: linear-gradient(
+      to top,
+      #373e39 50%,
+      #212522 100%
+      
+  );
+
+  background-color: var(--darkGreen);
 }
 
 .page {
@@ -213,28 +222,9 @@ input:focus, textarea:focus {
 }
 
 @media (max-width: 1250px) {
-  .navbar-wrapper {
-    display: none;
-  }
-
-  .mainbody {
-    margin: 0;
-  }
-  div.game-wrapper {
-    height: 100%;
-    min-width: 0 !important;
-    max-width: none !important;
-    align-self: flex-start;
-}
-
-
 
   div.toolbar-container {
     height: 100%;
-  }
-  div.toolbar-wrapper {
-
-    margin-bottom: 20px;
   }
 
 
@@ -258,6 +248,7 @@ input:focus, textarea:focus {
     max-height: none;
     height: auto;
     width: 100% !important;
+    max-width: 100%;
   }
   div.mainbody {
     flex-direction: column;
@@ -278,7 +269,7 @@ input:focus, textarea:focus {
     width: 360px;
     height: auto;
 
-    padding: 1rem; 
+
     margin: 0;
     border-radius: 0;
 
@@ -294,42 +285,7 @@ div.small-modal-buttons > button {
   font-size: 14px;
 }
 
-div.eval-bar-container {
-    height: 20px;
-    width: 100%;
-    background-color: black;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-    border-radius: 0;
-    color: var(--lightGreen);
-    font-size: 12px;
-
-    position: relative;
-    overflow: hidden;
-}
-
-
-
-
-div.game-wrapper {
-    height: auto;
-    width: auto;
-    align-self: center;
-    min-width: 0 !important;
-    max-width: none !important;
-    padding:1rem;
-    padding-bottom: 0;
-    flex: 1 1 0;
-}
-
-div.game-container {
-  place-items: center;
-  width: auto;
-}
 
 div.buttons-container > button:hover {
   background-color: transparent;
@@ -351,23 +307,24 @@ div.toolbar-body {
 }
 
 @media (max-width: 425px) {
+  :root {
+    font-size: 12px;
+  }
+  input {
+    padding: 1rem;
+  }
   .App {
     height: auto;
+    background-color: var(--eigen);
   }
   html {
     background-color: var(--eigen);
     overscroll-behavior: none;
   }
 
-  div.navbar-icon {
-    margin: 0;
-    padding-left: 15px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: var(--darkGrey);
-    width: 100%;
-    box-shadow: var(--defaultShadow);
+  div.navbar-wrapper {
+    padding: 1rem;
+    box-shadow: none;
   }
 
   div.navbar-icon > button {
@@ -381,34 +338,10 @@ div.toolbar-body {
     display: none;
   }
 
-  div.eval-bar-container > div.eval-bar {
-      position: absolute;
-      background-color: white;
-
-      left: 0;
-      top: 0;
-
-      min-height: 100%;
-      max-height: 100%;
-      width: 50%;
 
 
-      border-radius: 0;
 
-      transition: .5s ease-in-out;
-  }
 
-  div.game-container {
-    grid-template-columns: 1fr;
-    grid-template-rows:  24px 1fr;
-  }
-  div.board-container {
-    max-width: none;
-  }
-
-  div.game-wrapper {
-    padding: 0;
-  }
   div > div.toolbar-wrapper {
     height: auto;
     max-height: none;
@@ -431,14 +364,13 @@ div.toolbar-body {
     display: none;
   }
 
-  div.toolbar-description {
-
-  }
-
   form.search-container {
 
     padding: 10px 15px;
     margin: 0;
+    font-size: 14px;
+    height: 48px;
+    order:2;
   }
   form.search-container > * {
     height: 100%;
@@ -461,7 +393,7 @@ div.toolbar-body {
   }
 
   div.toolbar-header > .toolbar-description {
-
+    order:1;
   }
   div.toolbar-header > .selectcolor-container {
 

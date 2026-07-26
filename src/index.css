@@ -23,20 +23,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html {
+html,body {
   /*background-color: #2b3b31;
   overscroll-behavior: auto;
   background-color: var(--darkGreen);
   background-image: radial-gradient(circle at -70% -12%, #00000031 46%, transparent 46.05%),radial-gradient(circle at 88% 78%, #0000002f 59%, transparent 59.05%),radial-gradient(circle at 87% 0%, #00000022 49%, transparent 49.05%),linear-gradient(13deg, #0000002e 58%, transparent 58.05%);
 */
-  background-color: linear-gradient(
-      to top,
-      #373e39 50%,
-      #212522 100%
-      
-  );
-
-  background-color: var(--darkGreen);
+  background-color: var(--eigen);
 }
 
 

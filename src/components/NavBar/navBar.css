@@ -13,7 +13,7 @@
     padding: 10px 2rem;
 }
 
-nav {
+.horizontal-nav {
     width: 100%;
     height: auto;
 
@@ -61,6 +61,21 @@ nav > button:focus {
     color: var(--green);
 }
 
+
+.navbar-icon {
+    height: auto;
+    width: auto;
+
+    display: none;
+    display: relative;
+    z-index: 160;
+
+}
+
+.navbar-icon > a:hover {
+    color: grey;
+}
+
 .mobilenav-wrapper {
     position: fixed;
     top: 0;
@@ -73,20 +88,52 @@ nav > button:focus {
     background-color: rgba(0,0,0,.5);
     backdrop-filter: blur(5px);
     transition: filter 3s ease;
+
+    .navbar-exit {
+        background-color: transparent;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        height: 40px;
+        width: 40px;
+        font-size: 25px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: .1rem;
+        
+        position: absolute;
+        right: 10px;
+        top: 10px;
+
+        & svg:hover {
+            color: grey;
+        }
+
+
+    }
+
+    .mobilenav-container {
+        height: 100%;
+        width: calc(var(--navbarWidth) + 3rem);
+        background-color: var(--darkGrey) !important;
+        padding-bottom: 100px;
+        z-index: 300;
+        position: relative;
+
+        animation: slideIn .2s ease-in-out;
+        animation-name: mobilenav-animation;
+
+        h2 {
+            padding: 1rem;
+            padding-right: 50px;
+        }
+        nav button {
+            margin: 1rem 1rem;
+        }
+    }
 }
-
-.mobilenav-container {
-    height: 100%;
-    width: calc(var(--navbarWidth) + 3rem);
-    background-color: var(--darkGrey) !important;
-    padding-bottom: 100px;
-    z-index: 300;
-    position: relative;
-
-    animation: slideIn .4s ease-in-out;
-    animation-name: mobilenav-animation;
-}
-
 
 
 @keyframes mobilenav-animation {
@@ -98,67 +145,8 @@ nav > button:focus {
     }
 }
 
-.mobilenav-container > h2 {
-    padding: 1rem;
-}
 
-.navbar-icon {
-    height: auto;
-    width: auto;
-
-    display: none;
-    margin: 10px 0 0 20px;
-    display: relative;
-    z-index: 160;
-
-}
-
-.navbar-icon > button:hover {
-    color: grey;
-}
-
-.navbar-wrapper > button {
-    margin: 1rem;
-    font-size: 1rem;
-    border-radius: 2px;
-    padding: .5rem;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-}
-
-.navbar-exit {
-    background-color: transparent;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    height: 40px;
-    width: 40px;
-    font-size: 25px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: .1rem;
-    
-    position: absolute;
-    right: 10px;
-    top: 10px;
-
-}
-
-.navbar-exit >svg:hover {
-    color: grey;
-}
-
-.mobilenav-container > h2 {
-    padding-right: 50px !important;
-
-}
-
-.navbar-icon > button {
+.navbar-icon > a {
     background-color: var(--eigen);
     border: none;
     border-radius: 5px;
@@ -171,3 +159,18 @@ nav > button:focus {
     justify-content: center;
     align-items: center;
 }
+
+@media (max-width: 768px) {
+  div.navbar-icon {
+    display: inline-flex;
+    margin-left: auto;
+  }
+  div.navbar-wrapper {
+      padding-right: 2rem;
+  }
+  div.navbar-wrapper nav {
+    display: none;
+
+  }
+}
+

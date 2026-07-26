@@ -1,25 +1,40 @@
 
 
 .game-wrapper { 
+    flex: 1;
+    min-width: 300px;
+    min-width: 0;
 
+    height: auto;
 }
 
 .game-container {
-    display: grid;
-    grid-template-columns: 24px 1fr;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: stretch;
     gap: 10px;
-    max-height: 100%;
+
+    min-height: none;
+    width: 100%;
 }
 
 
 .board-container {
     box-shadow: var(--defaultShadow);
-    aspect-ratio: 1/1;  
-    max-width: calc(100vh - 104px);
-    max-height: 100%; 
+    min-width: 0;
 
-    flex-direction: row;
-    align-items: center;
+    aspect-ratio: 1/1;
+
+    align-self: flex-start;
+
+    flex: 1 1 auto;
+    aspect-ratio: 1;
+    max-width: calc(100vh - 104px);
+
+
+
+
 }
 
 #BasicBoard {
@@ -81,3 +96,93 @@
     color: var(--lightGreen);
 }
 
+
+
+@media (max-width: 768px) {
+    div.eval-bar-container {
+        height: 20px;
+        width: 100%;
+        background-color: black;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+        border-radius: 0;
+        color: var(--lightGreen);
+        font-size: 12px;
+        border-radius: 3px;
+
+        position: relative;
+        overflow: hidden;
+
+        div.eval-bar {
+            position: absolute;
+            background-color: white;
+
+            left: 0;
+            top: 0;
+
+            min-height: 100%;
+            max-height: 100%;
+            width: 50%;
+
+
+            border-radius: 0;
+
+            transition: .5s ease-in-out;
+        }
+    }
+
+    div.game-wrapper {
+        height: auto;
+        width: 100%;
+        align-self: center;
+        max-width: none !important;
+        padding:1rem;
+        padding-bottom: 0;
+    }
+
+    div.board-container {
+        max-width: none;
+    }
+
+    div.game-container {
+        width: 100%;;
+
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 425px) {
+
+
+    div.game-container {
+        margin-top: 1rem;
+        width: 100vw;
+
+    }
+    div.board-container {
+        width: 100%;
+        border-radius: 0;
+        max-width: none;
+
+    }
+
+    div.game-wrapper {
+        padding: 0;
+        width: 100%;
+    }
+    div.eval-bar-container, .eval-bar {
+        width: calc(100% - 1rem);
+
+    }
+    div.eval-bar-container {
+        border-radius: 3px;
+    }
+    div.eval-bar-container {
+        margin-left: .5rem;
+    }
+
+}
