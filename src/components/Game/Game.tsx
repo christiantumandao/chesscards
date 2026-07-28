@@ -9,7 +9,7 @@ import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
 import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen } from "../../util/contexts";
-import { MoveVerbose } from "../../types/states";
+import { Arrow, MoveVerbose } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 import { AudioType } from "../Main/MainBody";
@@ -25,15 +25,12 @@ interface GameProps {
     setLastSquare: (newVal: string | null) => void,
     playSound: (audio: AudioType) => void,
     lastMove: Move | undefined
+    displayedArrows: Arrow[],
+    setDisplayedArrows: (arrows: Arrow[]) => void,
 }
 
-interface Arrow {
-    startSquare: string,
-    endSquare: string,
-    color: string
-}
 
-const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: GameProps) => {
+const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displayedArrows, setDisplayedArrows }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory, currMove
@@ -52,7 +49,6 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     //const [squareStyles, setSquareStyles] = useState<Record<string, React.CSSProperties>>({});
     const [moveFrom, setMoveFrom] = useState('');
     const [optionSquares, setOptionSquares] = useState({});
-    const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
 
     const [windowWidth,setWindowWidth] = useState<number>(window.innerWidth);
 
@@ -151,7 +147,7 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
             findBestMove();
         } else {
             engine?.stop();
-            setDisplayedArrows([]);
+            //setDisplayedArrows([]);
             setPositionEvaluation(0);
         }
     },[game.fen(), playMode]) 
@@ -240,7 +236,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 endSquare: correctMove.to,
                 color: "orange"
             }] as Arrow[];
-            setDisplayedArrows(arrow);
+            setDisplayedArrows(arrow as Arrow[]);
+
         } catch (e) {
             console.error(`Error drawing arrow: ${e}`);
         }

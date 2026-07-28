@@ -19,6 +19,7 @@ import correctAudio from "/src/assets/sounds/correct.mp3" //get audio
 import checkAudio from "/src/assets/sounds/check.mp3"
 import illegalAudio from "/src/assets/sounds/illegal.mp3" // change audio
 import Engine from "../../services/Engine/engine";
+import { Arrow } from "react-chessboard";
 
 const audios = {
     move: moveAudio,
@@ -81,6 +82,8 @@ const MainBody = () => {
     const [localFreestyleHighscore, setLocalFreestyleHighscore] = useState<number>(0);
     const [localFlashcardsHighscore, setLocalFlashcardsleHighscore] = useState<number>(-1);
     const [localTimedHighscore, setLocalTimedHighscore] = useState<number>(0);
+
+    const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
 
 
     const { userData, setUserData } = useContext(UserContext);
@@ -230,6 +233,7 @@ const MainBody = () => {
         setTestingSetName(folderName);
         setTime(60);
         setHasSkippedFlashcard(false);
+        setDisplayedArrows([]);
 
     }
 
@@ -255,6 +259,7 @@ const MainBody = () => {
         setInGameCorrects(0);
         setTestingSetName(setName);
         setHasSkippedFlashcard(false);
+        setDisplayedArrows([]);
     }
     const onFinishFreestyle = () => {
         try {
@@ -598,6 +603,8 @@ const MainBody = () => {
                                     lastMove = { lastMove }
                                     setLastSquare={ setLastSquare }
                                     playSound = { playSound }
+                                    displayedArrows = { displayedArrows }
+                                    setDisplayedArrows= { setDisplayedArrows }
                                 />
                                 <Toolbar 
                                     undo = { undo } 

@@ -6,3 +6,9 @@ export interface MoveVerbose {
 
 export type Color = "white" | "black" | "both";
 export type PlayModeType = "" | "flashcards" | "freestyle" | "arcade" | "timed";
+
+export interface Arrow {
+    startSquare: string,
+    endSquare: string,
+    color: string
+}
