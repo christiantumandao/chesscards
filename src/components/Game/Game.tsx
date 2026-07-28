@@ -54,6 +54,8 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
     const [optionSquares, setOptionSquares] = useState({});
     const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
 
+    const [windowWidth,setWindowWidth] = useState<number>(window.innerWidth);
+
     const currPath = useLocation();
 
     // 
@@ -597,8 +599,18 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
 
         arrows: displayedArrows
     };
-    
-    console.log(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
 
 
@@ -610,14 +622,13 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound }: Gam
                 <div className='eval-bar-container'>
                     <p>{ (possibleMate) ? `M${possibleMate}` : positionEvaluation }</p>
                     <div className="eval-bar" style = {
-                        window.innerWidth <= 425 ? 
-                        {
-                            
-                            width: `${(50 + (positionEvaluation*5))}%`
+                        windowWidth <= 768 ? 
+                        {  
+                            width: `${(50 + (positionEvaluation*5))}%`,
                         }
                         :
                         {
-                        height: `${(50 + (positionEvaluation*5))}%`,
+                            height: `${(50 + (positionEvaluation*5))}%`,
                         }   
                     
                     }></div>
