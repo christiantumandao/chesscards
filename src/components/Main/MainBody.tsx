@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useContext, useMemo } from "react";
 import { Flashcard, Folder, UserData } from "../../types/db";
 import { Chess, Move } from "chess.js";
 import { Trie } from "../../util/Trie";
-import { Color, MoveVerbose, PlayModeType } from "../../types/states"; 
+import { Color, MoveVerbose, PlayModeType, PossibleMove } from "../../types/states"; 
 import { AutoPlayContext, BoardStateContext, CardsContext, EngineContext, PlayContext, startingFen, TabContext, UserContext } from "../../util/contexts";
 import Game from "../Game/Game";
 import Toolbar from "../Toolbar/Toolbar";
@@ -84,6 +84,7 @@ const MainBody = () => {
     const [localTimedHighscore, setLocalTimedHighscore] = useState<number>(0);
 
     const [displayedArrows, setDisplayedArrows] = useState<Arrow[]>([]);
+    const [possibleMoves, setPossibleMoves] = useState<PossibleMove[]>([]);
 
 
     const { userData, setUserData } = useContext(UserContext);
@@ -605,6 +606,7 @@ const MainBody = () => {
                                     playSound = { playSound }
                                     displayedArrows = { displayedArrows }
                                     setDisplayedArrows= { setDisplayedArrows }
+                                    setPossibleMoves = { setPossibleMoves }
                                 />
                                 <Toolbar 
                                     undo = { undo } 
@@ -613,6 +615,8 @@ const MainBody = () => {
 
                                     currentFolder = { currentFolder }
                                     setCurrentFolder = { setCurrentFolder }
+
+                                    possibleMoves = { possibleMoves }
 
                                 />
 

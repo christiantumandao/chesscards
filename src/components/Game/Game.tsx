@@ -9,7 +9,7 @@ import { Chess, Move, Square } from "chess.js";
 import { useLocation } from "react-router-dom";
 import { incrementCorrects, incrementIncorrects } from "../../services/userSetters";
 import { AutoPlayContext, BoardStateContext, EngineContext, PlayContext, startingFen } from "../../util/contexts";
-import { Arrow, MoveVerbose } from "../../types/states";
+import { Arrow, MoveVerbose, PossibleMove } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 import { AudioType } from "../Main/MainBody";
@@ -27,10 +27,11 @@ interface GameProps {
     lastMove: Move | undefined
     displayedArrows: Arrow[],
     setDisplayedArrows: (arrows: Arrow[]) => void,
+    setPossibleMoves: (moves: PossibleMove[]) => void
 }
 
 
-const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displayedArrows, setDisplayedArrows }: GameProps) => {
+const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displayedArrows, setDisplayedArrows, setPossibleMoves }: GameProps) => {
 
     const { game, color,
         setCurrOpening, setHistory, setMoveHistory, setCurrMove, setGame, moveHistory, currMove
@@ -126,12 +127,14 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displ
                 setDisplayedArrows([]);
                 setBestLine('');
                 setPossibleMate("");
+                
             }
             else {
                 handleFindOpening(); 
                 setDisplayedArrows([]);
                 setBestLine('');
                 setPossibleMate("");
+
             }
         } else if (currPath.pathname === "/flashcards") {
             const moveHistory = game.history();
@@ -185,6 +188,10 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displ
 
             
         }
+
+    }
+
+    const getPossibleMove = () => {
 
     }
 

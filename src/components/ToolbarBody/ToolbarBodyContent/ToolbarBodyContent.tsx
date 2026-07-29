@@ -10,14 +10,16 @@ import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarConte
 import { Flashcard as FlashcardType, Folder, UserData } from "../../../types/db";
 import { BiLoaderAlt } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
+import { PossibleMove } from "../../../types/states";
 
 interface ToolbarContentProps { 
     searchResults: FlashcardType[],
     setSearchResults: (val: FlashcardType[]) => void
     isSearchLoading: boolean,
+    possibleMoves: PossibleMove[]
 }
 
-const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: ToolbarContentProps) => {
+const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, possibleMoves }: ToolbarContentProps) => {
 
     const { flashcards, setFlashcards, folders, setFolders } = useContext(CardsContext);
     const { currentFolder, setCurrentFolder, 
@@ -112,7 +114,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading }: To
     // TODO: might have a duplicate 
     const showMoveHistory = () => {
         return (
-            <div className="">
+            <div className="move-container">
                 {
                     moveHistory.map((move, idx)=> (
                        (idx % 2 === 0) ? 

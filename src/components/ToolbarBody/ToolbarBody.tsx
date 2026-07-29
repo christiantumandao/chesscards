@@ -6,14 +6,16 @@ import { CardsContext, ToolbarContext } from "../../util/contexts";
 
 import ToolbarBodyHeader from "./ToolbarBodyContent/ToolbarBodyHeader/ToolbarBodyHeader";
 import ToolbarContent from "./ToolbarBodyContent/ToolbarBodyContent";
+import { PossibleMove } from "../../types/states";
 
 interface ToolbarBodyProps {
     searchResults: Flashcard[],
     setSearchResults: (val: Flashcard[]) => void
     isSearchLoading: boolean,
+    possibleMoves: PossibleMove[]
 }
 
-const ToolbarBody = ( { searchResults, setSearchResults, isSearchLoading } : ToolbarBodyProps) => {
+const ToolbarBody = ( { searchResults, setSearchResults, isSearchLoading, possibleMoves } : ToolbarBodyProps) => {
 
 
     const { flashcards } = useContext(CardsContext);
@@ -45,6 +47,7 @@ const ToolbarBody = ( { searchResults, setSearchResults, isSearchLoading } : Too
                     searchResults = { searchResults }
                     isSearchLoading = { isSearchLoading }
                     setSearchResults ={ setSearchResults }
+                    possibleMoves = { possibleMoves }
                 />
                 
                 

@@ -12,3 +12,10 @@ export interface Arrow {
     endSquare: string,
     color: string
 }
+
+export interface PossibleMove {
+    move: string,
+    draws: number,
+    black: number,
+    white: number
+}

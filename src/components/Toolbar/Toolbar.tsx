@@ -9,19 +9,21 @@ import ToolbarFooter from "../ToolbarFooter/ToolbarFooter";
 import ToolbarBody from "../ToolbarBody/ToolbarBody";
 import ToolbarHeader from "../ToolbarHeader/ToolbarHeader";
 import { ToolbarContextType } from "../../types/contexts";
+import { PossibleMove } from "../../types/states";
 
 interface ToolbarProps {
     undo: () => void,
     redo: () => void,
     restart: () => void, 
     currentFolder: Folder | null,
-    setCurrentFolder: (val: Folder | null) => void
+    setCurrentFolder: (val: Folder | null) => void,
+    possibleMoves: PossibleMove[]
 }
 
 const Toolbar = (props: ToolbarProps) => {
 
     const { undo, redo, restart,
-            currentFolder, setCurrentFolder
+            currentFolder, setCurrentFolder, possibleMoves
     } = props;
 
     const { tab } = useContext(TabContext);
@@ -86,6 +88,7 @@ const Toolbar = (props: ToolbarProps) => {
                     searchResults = { searchResults }
                     setSearchResults = { setSearchResults }
                     isSearchLoading = { isSearchLoading }
+                    possibleMoves = { possibleMoves }
                 />
                 
 
