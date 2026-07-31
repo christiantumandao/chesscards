@@ -17,13 +17,14 @@ interface ToolbarProps {
     restart: () => void, 
     currentFolder: Folder | null,
     setCurrentFolder: (val: Folder | null) => void,
-    possibleMoves: PossibleMove[]
+    possibleMoves: PossibleMove[],
+    makeAMove: (newMove: MoveVerbose | string) => boolean
 }
 
 const Toolbar = (props: ToolbarProps) => {
 
     const { undo, redo, restart,
-            currentFolder, setCurrentFolder, possibleMoves
+            currentFolder, setCurrentFolder, possibleMoves, makeAMove
     } = props;
 
     const { tab } = useContext(TabContext);
@@ -89,6 +90,7 @@ const Toolbar = (props: ToolbarProps) => {
                     setSearchResults = { setSearchResults }
                     isSearchLoading = { isSearchLoading }
                     possibleMoves = { possibleMoves }
+                    makeAMove = { makeAMove }
                 />
                 
 

@@ -13,6 +13,7 @@ import { Arrow, MoveVerbose, PossibleMove } from "../../types/states";
 import { parseMovesIntoArray } from "../../util/formatting";
 import { findOpening } from "../../services/dbGetters";
 import { AudioType } from "../Main/MainBody";
+import { fetchPossibleMoves } from "../../util/lichess";
 
 //import { generateBoard } from "react-chessboard";
 
@@ -127,13 +128,14 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displ
                 setDisplayedArrows([]);
                 setBestLine('');
                 setPossibleMate("");
-                
+                getPossibleMove();
             }
             else {
                 handleFindOpening(); 
                 setDisplayedArrows([]);
                 setBestLine('');
                 setPossibleMate("");
+                getPossibleMove();
 
             }
         } else if (currPath.pathname === "/flashcards") {
@@ -191,8 +193,9 @@ const Game = ({ makeAMove, lastSquare, setLastSquare, lastMove, playSound, displ
 
     }
 
-    const getPossibleMove = () => {
-
+    const getPossibleMove = async () => {
+        const moves = await fetchPossibleMoves(game.fen());
+        setPossibleMoves(moves);
     }
 
     const validateMove_flashcards = (move: string) => {

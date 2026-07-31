@@ -1,41 +1,36 @@
-.movepair-container {
-    height: auto;
+.moves-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    padding: 7px 10px;
-    margin: 0 -15px;
-}
-.movepair-container.movepair-shadow {
-    background-color: rgba(32,32,39,.5);
+    overflow-x: scroll;
+    gap: 1rem;
+
+    padding-bottom: 1rem;
+
 }
 
-.move-number {
-    font-size: .9rem;
-    font-weight: bolder;
-    margin-right: 20px;
-    min-width: 15px;
+
+
+.movepair-container {
+
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: .5rem;
+    padding: .2rem .5rem;
+    border-radius: 3px;
+
+    button.move-btn, span {
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 1rem;
+    }
+
 }
 
-.move-btn {
-    font-weight: bolder;
-    font-size: .9rem;
-    min-width: 30px;
-    margin-right: 30px;
-
-    border: none;
-    background-color: transparent;
-    color: white;
+.movepair-shadow {
+    background-color: gray;
 }
-.move-btn:focus {
-    outline: none;
-}
-.move-btn:hover {
-    color: var(--lightGreen);
-}
-.move-highlight {
-    color: var(--green);
-    font-size: .9rem;
-}
-

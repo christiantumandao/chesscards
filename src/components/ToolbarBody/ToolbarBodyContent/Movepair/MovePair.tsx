@@ -28,17 +28,18 @@ const MovePair = ({ idx }: MovePairProps) => {
 
     return (
         <div className={(pairIdx % 2 !== 0) ? "movepair-container movepair-shadow" : "movepair-container"}>
-            <div className="move-number">
+            <span className="move-number">
                 {
                     (idx === 0) ? "1." : 
                     (idx+2) / 2 +"."
                 }
-            </div>
+            </span>
             <button 
-            className={ (currMove === idx+1) ? "move-btn move-highlight" : "move-btn" }
-            onClick = { () => handleClick("w") }>
-                {moveHistory[idx]}
+                className={ (currMove === idx+1) ? "move-btn move-highlight" : "move-btn" }
+                onClick = { () => handleClick("w") }>
+                    {moveHistory[idx]}
             </button>
+            
             {
                 (idx+1 <= moveHistory.length - 1) ? 
                 <button 

@@ -10,16 +10,18 @@ import { BoardStateContext, CardsContext, PlayContext, startingFen, ToolbarConte
 import { Flashcard as FlashcardType, Folder, UserData } from "../../../types/db";
 import { BiLoaderAlt } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
-import { PossibleMove } from "../../../types/states";
+import { MoveVerbose, PossibleMove } from "../../../types/states";
+import PossibleMoveComp from "./PossibleMove/PossibleMoveComp";
 
 interface ToolbarContentProps { 
     searchResults: FlashcardType[],
     setSearchResults: (val: FlashcardType[]) => void
     isSearchLoading: boolean,
-    possibleMoves: PossibleMove[]
+    possibleMoves: PossibleMove[],
+    makeAMove: (newMove: MoveVerbose | string) => boolean
 }
 
-const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, possibleMoves }: ToolbarContentProps) => {
+const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, possibleMoves, makeAMove }: ToolbarContentProps) => {
 
     const { flashcards, setFlashcards, folders, setFolders } = useContext(CardsContext);
     const { currentFolder, setCurrentFolder, 
@@ -114,7 +116,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, poss
     // TODO: might have a duplicate 
     const showMoveHistory = () => {
         return (
-            <div className="move-container">
+            <div className="moves-container">
                 {
                     moveHistory.map((move, idx)=> (
                        (idx % 2 === 0) ? 
@@ -132,7 +134,22 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, poss
     const getExploreBody = () => {
         return (
             <>
-                { showMoveHistory() } 
+                { 
+                
+                    showMoveHistory() 
+                
+                } 
+                <div className="possible-moves-container">
+                {
+                    possibleMoves.map((move)=>(
+                        <PossibleMoveComp 
+                            move = { move }
+                            makeAMove = { makeAMove }
+
+                        />
+                    ))
+                }
+                </div>
             </>
         )
     }
@@ -152,6 +169,9 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, poss
                 <h1 className="empty-query-message">
                     Play a move or search for an opening above to get started.
                 </h1>
+                {
+                    getExploreBody()
+                }
             </>
         );
     }
@@ -236,6 +256,7 @@ const ToolbarContent = ({ searchResults, setSearchResults, isSearchLoading, poss
                 getSearchResults()
             : (currPath.pathname === "/") ? 
                 getExploreBody()
+         
             : null
     )
 }

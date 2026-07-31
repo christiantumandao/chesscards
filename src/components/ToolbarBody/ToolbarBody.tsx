@@ -12,10 +12,11 @@ interface ToolbarBodyProps {
     searchResults: Flashcard[],
     setSearchResults: (val: Flashcard[]) => void
     isSearchLoading: boolean,
-    possibleMoves: PossibleMove[]
+    possibleMoves: PossibleMove[],
+    makeAMove: (newMove: MoveVerbose | string) => boolean
 }
 
-const ToolbarBody = ( { searchResults, setSearchResults, isSearchLoading, possibleMoves } : ToolbarBodyProps) => {
+const ToolbarBody = ( { searchResults, setSearchResults, isSearchLoading, possibleMoves, makeAMove } : ToolbarBodyProps) => {
 
 
     const { flashcards } = useContext(CardsContext);
@@ -48,6 +49,7 @@ const ToolbarBody = ( { searchResults, setSearchResults, isSearchLoading, possib
                     isSearchLoading = { isSearchLoading }
                     setSearchResults ={ setSearchResults }
                     possibleMoves = { possibleMoves }
+                    makeAMove = { makeAMove }
                 />
                 
                 

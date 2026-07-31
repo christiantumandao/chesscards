@@ -191,7 +191,7 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     font-size: 1.3rem;
     height: auto;
     width: 60%;
-    margin: auto;
+    margin: 2rem auto;
 }
 
 

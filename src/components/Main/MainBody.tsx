@@ -617,6 +617,7 @@ const MainBody = () => {
                                     setCurrentFolder = { setCurrentFolder }
 
                                     possibleMoves = { possibleMoves }
+                                    makeAMove = { makeAMove }
 
                                 />
 

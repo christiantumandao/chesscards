@@ -2,7 +2,7 @@ import { PossibleMove } from "../types/states";
 
 
 
-export const fetchPossibleMoves = async (fen: string) => {
+export const fetchPossibleMoves = async (fen: string): Promise<PossibleMove[]> => {
     try {  
         if (!fen) fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         const params = new URLSearchParams({
@@ -19,7 +19,7 @@ export const fetchPossibleMoves = async (fen: string) => {
 
         const account = await response.json();
         
-        const possibleMoves: PossibleMove = account.moves.map((e: any)=>{
+        const possibleMoves: PossibleMove[] = account.moves.map((e: any)=>{
             return {
                 move: e.san,
                 white: e.white,
@@ -27,12 +27,14 @@ export const fetchPossibleMoves = async (fen: string) => {
                 draws: e.draws
             }
         });
-
-        console.log(possibleMoves);
+        if (possibleMoves === undefined) return [] as PossibleMove[];
+        else return possibleMoves as PossibleMove[];
+        
 
 
 
     } catch (e) {
         console.error(e);
+        return [] as PossibleMove[]
     }
 }
