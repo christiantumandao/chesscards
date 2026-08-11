@@ -7,7 +7,7 @@ export const fetchPossibleMoves = async (fen: string): Promise<PossibleMove[]> =
         if (!fen) fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         const params = new URLSearchParams({
             fen: fen,
-            moves: "10"
+            moves: "5"
         })
 
         const url=`https://explorer.lichess.org/masters?${params}`;
