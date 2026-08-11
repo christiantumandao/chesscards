@@ -6,7 +6,7 @@ import { CardsContext, ToolbarContext } from "../../util/contexts";
 
 import ToolbarBodyHeader from "./ToolbarBodyContent/ToolbarBodyHeader/ToolbarBodyHeader";
 import ToolbarContent from "./ToolbarBodyContent/ToolbarBodyContent";
-import { PossibleMove } from "../../types/states";
+import { MoveVerbose, PossibleMove } from "../../types/states";
 
 interface ToolbarBodyProps {
     searchResults: Flashcard[],

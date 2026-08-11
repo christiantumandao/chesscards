@@ -17,9 +17,11 @@ export const fetchPossibleMoves = async (fen: string): Promise<PossibleMove[]> =
         },
         });
 
-        const account = await response.json();
+        const moves = await response.json();
+
+        console.log(moves);
         
-        const possibleMoves: PossibleMove[] = account.moves.map((e: any)=>{
+        const possibleMoves: PossibleMove[] = moves.moves.map((e: any)=>{
             return {
                 move: e.san,
                 white: e.white,

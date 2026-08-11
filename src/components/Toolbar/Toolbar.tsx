@@ -9,7 +9,7 @@ import ToolbarFooter from "../ToolbarFooter/ToolbarFooter";
 import ToolbarBody from "../ToolbarBody/ToolbarBody";
 import ToolbarHeader from "../ToolbarHeader/ToolbarHeader";
 import { ToolbarContextType } from "../../types/contexts";
-import { PossibleMove } from "../../types/states";
+import { MoveVerbose, PossibleMove } from "../../types/states";
 
 interface ToolbarProps {
     undo: () => void,

@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    overflow-x: scroll;
+    overflow-x: auto;
     gap: 1rem;
 
     padding-bottom: 1rem;
@@ -13,7 +13,7 @@
 
 
 .movepair-container {
-
+    width: auto;
     display: inline-flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -21,12 +21,16 @@
     gap: .5rem;
     padding: .2rem .5rem;
     border-radius: 3px;
+    flex-shrink: 0;
+
 
     button.move-btn, span {
         background-color: transparent;
         border: none;
         color: white;
         font-size: 1rem;
+        width: auto;
+        max-width: none;
     }
 
 }

@@ -421,6 +421,7 @@ const MainBody = () => {
     }
 
     const restart = () => {
+        setAutoPlay(false);
         const newGame = new Chess();
         setGame(newGame);
         setHistory([startingFen]);
@@ -429,6 +430,7 @@ const MainBody = () => {
     }
 
     const redo = () => {
+        
         if (currMove === history.length - 1) return;
         else {
 

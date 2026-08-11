@@ -81,8 +81,8 @@ body {
 }
 
 .page {
-  max-width: calc(100vw - var(--navbarWidth));
   padding: 10px;
+  overflow-y: auto;
 }
 
 
